@@ -1,0 +1,36 @@
+{{ define "notice_message_notification" }}
+<div class="notification is-link has-text-centered">
+  <button class="delete"></button>
+  <div id="notification_message_notice"></div>
+</div>
+<style>
+    .notification.is-link {
+        display: none;
+        box-shadow: 3px 5px 2px 1px #555555;
+        position: fixed;
+        width: 400px;
+        max-width: 90%; /* For mobile devices */
+        margin-left: max(-45%, -200px);
+        height: 86px;
+        margin-top: -43px;
+        left: 50%;
+        top: 50%;
+        z-index: 900;
+    }
+</style>
+<script>
+    const notification_message_tag_notice = document.querySelector('#notification_message_notice');
+    const showNoticeMsg = (msgHead = "", msgBody = "") => {
+        if (msgHead == "" && msgBody == "") {
+            return;
+        }
+        notification_message_tag_notice.innerHTML = `<div><p><strong>${msgHead}</strong></p><p>${msgBody}</p></div>`;
+        notification_message_tag_notice.parentNode.style.display='block';
+    };
+    const hideNoticeMsg = (e) => {
+        notification_message_tag_notice.innerHTML = '';
+        e.target.parentNode.style.display = 'none';
+    };
+    document.querySelector('.notification.is-link .delete').addEventListener('click', hideNoticeMsg);
+</script>
+{{ end }}

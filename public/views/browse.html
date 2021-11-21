@@ -1,0 +1,143 @@
+{{ template "header" . }}
+<body>
+    {{ template "navbar" . }}
+    {{ template "error_message_notification" . }}
+    {{ template "notice_message_notification" . }}
+    <div id="padding-when-error"></div>
+        <div class="modal is-clipped">
+          <div class="modal-background"></div>
+          <div class="modal-content" style="z-index: 10000 !important">
+            <div style="text-align: center">
+              <div id="modal-message">
+                <p class="mb-4 mt-2" style="font-size: 1.25rem;" id="confirm-modal-title"></p>
+                <div>
+                  <button class="button is-primary mr-5" id="yesBtn">&nbsp;Yes&nbsp;</button>
+                  <button class="button is-danger" id="noBtn">&nbsp;No&nbsp;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+        <div class="main-padding-container">
+        {{ if .success }}
+            <div class="block"></div>
+            <div class="pb-3" id="adminSection" style="display: none;">
+                <button class="button is-small mr-2 is-primary" id="modifyBtn">Edit</button>
+                <button class="button is-small mr-2 is-danger" id="deleteBtn">Delete</button>
+            </div>
+            <div class="pb-3" style="cursor: default">
+                <div class="field is-grouped is-grouped-multiline">
+                  {{ if eq .adminOnly true }}
+                    <div class="control">
+                      <span class="tag is-danger">Admin Only</span>
+                    </div>
+                  {{ end }}
+                  <div class="control">
+                    <div class="tags has-addons">
+                      <span class="tag is-link">Date</span>
+                      <span class="tag">{{ .date }}</span>
+                    </div>
+                  </div>
+                  <div class="control">
+                    <div class="tags has-addons">
+                      <span class="tag is-link">Category</span>
+                      <a href="/articles/{{ .category }}">
+                        <span class="tag">{{ .category }}</span>
+                      </a>
+                    </div>
+                  </div>
+                  {{ range .author }}
+                    <div class="control">
+                      <div class="tags has-addons">
+                        <span class="tag is-link">Author</span>
+                        <span class="tag">{{ . }}</span>
+                      </div>
+                    </div>
+                  {{ end }}
+                  {{ range $t := .tags }}
+                    <div class="control">
+                      <div class="tags">
+                        <a href="/articles/tags?q={{ $t }}">
+                          <span class="tag">{{ $t }}</span>
+                        </a>
+                      </div>
+                    </div>
+                  {{ end }}
+                </div>
+                <div class="field is-grouped is-grouped-multiline">
+                  <div class="control" id="likeParent" data-liked=0 style="display: none; margin-right: 15px;">
+                    <span class="icon-text" style="cursor: pointer;">
+                      <img src="/assets/closed-eye.png" id="likeIconNo" style="height: 18.9px; padding-right: 6px; padding-top: 4px; margin-top: 4px; display: block">
+                      <i class="fas fa-eye has-text-link" id="likeIconYes" style="font-size: 22px; padding-right: 6px; padding-top: 2.5px; display: none"></i>
+                      <span style="padding-top: 1px; font-weight: 500">Eyes opened</span>
+                    </span>
+                  </div>
+                  <div class="control" id="bookmarkParent" data-bookmarked=0 style="display: none; margin-right: 15px;">
+                    <span class="icon-text" style="cursor: pointer;">
+                      <i class="far fa-bookmark has-text-link" id="bookmarkIconNo" style="font-size: 22px; padding-right: 6px; padding-top: 2.5px;display: block"></i>
+                      <i class="fas fa-bookmark has-text-link" id="bookmarkIconYes" style="font-size: 22px; padding-right: 6px; padding-top: 2.5px; display: none"></i>
+                      <span style="padding-top: 1px; font-weight: 500">Save</span>
+                    </span>
+                  </div>
+                </div>
+            </div>
+            <div class="block" style="text-align: center; padding-top: 15px;">
+                <p class="title is-2 mt-3">{{ .title }}</p>
+                <p class="subtitle is-5 pt-2">{{ .subtitle }}</p>
+            </div>
+            <div style="padding-top: 15px"></div>
+            <div class="content is-normal">
+            </div>
+            <script>
+                var imgHead = '<div class="block px-2" style="max-width: 800px; max-height: 600px; overflow-y: hidden; margin-left: auto; margin-right: auto;"><figure class="image is-16by9">';
+                var imgTail = '</figure></div>';
+                var content = "{{ .content }}".replace(/<p>(<img.*>)<\/p>/g, imgHead + "$1" + imgTail) ;
+
+                var quoteHead = '<article class="message is-warning"> <div class="message-body" style="background-color: #fbfbfb !important; color: #4A4A4A !important;">';
+                var quoteTail = '</div></article>';
+                content = content.replaceAll('<blockquote>', quoteHead).replaceAll('</blockquote>', quoteTail);
+                document.querySelector('.content.is-normal').innerHTML = content;
+            </script>
+        {{ end }}
+    </div>
+    {{ template "footer" . }}
+    {{ if not .success }}
+        <script>
+            showErrMsg('{{ .errHead }}', '{{ .errBody }}');
+            var offset = document.querySelector('nav').offsetHeight +  document.querySelector('footer').offsetHeight + 60; // 60: the padding in the footer
+            document.querySelector('#padding-when-error').style.paddingBottom = `${window.innerHeight - offset}px`;
+        </script>
+    {{ end }}
+    <script src="/js/browse.js"></script>
+</body>
+
+<!-- A full example -->
+<!--
+<article class="message is-warning">
+  <div class="message-header" style="color: #4A4A4A !important;">
+    <p>Quote title</p>
+  </div>
+  <div class="message-body" style="background-color: #fdfdfd !important; color: #4A4A4A !important;">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et sem eget, facilisis sodales sem.
+  </div>
+</article>
+<div class="content is-normal">
+  <h1>Hello World</h1>
+  <p>Lorem ipsum<sup><a>[1]</a></sup> dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, nec rutrum justo nibh eu lectus. Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque. Sub<sub>script</sub> works as well!</p>
+  <h3>Third level</h3>
+  <p>Curabitur accumsan turpis pharetra <strong>augue tincidunt</strong> blandit. Quisque condimentum maximus mi, sit amet commodo arcu rutrum id. Proin pretium urna vel cursus venenatis. Suspendisse potenti. Etiam mattis sem rhoncus lacus dapibus facilisis.</p>
+  <figure class="image is-16by9">
+    <iframe class="has-ratio" width="640" height="360" src="https://www.youtube.com/embed/YE7VzlLtp-4" frameborder="0" allowfullscreen></iframe>
+  </figure>
+  <p>Donec at dignissim dui. Ut et neque nisl.</p>
+  <blockquote>Ut venenatis, nisl scelerisque sollicitudin fermentum, quam libero hendrerit ipsum, ut blandit est tellus sit amet turpis.</blockquote>
+  <ul>
+    <li>In fermentum leo eu lectus mollis, quis dictum mi aliquet.</li>
+    <li>Ut non enim metus.</li>
+  </ul>
+  {{ template "one_image" . }}
+  {{ template "two_images" . }}
+  {{ template "three_images" . }}
+</div>
+-->

@@ -1,0 +1,11 @@
+navbar {
+    background-color: var(--main-bg-color);
+}
+
+.navbar-link:not(.is-arrowless)::after {
+    border-color: #FFDF8A;
+}
+
+.navbar-item:hover {
+    color: hsl(0, 0%, 38%) !important;
+}

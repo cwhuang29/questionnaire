@@ -1,0 +1,6 @@
+.git
+public/upload/*/*
+certs/*
+.DS_Store
+demo/*
+tmp.db
