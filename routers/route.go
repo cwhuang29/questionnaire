@@ -25,6 +25,7 @@ func loadAssets() {
 func injectRoutesV2() {
 	v2 := router.Group("/v2")
 
+	v2.OPTIONS("/login", handlers.HandlePreflight)
 	v2.OPTIONS("/register", handlers.HandlePreflight)
 	v2.POST("/login", handlers.LoginV2)
 	v2.POST("/register", handlers.RegisterV2)

@@ -13,9 +13,9 @@ import (
 
 func HandlePreflight(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "PUT,POST")
+	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
 	c.Header("Access-Control-Max-Age", "600")
-	c.Header("Access-Control-Request-Headers", "Authorization")
 	c.String(http.StatusOK, "success")
 }
 
@@ -73,7 +73,7 @@ func RegisterV2(c *gin.Context) {
 }
 
 func LogoutV2(c *gin.Context) {
-	c.SetCookie(constants.CookieAuthToken, "", 0, "/", "", true, true) // Set maxAge to 0 cause values on "Expires/Max-Age" cell on dev-tools's "Application" tab become "Session"
+	// c.SetCookie(constants.CookieAuthToken, "", 0, "/", "", true, true) // Set maxAge to 0 cause values on "Expires/Max-Age" cell on dev-tools's "Application" tab become "Session"
 	// c.Header("Location", constants.URLLandingPage)
 	c.JSON(http.StatusResetContent, gin.H{})
 }
@@ -106,9 +106,7 @@ func LoginV2(c *gin.Context) {
 
 	token, err := utils.GenerateJWTToken(user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -119,6 +117,7 @@ func LoginV2(c *gin.Context) {
 	// if user.Role.IsAdmin() {
 	//     c.SetCookie(constants.CookieIsAdmin, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
 	// }
-	c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", true, true)
+
+	// c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", true, true)
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
