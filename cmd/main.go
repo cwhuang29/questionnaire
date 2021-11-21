@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/cwhuang29/article-sharing-website/config"
-	"github.com/cwhuang29/article-sharing-website/databases"
-	"github.com/cwhuang29/article-sharing-website/routers"
+	"github.com/cwhuang29/questionaire/config"
+	"github.com/cwhuang29/questionaire/databases"
+	"github.com/cwhuang29/questionaire/routers"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -39,9 +39,9 @@ func setupDatabase() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "article-sharing-website",
-	Short: "article-sharing-website",
-	Long:  "An article sharing website developed by Go.",
+	Use:   "A questionnaire website",
+	Short: "a-questionnaire-website",
+	Long:  "A questionnaire website developed by Go.",
 	Run: func(cmd *cobra.Command, args []string) {
 		setupConfig()
 		setupDatabase()

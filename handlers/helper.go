@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cwhuang29/article-sharing-website/constants"
-	"github.com/cwhuang29/article-sharing-website/databases"
-	"github.com/cwhuang29/article-sharing-website/databases/models"
-	"github.com/cwhuang29/article-sharing-website/utils"
+	"github.com/cwhuang29/questionaire/constants"
+	"github.com/cwhuang29/questionaire/databases"
+	"github.com/cwhuang29/questionaire/databases/models"
+	"github.com/cwhuang29/questionaire/utils"
 	"github.com/gin-gonic/gin"
 )
 

@@ -3,7 +3,7 @@ package databases
 import (
 	"errors"
 
-	"github.com/cwhuang29/article-sharing-website/databases/models"
+	"github.com/cwhuang29/questionaire/databases/models"
 	"github.com/sirupsen/logrus"
 
 	"gorm.io/gorm"

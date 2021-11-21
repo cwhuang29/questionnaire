@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cwhuang29/article-sharing-website/constants"
-	"github.com/cwhuang29/article-sharing-website/handlers"
+	"github.com/cwhuang29/questionaire/constants"
+	"github.com/cwhuang29/questionaire/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )

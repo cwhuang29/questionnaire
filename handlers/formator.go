@@ -3,9 +3,9 @@ package handlers
 import (
 	"strings"
 
-	"github.com/cwhuang29/article-sharing-website/constants"
-	"github.com/cwhuang29/article-sharing-website/databases/models"
-	"github.com/cwhuang29/article-sharing-website/utils"
+	"github.com/cwhuang29/questionaire/constants"
+	"github.com/cwhuang29/questionaire/databases/models"
+	"github.com/cwhuang29/questionaire/utils"
 )
 
 func articleFormatDBToOverview(article models.Article) (a Article) {

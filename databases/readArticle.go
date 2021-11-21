@@ -3,7 +3,7 @@ package databases
 import (
 	"time"
 
-	"github.com/cwhuang29/article-sharing-website/databases/models"
+	"github.com/cwhuang29/questionaire/databases/models"
 )
 
 func IsArticleExists(id int, isAdmin bool) (succeed bool) {
