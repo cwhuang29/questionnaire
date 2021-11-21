@@ -7,7 +7,7 @@ const (
 	Parent
 	Teacher
 	Researcher
-	Admin
+	Admin // This role can only be set via backend (in the handlers.register)
 )
 
 func (r RoleType) String() string {

@@ -22,6 +22,7 @@ func GetCopy() config {
 		adminEmails[i] = a
 	}
 	tmp.Admin.Email = adminEmails
+
 	return tmp
 }
 
@@ -130,5 +131,6 @@ func Initial(configFilePath string) error {
 
 	cfg.setDefaultValue()
 	cfg.setOverwriteValue()
+
 	return nil
 }

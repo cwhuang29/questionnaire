@@ -71,7 +71,7 @@ func AuthRequired() gin.HandlerFunc {
 
 		tokenClaims, err := jwt.ParseWithClaims(token, &utils.JWTClaim{}, func(token *jwt.Token) (i interface{}, err error) {
 			// if someErrorOccurs { return nil, customizedErr }
-			return jwtSecret, nil
+			return utils.GetJWTSecretKeyFromConfig(), nil
 		})
 
 		if err != nil {

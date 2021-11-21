@@ -53,14 +53,20 @@ func createTables() {
 	if !(db.Migrator().HasTable(&models.Admin{})) {
 		db.Migrator().CreateTable(&models.Admin{})
 	}
+	if !(db.Migrator().HasTable(&models.Notify{})) {
+		db.Migrator().CreateTable(&models.Notify{})
+	}
+	if !(db.Migrator().HasTable(&models.FormStatus{})) {
+		db.Migrator().CreateTable(&models.FormStatus{})
+	}
+	if !(db.Migrator().HasTable(&models.FormHistory{})) {
+		db.Migrator().CreateTable(&models.FormHistory{})
+	}
 }
 
 func createConstraints() {
 	if !db.Migrator().HasConstraint(&models.Login{}, "User") {
 		db.Migrator().CreateConstraint(&models.Login{}, "User")
-	}
-	if !db.Migrator().HasConstraint(&models.Password{}, "User") {
-		db.Migrator().CreateConstraint(&models.Password{}, "User")
 	}
 }
 

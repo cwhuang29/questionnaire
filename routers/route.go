@@ -5,13 +5,11 @@ import (
 
 	"github.com/cwhuang29/questionnaire/config"
 	"github.com/cwhuang29/questionnaire/handlers"
-	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 )
 
 var (
-	router    = gin.Default() // Creates a gin router with default middleware: logger and recovery (crash-free) middleware
-	jwtSecret = utils.GetJWTSecretKeyFromConfig()
+	router = gin.Default() // Creates a gin router with default middleware: logger and recovery (crash-free) middleware
 	// htmlFiles = []string{"public/views/about.html", "public/views/home.html"}
 )
 
@@ -85,12 +83,6 @@ func injectRoutesV1() {
 		}
 	}
 
-	v1.GET("/register", handlers.RegisterView)
-	v1.GET("/login", handlers.LoginView)
-	v1.POST("/register", handlers.Register)
-	v1.POST("/login", handlers.Login)
-	v1.POST("/logout", handlers.Logout)
-
 	v1.GET("/home", handlers.Home)
 	v1.GET("/about", handlers.About)
 	v1.GET("/contact-us", handlers.ContactUs)
@@ -121,5 +113,6 @@ func Router() {
 
 	loadAssets()
 	injectRoutesV1()
+	injectRoutesV2()
 	serve()
 }

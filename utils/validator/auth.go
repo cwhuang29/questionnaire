@@ -56,7 +56,7 @@ func ValidateRegisterForm(newUser models.User) (err map[string]string) {
 		err["email"] = errInputMsg["empty"]
 	}
 
-	if !newUser.Role.IsValidAndNotAdmin() {
+	if !utils.RoleType(newUser.Role).IsValidAndNotAdmin() {
 		err["role"] = errInputMsg["roleInvalid"]
 	}
 
