@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"github.com/cwhuang29/questionaire/constants"
-	"github.com/cwhuang29/questionaire/databases"
+	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/databases"
 )
 
 func DoesUserHasEmailQuota(id int) bool {

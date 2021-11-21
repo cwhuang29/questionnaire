@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/cwhuang29/questionaire/constants"
-	"github.com/cwhuang29/questionaire/databases"
+	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/gin-gonic/gin"
 )
 

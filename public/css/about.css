@@ -1,8 +1,0 @@
-figure {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-figure > img {
-    margin: auto !important;
-}

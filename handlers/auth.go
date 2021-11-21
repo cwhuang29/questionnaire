@@ -3,11 +3,11 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/cwhuang29/questionaire/constants"
-	"github.com/cwhuang29/questionaire/databases"
-	"github.com/cwhuang29/questionaire/databases/models"
-	"github.com/cwhuang29/questionaire/utils"
-	"github.com/cwhuang29/questionaire/utils/validator"
+	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/databases"
+	"github.com/cwhuang29/questionnaire/databases/models"
+	"github.com/cwhuang29/questionnaire/utils"
+	"github.com/cwhuang29/questionnaire/utils/validator"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/cwhuang29/questionaire/config"
-	"github.com/cwhuang29/questionaire/databases"
-	"github.com/cwhuang29/questionaire/routers"
+	"github.com/cwhuang29/questionnaire/config"
+	"github.com/cwhuang29/questionnaire/databases"
+	"github.com/cwhuang29/questionnaire/routers"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

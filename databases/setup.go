@@ -1,8 +1,8 @@
 package databases
 
 import (
-	"github.com/cwhuang29/questionaire/config"
-	"github.com/cwhuang29/questionaire/databases/models"
+	"github.com/cwhuang29/questionnaire/config"
+	"github.com/cwhuang29/questionnaire/databases/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"

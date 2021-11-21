@@ -1,8 +1,8 @@
 package validator
 
 import (
-	"github.com/cwhuang29/questionaire/databases/models"
-	"github.com/cwhuang29/questionaire/utils"
+	"github.com/cwhuang29/questionnaire/databases/models"
+	"github.com/cwhuang29/questionnaire/utils"
 )
 
 var (

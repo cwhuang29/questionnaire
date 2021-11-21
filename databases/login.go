@@ -3,8 +3,8 @@ package databases
 import (
 	"strconv"
 
-	"github.com/cwhuang29/questionaire/config"
-	"github.com/cwhuang29/questionaire/databases/models"
+	"github.com/cwhuang29/questionnaire/config"
+	"github.com/cwhuang29/questionnaire/databases/models"
 	"github.com/sirupsen/logrus"
 )
 

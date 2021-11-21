@@ -3,8 +3,8 @@ package validator
 import (
 	"time"
 
-	"github.com/cwhuang29/questionaire/constants"
-	"github.com/cwhuang29/questionaire/databases/models"
+	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/databases/models"
 )
 
 var (

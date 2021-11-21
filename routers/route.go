@@ -3,8 +3,8 @@ package routers
 import (
 	"net/http"
 
-	"github.com/cwhuang29/questionaire/config"
-	"github.com/cwhuang29/questionaire/handlers"
+	"github.com/cwhuang29/questionnaire/config"
+	"github.com/cwhuang29/questionnaire/handlers"
 	"github.com/gin-gonic/gin"
 )
 
