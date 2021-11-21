@@ -11,7 +11,7 @@ import (
 
 var (
 	router    = gin.Default() // Creates a gin router with default middleware: logger and recovery (crash-free) middleware
-	jwtSecret = utils.GetJWTSecretKeyFromConfig(config.GetCopy().JWT.Secret)
+	jwtSecret = utils.GetJWTSecretKeyFromConfig()
 	// htmlFiles = []string{"public/views/about.html", "public/views/home.html"}
 )
 
@@ -29,9 +29,12 @@ func injectRoutesV2() {
 
 	v2.Use(AuthRequired())
 	{
-		v2.Get("/login", handlers.LoginV2)
+		v2.GET("/users/me", handlers.Me)
+		v2.GET("/logout", handlers.LogoutV2)
 
 	}
+	v2.GET("/login", handlers.LoginV2)
+	v2.GET("/register", handlers.RegisterV2)
 }
 
 func injectRoutesV1() {

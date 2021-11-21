@@ -1,7 +1,5 @@
 package handlers
 
-import "github.com/golang-jwt/jwt"
-
 type UserStatus int
 
 const (
@@ -32,8 +30,7 @@ type Article struct {
 	AdminOnly  bool     `json:"adminOnly"`
 }
 
-type JWTClaims struct {
-	Email string `json:"email"`
-	Role  string `json:"role"`
-	jwt.StandardClaims
+type LoginForm struct {
+	Email    string `form:"email" json:"email" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
 }

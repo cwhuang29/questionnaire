@@ -7,10 +7,14 @@ import (
 
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/handlers"
+	"github.com/cwhuang29/questionnaire/logger"
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
-	"github.com/sirupsen/logrus"
+)
+
+var (
+	log = logger.New("Middleware")
 )
 
 func CSRFProtection() gin.HandlerFunc {
@@ -48,24 +52,24 @@ func AdminRequired() gin.HandlerFunc {
 			"latency": time.Since(t),
 			"email":   cookieEmail,
 		}
-		logrus.WithFields(fields).Info("Admins routes")
+		log.Info(fields)
 	}
 }
 
+// parse and validate token for six things:
+// validationErrorMalformed        -> token is malformed
+// validationErrorUnverifiable     -> token could not be verified because of signing problems
+// validationErrorSignatureInvalid -> signature validation failed
+// validationErrorExpired          -> exp validation failed
+// validationErrorNotValidYet      -> nbf validation failed
+// validationErrorIssuedAt         -> iat validation failed
 func AuthRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
 		auth := c.GetHeader("Authorization")
 		token := strings.Split(auth, "Bearer ")[1]
 
-		// parse and validate token for six things:
-		// validationErrorMalformed        -> token is malformed
-		// validationErrorUnverifiable     -> token could not be verified because of signing problems
-		// validationErrorSignatureInvalid -> signature validation failed
-		// validationErrorExpired          -> exp validation failed
-		// validationErrorNotValidYet      -> nbf validation failed
-		// validationErrorIssuedAt         -> iat validation failed
-		tokenClaims, err := jwt.ParseWithClaims(token, &handlers.JWTClaims{}, func(token *jwt.Token) (i interface{}, err error) {
+		tokenClaims, err := jwt.ParseWithClaims(token, &utils.JWTClaim{}, func(token *jwt.Token) (i interface{}, err error) {
 			// if someErrorOccurs { return nil, customizedErr }
 			return jwtSecret, nil
 		})
@@ -75,8 +79,10 @@ func AuthRequired() gin.HandlerFunc {
 			return
 		}
 
-		if claims, ok := tokenClaims.Claims.(*handlers.JWTClaims); ok && tokenClaims.Valid && claims.Email != "" && claims.Role != "" {
+		claims, ok := tokenClaims.Claims.(*utils.JWTClaim)
+		if ok && tokenClaims.Valid && claims.Email != "" && claims.Role != "" {
 			c.Set("email", claims.Email)
+			c.Set("name", claims.Name)
 			c.Set("role", claims.Role)
 			c.Next()
 		} else {
@@ -89,9 +95,10 @@ func AuthRequired() gin.HandlerFunc {
 			"url":     c.Request.URL.String(),
 			"status":  c.Writer.Status(),
 			"latency": time.Since(t),
-			"email":   tokenClaims.Claims.(*handlers.JWTClaims).Email,
-			"role":    tokenClaims.Claims.(*handlers.JWTClaims).Role,
+			"email":   claims.Email,
+			"name":    claims.Name,
+			"role":    claims.Role,
 		}
-		logrus.WithFields(fields).Info("Admins routes")
+		log.Info(fields)
 	}
 }

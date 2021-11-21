@@ -15,6 +15,7 @@ const (
 	CookieLoginToken = "login_token"
 	CookieIsAdmin    = "is_admin"
 	CookieCSRFToken  = "csrf_token"
+	CookieAuthToken  = "auth"
 
 	URLLandingPage   = "/articles/weekly-update"
 	URLTopicMed      = "/articles/medication"

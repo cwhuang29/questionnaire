@@ -1,12 +1,44 @@
 package utils
 
 import (
+	"strconv"
+	"time"
+
+	"github.com/cwhuang29/questionnaire/config"
 	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/databases/models"
 	"github.com/golang-jwt/jwt"
 )
 
-func GetJWTSecretKeyFromConfig(secret string) []byte {
-	return []byte(secret)
+type JWTClaim struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+	Role  string `json:"role"`
+	jwt.StandardClaims
+}
+
+func GetJWTSecretKeyFromConfig() []byte {
+	return []byte(config.GetCopy().JWT.Secret)
+}
+
+func GenerateJWTToken(user models.User) (string, error) {
+	now := time.Now()
+	jwtId := user.Email + strconv.FormatInt(now.Unix(), 10)
+
+	claims := JWTClaim{
+		Email: user.Email,
+		Name:  user.GetName(),
+		Role:  user.Role.String(),
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: now.Add(20 * time.Second).Unix(),
+			Id:        jwtId,
+			IssuedAt:  now.Unix(),
+			NotBefore: 0,
+		},
+	}
+
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return tokenClaims.SignedString(GetJWTSecretKeyFromConfig())
 }
 
 func GetJWTErrMsg(err error) string {

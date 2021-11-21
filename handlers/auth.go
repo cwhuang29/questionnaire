@@ -11,15 +11,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterView(c *gin.Context) {
-	c.HTML(http.StatusOK, "register.html", gin.H{"currPageCSS": "css/register.css", "title": "Signup"})
+func Me(c *gin.Context) {
+	email := c.MustGet("email").(string)
+	name := c.MustGet("name").(string)
+	role := c.MustGet("role").(string)
+
+	user := databases.GetUser(email)
+	c.JSON(http.StatusOK, gin.H{
+		"email": email,
+		"name":  name,
+		"role":  role,
+		"user":  user,
+	})
 }
 
-func LoginView(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.html", gin.H{"currPageCSS": "css/login.css", "title": "Login"})
-}
-
-func Register(c *gin.Context) {
+func RegisterV2(c *gin.Context) {
 	var newUser models.User
 
 	if err := c.ShouldBindJSON(&newUser); err != nil {
@@ -29,7 +35,7 @@ func Register(c *gin.Context) {
 
 	invalids := validator.ValidateRegisterForm(newUser)
 	if len(invalids) != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"bindingError": false, "errTags": invalids})
+		c.JSON(http.StatusBadRequest, gin.H{"bindingError": false, "error": invalids})
 		return
 	}
 
@@ -39,7 +45,7 @@ func Register(c *gin.Context) {
 	}
 
 	if databases.IsAdminUser(newUser.Email) {
-		newUser.Admin = true
+		newUser.Role = constants.Admin
 	}
 
 	hashedPwd, err := utils.HashPassword(newUser.Password)
@@ -49,110 +55,36 @@ func Register(c *gin.Context) {
 	}
 
 	newUser.Password = string(hashedPwd)
-	id, res := databases.InsertUser(newUser)
+	_, res := databases.InsertUser(newUser)
 	if !res {
 		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
 		return
 	}
 
-	token := utils.StoreLoginToken(id, constants.LoginMaxAge)
-	c.Header("Location", constants.URLLandingPage)
-	c.SetCookie(constants.CookieLoginToken, token, constants.LoginMaxAge, "/", "", true, true)
-	c.SetCookie(constants.CookieLoginEmail, newUser.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
-	if newUser.Admin {
-		c.SetCookie(constants.CookieIsAdmin, newUser.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
-	}
 	c.JSON(http.StatusCreated, gin.H{})
 }
 
-func Login(c *gin.Context) {
-	json := struct {
-		Email    string `form:"email" json:"email" binding:"required"`
-		Password string `form:"password" json:"password" binding:"required"`
-	}{}
-
-	if err := c.ShouldBindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"inputFormatInvalid": true, "errHead": err.Error(), "errBody": constants.TryAgain})
-		return
-	}
-
-	invalids := validator.ValidateLoginForm(json.Email, json.Password)
-	if len(invalids) != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"inputFormatInvalid": false, "errTags": invalids})
-		return
-	}
-
-	var user models.User
-	user = databases.GetUser(json.Email)
-	if user.ID == 0 {
-		c.JSON(http.StatusForbidden, gin.H{"inputFormatInvalid": false, "errHead": constants.UserNotFound, "errBody": constants.TryAgain})
-		return
-	}
-
-	err := utils.CompareHashAndPassword([]byte(user.Password), []byte(json.Password))
-	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{"inputFormatInvalid": false, "errHead": constants.PasswordIncorrect, "errBody": constants.TryAgain})
-		return
-	}
-
-	token := utils.StoreLoginToken(user.ID, constants.LoginMaxAge)
-	c.Header("Location", constants.URLLandingPage)
-	c.SetCookie(constants.CookieLoginToken, token, constants.LoginMaxAge, "/", "", true, true)
-	c.SetCookie(constants.CookieLoginEmail, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
-	if user.Admin {
-		c.SetCookie(constants.CookieIsAdmin, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
-	}
-	c.JSON(http.StatusOK, gin.H{})
-}
-
-func Logout(c *gin.Context) {
-	email, _ := c.Cookie(constants.CookieLoginEmail) // If no such cookie, first argument will be an empty string
-	token, _ := c.Cookie(constants.CookieLoginToken)
-	if email == "" {
-		// We'll reach here if user logout in one tab and re-logout on the another tab subsequently
-		// So don't regard this case as an error
-		c.Header("Location", constants.URLLandingPage)
-		c.JSON(http.StatusOK, gin.H{})
-		return
-	}
-
-	user := databases.GetUser(email)
-	utils.ClearLoginToken(user.ID, token)
-
-	// Notice: Users may have multiple tokens based on different user agents they have logged in from (e.g. cellphone and laptop),
-	// and those tokens must be removed from DB when expired
-	// TODO revise the clear expired tokens action into a go-routine which will execute periodically
-	utils.ClearExpiredLoginTokens(user.ID)
-
-	c.SetCookie(constants.CookieLoginToken, "", 0, "/", "", true, true) // Set maxAge to 0 cause values on "Expires/Max-Age" cell on dev-tools's "Application" tab become "Session"
-	c.SetCookie(constants.CookieLoginEmail, "", 0, "/", "", true, false)
-	c.SetCookie(constants.CookieIsAdmin, "", 0, "/", "", true, false)
-
-	c.Header("Location", constants.URLLandingPage)
+func LogoutV2(c *gin.Context) {
+	c.SetCookie(constants.CookieAuthToken, "", 0, "/", "", true, true) // Set maxAge to 0 cause values on "Expires/Max-Age" cell on dev-tools's "Application" tab become "Session"
+	// c.Header("Location", constants.URLLandingPage)
 	c.JSON(http.StatusResetContent, gin.H{})
 }
 
 func LoginV2(c *gin.Context) {
-	email := c.MustGet("email").(string)
-	_ := c.MustGet("role")
-
-	body := struct {
-		Password string `form:"password" json:"password" binding:"required"`
-	}{}
-
+	body := LoginForm{}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"inputFormatInvalid": true, "errHead": err.Error(), "errBody": constants.TryAgain})
 		return
 	}
 
-	invalids := validator.ValidateLoginForm(email, body.Password)
+	invalids := validator.ValidateLoginForm(body.Email, body.Password)
 	if len(invalids) != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"inputFormatInvalid": false, "errTags": invalids})
 		return
 	}
 
 	var user models.User
-	user = databases.GetUser(email)
+	user = databases.GetUser(body.Email)
 	if user.ID == 0 {
 		c.JSON(http.StatusForbidden, gin.H{"inputFormatInvalid": false, "errHead": constants.UserNotFound, "errBody": constants.TryAgain})
 		return
@@ -164,12 +96,21 @@ func LoginV2(c *gin.Context) {
 		return
 	}
 
-	token := utils.StoreLoginToken(user.ID, constants.LoginMaxAge)
-	c.Header("Location", constants.URLLandingPage)
-	c.SetCookie(constants.CookieLoginToken, token, constants.LoginMaxAge, "/", "", true, true)
-	c.SetCookie(constants.CookieLoginEmail, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
-	if user.Admin {
-		c.SetCookie(constants.CookieIsAdmin, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
+	token, err := utils.GenerateJWTToken(user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{})
+
+	// token := utils.StoreLoginToken(user.ID, constants.LoginMaxAge)
+	// c.Header("Location", constants.URLLandingPage)
+	// c.SetCookie(constants.CookieLoginToken, token, constants.LoginMaxAge, "/", "", true, true)
+	// c.SetCookie(constants.CookieLoginEmail, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
+	// if user.Role.IsAdmin() {
+	//     c.SetCookie(constants.CookieIsAdmin, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
+	// }
+	c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", true, true)
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }

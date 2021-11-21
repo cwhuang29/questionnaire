@@ -4,14 +4,12 @@ import (
 	"gorm.io/gorm"
 )
 
-/*
- * func (u *User) AfterDelete(tx *gorm.DB) (err error) {
- *   if u.Confirmed {
- *     tx.Model(&Address{}).Where("user_id = ?", u.ID).Update("invalid", false)
- *   }
- *   return
- * }
- */
+// func (u *User) AfterDelete(tx *gorm.DB) (err error) {
+//   if u.Confirmed {
+//     tx.Model(&Address{}).Where("user_id = ?", u.ID).Update("invalid", false)
+//   }
+//   return
+// }
 
 func (u *User) BeforeDelete(tx *gorm.DB) (err error) {
 	/*

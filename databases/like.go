@@ -2,6 +2,7 @@ package databases
 
 import (
 	"github.com/cwhuang29/questionnaire/databases/models"
+	"github.com/cwhuang29/questionnaire/logger"
 	"github.com/sirupsen/logrus"
 )
 
@@ -9,6 +10,10 @@ import (
  * 0: User doesn't like this article
  * 1: User has liked this article
  */
+
+var (
+	log = logger.New("Database")
+)
 
 func CountUserLikes(userId int) int {
 	return int(db.Model(&models.User{ID: userId}).Association("LikedArticles").Count())
@@ -18,11 +23,11 @@ func GetUserLikedArticles(userId, offset, limit int, isAdmin bool) (articles []m
 	switch isAdmin {
 	case true:
 		if err := db.Model(&models.User{ID: userId}).Preload("Tags").Order("id desc").Limit(limit).Offset(offset).Association("LikedArticles").Find(&articles); err != nil {
-			logrus.Error(err.Error())
+			log.ErrorMsg(err.Error())
 		}
 	case false:
 		if err := db.Model(&models.User{ID: userId}).Preload("Tags").Order("id desc").Limit(limit).Offset(offset).Where("admin_only = ?", false).Association("LikedArticles").Find(&articles); err != nil {
-			logrus.Error(err.Error())
+			log.ErrorMsg(err.Error())
 		}
 	}
 	return
@@ -33,7 +38,7 @@ func GetLikeStatus(userId, articleId int) int {
 	article := models.Article{ID: articleId}
 
 	if err := db.Model(&article).Where("user_id = ?", userId).Association("LikedUsers").Find(&user); err != nil {
-		logrus.Error(err.Error())
+		log.ErrorMsg(err.Error())
 		return 0
 	}
 
@@ -55,7 +60,7 @@ func UpdateLikeStatus(userId, articleId, isLiked int) bool {
 		}
 	case 1:
 		if err := db.Model(&article).Association("LikedUsers").Append(&user); err != nil {
-			logrus.Error(err.Error())
+			log.ErrorMsg(err.Error())
 			return false
 		}
 	default:

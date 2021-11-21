@@ -16,6 +16,7 @@ var (
 		"tagsTooLong":      "Each tag can contain at most 20 bytes (1 alphabet - 1 byte/1 Chinese word - 3 bytes/1 Emoji - 4 bytes)",
 		"emailInvalid":     "The email format is not correct.",
 		"passwordTooShort": "Passwords must be at least 8 characters long.",
+		"roleInvalid":      "Role is not correct",
 	}
 )
 
@@ -55,29 +56,9 @@ func ValidateRegisterForm(newUser models.User) (err map[string]string) {
 		err["email"] = errInputMsg["empty"]
 	}
 
-	if len(newUser.Gender) == 0 {
-		err["gender"] = errInputMsg["empty"]
-	}
-
-	if len(newUser.Major) == 0 {
-		err["major"] = errInputMsg["empty"]
+	if !newUser.Role.IsValidAndNotAdmin() {
+		err["role"] = errInputMsg["roleInvalid"]
 	}
 
 	return err
-}
-
-func ValidateLoginFormV2(email, password, role string) (err map[string]string) {
-	err = make(map[string]string)
-
-	if len(email) == 0 {
-		err["email"] = errInputMsg["empty"]
-	} else if !utils.IsEmailValid(email) {
-		err["email"] = errInputMsg["emailInvalid"]
-	}
-
-	if len(password) == 0 {
-		err["password"] = errInputMsg["empty"]
-	}
-
-	return
 }
