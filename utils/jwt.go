@@ -23,20 +23,17 @@ func GetJWTSecretKeyFromConfig() []byte {
 
 func GenerateJWTToken(user models.User) (string, error) {
 	now := time.Now()
-	jwtId := user.Email + strconv.FormatInt(now.Unix(), 10)
-
 	claims := JWTClaim{
 		Email: user.Email,
 		Name:  user.GetName(),
-		Role:  user.Role.String(),
+		Role:  RoleType(user.Role).String(),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: now.Add(20 * time.Second).Unix(),
-			Id:        jwtId,
+			Id:        user.Email + strconv.FormatInt(now.Unix(), 10),
 			IssuedAt:  now.Unix(),
 			NotBefore: 0,
 		},
 	}
-
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return tokenClaims.SignedString(GetJWTSecretKeyFromConfig())
 }

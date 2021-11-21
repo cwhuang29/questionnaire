@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// TODO
 type Login struct {
 	UserID    string
 	User      User      `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`

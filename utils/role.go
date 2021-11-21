@@ -1,4 +1,4 @@
-package constants
+package utils
 
 type RoleType int
 

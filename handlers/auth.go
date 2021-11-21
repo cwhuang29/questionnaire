@@ -45,7 +45,7 @@ func RegisterV2(c *gin.Context) {
 	}
 
 	if databases.IsAdminUser(newUser.Email) {
-		newUser.Role = constants.Admin
+		newUser.Role = int(utils.Admin)
 	}
 
 	hashedPwd, err := utils.HashPassword(newUser.Password)
