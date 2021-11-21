@@ -11,6 +11,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func HandlePreflight(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "PUT,POST")
+	c.Header("Access-Control-Max-Age", "600")
+	c.Header("Access-Control-Request-Headers", "Authorization")
+	c.String(http.StatusOK, "success")
+}
+
 func Me(c *gin.Context) {
 	email := c.MustGet("email").(string)
 	name := c.MustGet("name").(string)
