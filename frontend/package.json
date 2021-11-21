@@ -3,17 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "11.6.0",
+    "@emotion/styled": "11.6.0",
+    "@mui/icons-material": "5.1.1",
+    "@mui/lab": "5.0.0-alpha.55",
     "@mui/material": "5.1.1",
-    "@mui/styled-engine-sc": "5.1.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "0.24.0",
     "formik": "2.2.9",
+    "history": "5.1.0",
+    "prop-types": "15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-redux": "7.2.6",
+    "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
-    "styled-components": "5.3.3",
+    "redux": "4.1.2",
+    "redux-logger": "3.0.6",
+    "redux-thunk": "2.4.0",
     "web-vitals": "^1.0.1",
     "yup": "0.32.11"
   },
@@ -26,16 +35,36 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "airbnb"
+      "airbnb",
+      "plugin:import/errors",
+      "plugin:import/warnings"
     ],
     "rules": {
-      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "react/jsx-filename-extension": [
+        1,
+        {
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
+        }
+      ],
       "react/function-component-definition": [
         2,
         {
           "namedComponents": "arrow-function"
         }
       ]
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "moduleDirectory": [
+            "node_modules",
+            "src/"
+          ]
+        }
+      }
     }
   },
   "browserslist": {
@@ -51,6 +80,7 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-airbnb": "18.2.1"
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-plugin-import": "^2.25.3"
   }
 }

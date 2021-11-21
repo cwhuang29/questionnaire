@@ -1,4 +1,7 @@
-import { createBrowserHistory } from 'history'
+import { createBrowserHistory } from 'history';
 
 // Create a custom history object used by the React Router
-export const history = createBrowserHistory()
+// eslint-disable-next-line import/prefer-default-export
+const history = createBrowserHistory();
+
+export default history;
