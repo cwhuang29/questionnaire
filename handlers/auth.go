@@ -11,12 +11,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func HandlePreflight(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
+	c.Header("Access-Control-Max-Age", "600")
+	c.String(http.StatusOK, "success")
+}
+
 func Me(c *gin.Context) {
 	email := c.MustGet("email").(string)
 	name := c.MustGet("name").(string)
 	role := c.MustGet("role").(string)
 
 	user := databases.GetUser(email)
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
+	c.Header("Access-Control-Max-Age", "600")
 	c.JSON(http.StatusOK, gin.H{
 		"email": email,
 		"name":  name,
@@ -61,11 +73,15 @@ func RegisterV2(c *gin.Context) {
 		return
 	}
 
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
+	c.Header("Access-Control-Max-Age", "600")
 	c.JSON(http.StatusCreated, gin.H{})
 }
 
 func LogoutV2(c *gin.Context) {
-	c.SetCookie(constants.CookieAuthToken, "", 0, "/", "", true, true) // Set maxAge to 0 cause values on "Expires/Max-Age" cell on dev-tools's "Application" tab become "Session"
+	// c.SetCookie(constants.CookieAuthToken, "", 0, "/", "", true, true) // Set maxAge to 0 cause values on "Expires/Max-Age" cell on dev-tools's "Application" tab become "Session"
 	// c.Header("Location", constants.URLLandingPage)
 	c.JSON(http.StatusResetContent, gin.H{})
 }
@@ -98,9 +114,7 @@ func LoginV2(c *gin.Context) {
 
 	token, err := utils.GenerateJWTToken(user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -111,6 +125,11 @@ func LoginV2(c *gin.Context) {
 	// if user.Role.IsAdmin() {
 	//     c.SetCookie(constants.CookieIsAdmin, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
 	// }
-	c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", true, true)
+
+	// c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", true, true)
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
+	c.Header("Access-Control-Max-Age", "600")
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
