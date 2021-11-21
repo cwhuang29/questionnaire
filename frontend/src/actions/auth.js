@@ -18,11 +18,11 @@ export const register = (data) => (
   })
   .catch((error) => Promise.reject(handleErrorMessage(error)));
 
-export const login = (account, password) => (dispatch) => AuthService.login(account, password)
-  .then((data) => {
+export const login = (data) => (dispatch) => AuthService.login(data)
+  .then((response) => {
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: { user: data },
+      payload: { user: response },
     });
 
     return Promise.resolve();

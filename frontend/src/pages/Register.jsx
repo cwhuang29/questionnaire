@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Box, TextField, Alert, FormControl, InputLabel, Select, MenuItem,
 } from '@mui/material';
@@ -41,6 +42,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -55,7 +57,7 @@ const Register = () => {
       setLoading(true);
       setErrorMessage('');
 
-      await register(values)
+      await dispatch(register(values))
         .then(() => history.push('/login'))
         .catch((error) => {
           setLoading(false);
@@ -68,7 +70,9 @@ const Register = () => {
     <Box
       component="form"
       onSubmit={formik.handleSubmit}
+      sx={{ mt: 20 }}
     >
+
       <TextField
         fullWidth
         id="firstName"

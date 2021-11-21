@@ -5,8 +5,9 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { login } from 'actions/auth';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-const validationSchema = {
+const validationSchema = Yup.object({
   email: Yup
     .string('Enter your email')
     .email('Enter a valid email')
@@ -15,12 +16,13 @@ const validationSchema = {
     .string('Enter your password')
     .min(8, 'Password should be of minimum 8 characters length')
     .required('Password is required'),
-};
+});
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -32,11 +34,11 @@ const Login = () => {
       setLoading(true);
       setErrorMessage('');
 
-      await login(values)
+      await dispatch(login(values))
         .then(() => history.push('/'))
         .catch((error) => {
           setLoading(false);
-          setErrorMessage(error);
+          setErrorMessage(JSON.stringify(error));
         });
     },
   });
@@ -44,6 +46,8 @@ const Login = () => {
   return (
     <Box
       component="form"
+      sx={{ mt: 20 }}
+      onSubmit={formik.handleSubmit}
     >
       <TextField
         fullWidth
