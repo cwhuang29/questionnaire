@@ -55,6 +55,10 @@ func (c *config) check() *configError {
 		return &configError{errType: "database", err: "password"}
 	}
 
+	if c.JWT.Secret == "" {
+		return &configError{errType: "jwt", err: "secret"}
+	}
+
 	if len(c.Admin.Email) == 0 {
 		return &configError{errType: "admin", err: "email"}
 	}
@@ -101,6 +105,7 @@ func (c *config) setOverwriteValue() {
 		{"WEB_EMAIL_REGION", "app.email.region", &cfg.Email.Region},
 		{"WEB_EMAIL_NUM_PER_DAY", "app.email.numPerDay", &cfg.Email.NumPerDay},
 		{"WEB_EMAIL_NUM_PER_SEC", "app.email.numPerSec", &cfg.Email.NumPerSec},
+		{"WEB_JWT_SECRET", "jwt.secret", &cfg.JWT.Secret},
 	}
 
 	for _, e := range envs {
@@ -123,7 +128,7 @@ func Initial(configFilePath string) error {
 		return err
 	}
 
-	cfg.setOverwriteValue()
 	cfg.setDefaultValue()
+	cfg.setOverwriteValue()
 	return nil
 }

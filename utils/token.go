@@ -13,7 +13,7 @@ func StoreLoginToken(id, loginMaxAge int) string {
 	token := GetUUID()
 
 	if ok := databases.InsertLoginToken(id, token, loginMaxAge); !ok {
-		return StoreLoginToken(id, loginMaxAge) // Try again if we got duplicate tokens
+		token = StoreLoginToken(id, loginMaxAge) // Try again if we got duplicate tokens
 	}
 	return token
 }

@@ -43,4 +43,14 @@ const (
 	EmailRequestAgain     = "Please request a reset password email again"
 	EmailIsAddressCorrect = "Did you fill in the correct email address?"
 	EmailTryLater         = "Please try again in one hour"
+
+	JWTValidationErrorMalformed        = "Token is malformed"
+	JWTValidationErrorUnverifiable     = "Token could not be verified because of signing problems"
+	JWTValidationErrorSignatureInvalid = "Signature validation failed"
+	JWTValidationErrorExpired          = "Token is expired"
+	JWTValidationErrorNotValidYet      = "Token is not yet valid before sometime"
+	JWTPayloadMalformed                = "JWT token payload is improper"
+	JWTUnknown                         = "Can not handle this token"
+
+	EnumTypeErr = "Invalid type of %s"
 )

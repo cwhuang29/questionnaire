@@ -8,9 +8,9 @@ import (
 )
 
 // Each mandarin symbol takes 3 - 4 bytes.
-// The following `limit` is a value to measured how many "characters" can be displayed,
+// The following `limit` is a value to measure how many "characters" can be displayed,
 // It measures not only number of characters, but also the width of each character.
-// `ratio` is the width ratio of Chinese words versus English characters
+// `ratio` is the width ratio of Chinese words versus English characters (varies from CSS and fonts used in frontend)
 func DecodeRuneStringForFrontend(s string, limit float64, ratio float64) string {
 	idx := 0
 

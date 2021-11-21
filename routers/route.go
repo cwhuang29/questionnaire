@@ -5,45 +5,39 @@ import (
 
 	"github.com/cwhuang29/questionnaire/config"
 	"github.com/cwhuang29/questionnaire/handlers"
+	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 )
 
 var (
 	router    = gin.Default() // Creates a gin router with default middleware: logger and recovery (crash-free) middleware
-	htmlFiles = []string{
-		"public/views/medication.html",
-		"public/views/pharma.html",
-		"public/views/about.html",
-		"public/views/home.html",
-		"public/views/browse.html",
-		"public/views/login.html",
-		"public/views/register.html",
-		"public/views/overview.html",
-		"public/views/editor.html",
-		"public/views/auth/passwordResetRequest.html",
-		"public/views/auth/passwordResetForm.html",
-		"public/views/templates/header.tmpl",
-		"public/views/templates/navbar.tmpl",
-		"public/views/templates/footer.tmpl",
-		"public/views/templates/error_message_notification.tmpl",
-		"public/views/templates/notice_message_notification.tmpl",
-		"public/views/templates/one_image.tmpl",
-		"public/views/templates/two_images.tmpl",
-		"public/views/templates/three_images.tmpl",
-	}
+	jwtSecret = utils.GetJWTSecretKeyFromConfig(config.GetCopy().JWT.Secret)
+	// htmlFiles = []string{"public/views/about.html", "public/views/home.html"}
 )
 
 func loadAssets() {
-	router.Static("/upload/images", "public/upload/images")
-	router.Static("/js", "public/js")
-	router.Static("/css", "public/css") // Static serves files from the given file system root. Internally a http.FileServer is used
-	router.Static("/assets", "public/assets")
-	router.StaticFile("/favicon.ico", "public/assets/favicon-64.ico") // StaticFile registers a single route in order to serve a single file of the local filesystem
-	router.LoadHTMLFiles(htmlFiles...)                                // router.LoadHTMLGlob("public/*")
+	// router.Static("/upload/images", "public/upload/images") // Static serves files from the given file system root. Internally a http.FileServer is used
+	// router.Static("/js", "public/js")
+	// router.Static("/css", "public/css")
+	// router.Static("/assets", "public/assets")
+	// router.StaticFile("/favicon.ico", "public/assets/favicon-64.ico") // StaticFile registers a single route in order to serve a single file of the local filesystem
+	// router.LoadHTMLFiles(htmlFiles...)                                // router.LoadHTMLGlob("public/*")
 }
 
-func injectRoutes() {
-	admin := router.Group("/admin") // /overview/... -> /admin/overview/...
+func injectRoutesV2() {
+	v2 := router.Group("/v2")
+
+	v2.Use(AuthRequired())
+	{
+		v2.Get("/login", handlers.LoginV2)
+
+	}
+}
+
+func injectRoutesV1() {
+	v1 := router.Group("/v1")
+
+	admin := v1.Group("/admin") // /overview/... -> /admin/overview/...
 	admin.Use(AdminRequired())
 	{
 		admin.GET("/overview", handlers.AdminOverview)
@@ -59,7 +53,7 @@ func injectRoutes() {
 		}
 	}
 
-	articles := router.Group("/articles")
+	articles := v1.Group("/articles")
 	{
 		articles.GET("/", func(c *gin.Context) { c.Redirect(http.StatusFound, "/articles/weekly-update") })
 		articles.GET("/weekly-update", handlers.Overview) // The main page
@@ -77,7 +71,7 @@ func injectRoutes() {
 		articles.PUT("/like/:articleId", handlers.UpdateLike)
 	}
 
-	password := router.Group("/password")
+	password := v1.Group("/password")
 	{
 		password.GET("/reset", handlers.PasswordResetRequest)
 		password.GET("/reset/:token", handlers.PasswordResetForm)
@@ -88,16 +82,16 @@ func injectRoutes() {
 		}
 	}
 
-	router.GET("/register", handlers.RegisterView)
-	router.GET("/login", handlers.LoginView)
-	router.POST("/register", handlers.Register)
-	router.POST("/login", handlers.Login)
-	router.POST("/logout", handlers.Logout)
+	v1.GET("/register", handlers.RegisterView)
+	v1.GET("/login", handlers.LoginView)
+	v1.POST("/register", handlers.Register)
+	v1.POST("/login", handlers.Login)
+	v1.POST("/logout", handlers.Logout)
 
-	router.GET("/home", handlers.Home)
-	router.GET("/about", handlers.About)
-	router.GET("/contact-us", handlers.ContactUs)
-	router.GET("/", func(c *gin.Context) { c.Redirect(http.StatusFound, "/articles/weekly-update") })
+	v1.GET("/home", handlers.Home)
+	v1.GET("/about", handlers.About)
+	v1.GET("/contact-us", handlers.ContactUs)
+	v1.GET("/", func(c *gin.Context) { c.Redirect(http.StatusFound, "/articles/weekly-update") })
 }
 
 func serve() {
@@ -123,6 +117,6 @@ func Router() {
 	router.MaxMultipartMemory = 16 << 20 // Set a lower memory limit for multipart forms (default is 32 MiB)
 
 	loadAssets()
-	injectRoutes()
+	injectRoutesV1()
 	serve()
 }

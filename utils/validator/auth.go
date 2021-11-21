@@ -19,7 +19,7 @@ var (
 	}
 )
 
-func ValidateLoginForm(email string, password string) (err map[string]string) {
+func ValidateLoginForm(email, password string) (err map[string]string) {
 	err = make(map[string]string)
 
 	if len(email) == 0 {
@@ -64,4 +64,20 @@ func ValidateRegisterForm(newUser models.User) (err map[string]string) {
 	}
 
 	return err
+}
+
+func ValidateLoginFormV2(email, password, role string) (err map[string]string) {
+	err = make(map[string]string)
+
+	if len(email) == 0 {
+		err["email"] = errInputMsg["empty"]
+	} else if !utils.IsEmailValid(email) {
+		err["email"] = errInputMsg["emailInvalid"]
+	}
+
+	if len(password) == 0 {
+		err["password"] = errInputMsg["empty"]
+	}
+
+	return
 }

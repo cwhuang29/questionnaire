@@ -25,6 +25,7 @@ type config struct {
 	Database `yaml:"database,omitempty"`
 	Admin    `yaml:"admin,omitempty"`
 	Email    `yaml:"email,omitempty"`
+	JWT      `yaml:"jwt"`
 }
 
 type App struct {
@@ -54,4 +55,8 @@ type Email struct {
 	Region    string `yaml:"region,omitempty"`
 	NumPerDay string `yaml:"numPerDay,omitempty"`
 	NumPerSec string `yaml:"numPerSec,omitempty"`
+}
+
+type JWT struct {
+	Secret string `yaml:"jwt"`
 }

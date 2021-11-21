@@ -24,3 +24,7 @@ email:
   region: us-east-1
   numPerDay: 50000
   numPerSec: 14
+
+
+jwt:
+  secret: XXXX # For testing purpose. JWT should be stored in env

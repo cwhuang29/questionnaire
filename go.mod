@@ -6,6 +6,7 @@ require (
 	github.com/aws/aws-sdk-go v1.42.9
 	github.com/cwhuang29/article-sharing-website v0.0.0-20211011063341-6e198c68e037 // indirect
 	github.com/gin-gonic/gin v1.7.4
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.3.0
 	github.com/russross/blackfriday v1.6.0
 	github.com/sirupsen/logrus v1.8.1
