@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"github.com/cwhuang29/article-sharing-website/databases"
-	"github.com/cwhuang29/article-sharing-website/databases/models"
+	"github.com/cwhuang29/questionnaire/databases"
+	"github.com/cwhuang29/questionnaire/databases/models"
 )
 
 func GetPasswordResetTokenInstance(token string) models.Password {

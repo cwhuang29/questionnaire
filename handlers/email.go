@@ -7,8 +7,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
-	"github.com/cwhuang29/article-sharing-website/config"
-	"github.com/cwhuang29/article-sharing-website/constants"
+	"github.com/cwhuang29/questionnaire/config"
+	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/sirupsen/logrus"
 )
 
