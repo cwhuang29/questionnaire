@@ -1,0 +1,51 @@
+{
+  "extends": ["airbnb", "plugin:react-hooks/recommended", "prettier"],
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "plugins": ["react", "react-hooks", "prettier"],
+  "rules": {
+    "no-plusplus": 0,
+    "react/forbid-prop-types": 0,
+    "react/jsx-filename-extension": 0,
+    "react/jsx-space-before-closing": 0,
+    "react/jsx-no-target-blank": 0,
+    "react/jsx-tag-spacing": ["error", { "beforeSelfClosing": "always" }],
+    "jsx-a11y/no-static-element-interactions": 0,
+    "import/extensions": 0, // skip import extensions
+    "import/no-named-as-default": 0,
+    "import/prefer-default-export": 0,
+    "import/no-extraneous-dependencies": 0,
+    "no-console": 1, // Change to 0 to disable warning
+    "no-unreachable": 1,
+    "no-unused-vars": 1,
+    "no-use-before-define": 0,
+    "no-extra-semi": 0,
+    "prettier/prettier": [1, {
+        semi: true,
+        tabWidth: 2,
+        trailingComma: "es5",
+        singleQuote: true,
+        bracketSpacing: true,
+        jsxSingleQuote: true,
+    }]
+  },
+  "globals": {
+    "jest": false
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src", "test"]
+      },
+      "babel-module": {
+        "alias": {
+          "@": "./src",
+        }
+      }
+    }
+  }
+}
+

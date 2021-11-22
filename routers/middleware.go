@@ -17,6 +17,64 @@ var (
 	log = logger.New("Middleware")
 )
 
+func AllowCORS() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Next()
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
+		c.Header("Access-Control-Max-Age", "600")
+	}
+}
+
+// parse and validate token for six things:
+// validationErrorMalformed        -> token is malformed
+// validationErrorUnverifiable     -> token could not be verified because of signing problems
+// validationErrorSignatureInvalid -> signature validation failed
+// validationErrorExpired          -> exp validation failed
+// validationErrorNotValidYet      -> nbf validation failed
+// validationErrorIssuedAt         -> iat validation failed
+func AuthRequired() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		t := time.Now()
+		auth := c.GetHeader("Authorization")
+		token := strings.Split(auth, "Bearer ")[1]
+
+		tokenClaims, err := jwt.ParseWithClaims(token, &utils.JWTClaim{}, func(token *jwt.Token) (i interface{}, err error) {
+			// if someErrorOccurs { return nil, customizedErr }
+			return utils.GetJWTSecretKeyFromConfig(), nil
+		})
+
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": utils.GetJWTErrMsg(err)})
+			return
+		}
+
+		claims, ok := tokenClaims.Claims.(*utils.JWTClaim)
+		if ok && tokenClaims.Valid && claims.Email != "" {
+			c.Set("email", claims.Email)
+			c.Set("name", claims.Name)
+			c.Set("role", claims.Role)
+			c.Next()
+		} else {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": constants.JWTPayloadMalformed})
+			return
+		}
+
+		fields := map[string]interface{}{
+			"method":  c.Request.Method,
+			"url":     c.Request.URL.String(),
+			"status":  c.Writer.Status(),
+			"latency": time.Since(t),
+			"email":   claims.Email,
+			"name":    claims.Name,
+			"role":    claims.Role,
+		}
+		log.Info(fields)
+	}
+}
+
 func CSRFProtection() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		csrfHeaders := c.Request.Header["X-Csrf-Token"]
@@ -51,53 +109,6 @@ func AdminRequired() gin.HandlerFunc {
 			"status":  c.Writer.Status(),
 			"latency": time.Since(t),
 			"email":   cookieEmail,
-		}
-		log.Info(fields)
-	}
-}
-
-// parse and validate token for six things:
-// validationErrorMalformed        -> token is malformed
-// validationErrorUnverifiable     -> token could not be verified because of signing problems
-// validationErrorSignatureInvalid -> signature validation failed
-// validationErrorExpired          -> exp validation failed
-// validationErrorNotValidYet      -> nbf validation failed
-// validationErrorIssuedAt         -> iat validation failed
-func AuthRequired() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		t := time.Now()
-		auth := c.GetHeader("Authorization")
-		token := strings.Split(auth, "Bearer ")[1]
-
-		tokenClaims, err := jwt.ParseWithClaims(token, &utils.JWTClaim{}, func(token *jwt.Token) (i interface{}, err error) {
-			// if someErrorOccurs { return nil, customizedErr }
-			return utils.GetJWTSecretKeyFromConfig(), nil
-		})
-
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": utils.GetJWTErrMsg(err)})
-			return
-		}
-
-		claims, ok := tokenClaims.Claims.(*utils.JWTClaim)
-		if ok && tokenClaims.Valid && claims.Email != "" && claims.Role != "" {
-			c.Set("email", claims.Email)
-			c.Set("name", claims.Name)
-			c.Set("role", claims.Role)
-			c.Next()
-		} else {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": constants.JWTPayloadMalformed})
-			return
-		}
-
-		fields := map[string]interface{}{
-			"method":  c.Request.Method,
-			"url":     c.Request.URL.String(),
-			"status":  c.Writer.Status(),
-			"latency": time.Since(t),
-			"email":   claims.Email,
-			"name":    claims.Name,
-			"role":    claims.Role,
 		}
 		log.Info(fields)
 	}

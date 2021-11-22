@@ -12,10 +12,6 @@ import (
 )
 
 func HandlePreflight(c *gin.Context) {
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
-	c.Header("Access-Control-Max-Age", "600")
 	c.String(http.StatusOK, "success")
 }
 
@@ -25,10 +21,6 @@ func Me(c *gin.Context) {
 	role := c.MustGet("role").(string)
 
 	user := databases.GetUser(email)
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
-	c.Header("Access-Control-Max-Age", "600")
 	c.JSON(http.StatusOK, gin.H{
 		"email": email,
 		"name":  name,
@@ -73,10 +65,6 @@ func RegisterV2(c *gin.Context) {
 		return
 	}
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
-	c.Header("Access-Control-Max-Age", "600")
 	c.JSON(http.StatusCreated, gin.H{})
 }
 
@@ -127,9 +115,5 @@ func LoginV2(c *gin.Context) {
 	// }
 
 	// c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", true, true)
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-	c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
-	c.Header("Access-Control-Max-Age", "600")
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
