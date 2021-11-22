@@ -8,12 +8,10 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 const validationSchema = Yup.object({
-  email: Yup
-    .string('Enter your email')
+  email: Yup.string('Enter your email')
     .email('Enter a valid email')
     .required('Email is required'),
-  password: Yup
-    .string('Enter your password')
+  password: Yup.string('Enter your password')
     .min(8, 'Password should be of minimum 8 characters length')
     .required('Password is required'),
 });
@@ -44,16 +42,12 @@ const Login = () => {
   });
 
   return (
-    <Box
-      component="form"
-      sx={{ mt: 20 }}
-      onSubmit={formik.handleSubmit}
-    >
+    <Box component='form' sx={{ mt: 20 }} onSubmit={formik.handleSubmit}>
       <TextField
         fullWidth
-        id="email"
-        name="email"
-        label="Email"
+        id='email'
+        name='email'
+        label='Email'
         value={formik.values.email}
         onChange={formik.handleChange}
         error={formik.touched.email && Boolean(formik.errors.email)}
@@ -61,22 +55,21 @@ const Login = () => {
       />
       <TextField
         fullWidth
-        id="password"
-        name="password"
-        label="Password"
-        type="password"
+        id='password'
+        name='password'
+        label='Password'
+        type='password'
         value={formik.values.password}
         onChange={formik.handleChange}
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
 
-      <LoadingButton loading={loading} variant="contained" type="submit">
+      <LoadingButton loading={loading} variant='contained' type='submit'>
         Submit
       </LoadingButton>
 
-      {errorMessage
-      && <Alert severity="error">{errorMessage}</Alert>}
+      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
     </Box>
   );
 };

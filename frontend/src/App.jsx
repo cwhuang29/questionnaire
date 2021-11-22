@@ -13,26 +13,23 @@ const App = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  useEffect(
-    () => {
-      history.listen(() => {
-        dispatch(clearMessage());
-      });
-    },
-    [dispatch],
-  );
+  useEffect(() => {
+    history.listen(() => {
+      dispatch(clearMessage());
+    });
+  }, [dispatch]);
 
   return (
     <Router history={history}>
-      <header className="App-header">
+      <header className='App-header'>
         <Menu currentUser={currentUser} />
       </header>
 
       <Switch>
-        <Route exact path="/register" component={Register} />
-        <Route exact path="/login" component={Login} />
+        <Route exact path='/register' component={Register} />
+        <Route exact path='/login' component={Login} />
         <Route
-          path=""
+          path=''
           render={() => <Paper sx={{ textAlign: 'center' }}>404</Paper>}
         />
       </Switch>

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
-  Box, TextField, Alert, FormControl, InputLabel, Select, MenuItem,
+  Box,
+  TextField,
+  Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useHistory } from 'react-router-dom';
@@ -12,30 +18,26 @@ import ROLES from 'shared/constant/roles';
 import { register } from 'actions/auth';
 
 const validationSchema = Yup.object({
-  firstName: Yup
-    .string('Enter your first name')
-    .required('First name is required'),
-  lastName: Yup
-    .string('Enter your last name')
-    .required('Last name is required'),
-  email: Yup
-    .string('Enter your email')
+  firstName: Yup.string('Enter your first name').required(
+    'First name is required'
+  ),
+  lastName: Yup.string('Enter your last name').required(
+    'Last name is required'
+  ),
+  email: Yup.string('Enter your email')
     .email('Enter a valid email')
     .required('Email is required'),
-  password: Yup
-    .string('Enter your password')
+  password: Yup.string('Enter your password')
     .min(8, 'Password should be of minimum 8 characters length')
     .required('Password is required'),
   changepassword: Yup.string().when('password', {
-    is: (val) => (!!(val && val.length > 0)),
+    is: (val) => !!(val && val.length > 0),
     then: Yup.string().oneOf(
       [Yup.ref('password')],
-      'Both password need to be the same',
+      'Both password need to be the same'
     ),
   }),
-  role: Yup
-    .string('Select a role')
-    .required('Role is required'),
+  role: Yup.string('Select a role').required('Role is required'),
 });
 
 const Register = () => {
@@ -67,17 +69,12 @@ const Register = () => {
   });
 
   return (
-    <Box
-      component="form"
-      onSubmit={formik.handleSubmit}
-      sx={{ mt: 20 }}
-    >
-
+    <Box component='form' onSubmit={formik.handleSubmit} sx={{ mt: 20 }}>
       <TextField
         fullWidth
-        id="firstName"
-        name="firstName"
-        label="First Name"
+        id='firstName'
+        name='firstName'
+        label='First Name'
         value={formik.values.firstName}
         onChange={formik.handleChange}
         error={formik.touched.firstName && Boolean(formik.errors.firstName)}
@@ -85,9 +82,9 @@ const Register = () => {
       />
       <TextField
         fullWidth
-        id="lastName"
-        name="lastName"
-        label="Last Name"
+        id='lastName'
+        name='lastName'
+        label='Last Name'
         value={formik.values.lastName}
         onChange={formik.handleChange}
         error={formik.touched.lastName && Boolean(formik.errors.lastName)}
@@ -95,9 +92,9 @@ const Register = () => {
       />
       <TextField
         fullWidth
-        id="email"
-        name="email"
-        label="Email"
+        id='email'
+        name='email'
+        label='Email'
         value={formik.values.email}
         onChange={formik.handleChange}
         error={formik.touched.email && Boolean(formik.errors.email)}
@@ -105,10 +102,10 @@ const Register = () => {
       />
       <TextField
         fullWidth
-        id="password"
-        name="password"
-        label="Password"
-        type="password"
+        id='password'
+        name='password'
+        label='Password'
+        type='password'
         value={formik.values.password}
         onChange={formik.handleChange}
         error={formik.touched.password && Boolean(formik.errors.password)}
@@ -116,26 +113,28 @@ const Register = () => {
       />
 
       <FormControl fullWidth>
-        <InputLabel id="role-label">Role</InputLabel>
+        <InputLabel id='role-label'>Role</InputLabel>
         <Select
-          labelId="role-label"
-          id="role"
-          name="role"
+          labelId='role-label'
+          id='role'
+          name='role'
           value={formik.values.role}
-          label="Age"
+          label='Age'
           onChange={formik.handleChange}
         >
-          {ROLES.map(({value, label}) => <MenuItem key={value} value={value}>{label}</MenuItem>)}
+          {ROLES.map(({ value, label }) => (
+            <MenuItem key={value} value={value}>
+              {label}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
-      <LoadingButton loading={loading} variant="contained" type="submit">
+      <LoadingButton loading={loading} variant='contained' type='submit'>
         Submit
       </LoadingButton>
 
-      {errorMessage
-      && <Alert severity="error">{errorMessage}</Alert>}
-
+      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
     </Box>
   );
 };
