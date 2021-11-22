@@ -19,12 +19,12 @@ var (
 
 func AllowCORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Next()
-
 		c.Header("Access-Control-Allow-Origin", "*")
 		c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
 		c.Header("Access-Control-Max-Age", "600")
+		// After calling c.JSON(), headers are all set
+		c.Next()
 	}
 }
 

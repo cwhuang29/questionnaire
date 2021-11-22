@@ -69,8 +69,6 @@ func RegisterV2(c *gin.Context) {
 }
 
 func LogoutV2(c *gin.Context) {
-	// c.SetCookie(constants.CookieAuthToken, "", 0, "/", "", true, true) // Set maxAge to 0 cause values on "Expires/Max-Age" cell on dev-tools's "Application" tab become "Session"
-	// c.Header("Location", constants.URLLandingPage)
 	c.JSON(http.StatusResetContent, gin.H{})
 }
 
@@ -106,14 +104,7 @@ func LoginV2(c *gin.Context) {
 		return
 	}
 
-	// token := utils.StoreLoginToken(user.ID, constants.LoginMaxAge)
 	// c.Header("Location", constants.URLLandingPage)
-	// c.SetCookie(constants.CookieLoginToken, token, constants.LoginMaxAge, "/", "", true, true)
-	// c.SetCookie(constants.CookieLoginEmail, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
-	// if user.Role.IsAdmin() {
-	//     c.SetCookie(constants.CookieIsAdmin, user.Email, constants.LoginMaxAge, "/", "", true, false) // Frontend relies on this cookie
-	// }
-
-	// c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", true, true)
+	// c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", false, true)
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
