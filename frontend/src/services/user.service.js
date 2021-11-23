@@ -1,7 +1,7 @@
+import handleErrorMessage from 'shared/utils/handleErrorMessage';
+import APIS from 'shared/constant/apis';
 import { localAPI } from './roots';
 import authHeader from './auth-header';
-import handleErrorMessage from '../shared/utils/handleErrorMessage';
-import APIS from '../shared/constant/apis';
 
 const getCurrentMemberData = (token = authHeader()) =>
   localAPI

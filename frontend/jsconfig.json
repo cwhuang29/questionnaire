@@ -8,6 +8,7 @@
         "downlevelIteration": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
+        "jsx": "react",
         "paths": {
             "/*":["./*"],
             "@/*": ["src/*"],

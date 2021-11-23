@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Router, Switch, Route } from 'react-router-dom';
-
-import Menu from 'components/Menu';
 import { Paper } from '@mui/material';
 import history from 'helpers/history';
 import { clearMessage } from 'actions/message';
-import Register from './pages/Register';
-import Login from './pages/Login';
+import Register from 'pages/Register';
+import Login from 'pages/Login';
+import Home from 'pages/Home';
+import NavBar from 'pages/NavBar';
+import Form from 'pages/Form';
 
 const App = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -21,15 +22,14 @@ const App = () => {
 
   return (
     <Router history={history}>
-      <header className='App-header'>
-        <Menu currentUser={currentUser} />
-      </header>
-
+      <NavBar currentUser={currentUser} />
       <Switch>
+        <Route exact path='/' component={Home} />
         <Route exact path='/register' component={Register} />
         <Route exact path='/login' component={Login} />
+        <Route path='/form/:formId' component={Form} />
         <Route
-          path=''
+          path='*'
           render={() => <Paper sx={{ textAlign: 'center' }}>404</Paper>}
         />
       </Switch>
