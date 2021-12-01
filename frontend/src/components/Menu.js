@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -12,13 +12,11 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import Proptypes from 'prop-types';
 
-
-const Menu = ({ currentUser }) => {
+const Menu = ({ user }) => {
   const history = useHistory();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-
       <AppBar>
         <Toolbar>
           <IconButton
@@ -33,14 +31,18 @@ const Menu = ({ currentUser }) => {
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             Questionnaire
           </Typography>
-          {currentUser ? (
+          {user ? (
             <Link href='/profile' sx={{ color: 'white' }}>
               Profile
             </Link>
           ) : (
             <>
-              <Button color='inherit' onClick={() => history.push('/login')}>Login</Button>
-              <Button color='inherit' onClick={() => history.push('/register')}>Register</Button>
+              <Button color='inherit' onClick={() => history.push('/login')}>
+                Login
+              </Button>
+              <Button color='inherit' onClick={() => history.push('/register')}>
+                Register
+              </Button>
             </>
           )}
         </Toolbar>
@@ -50,11 +52,11 @@ const Menu = ({ currentUser }) => {
 };
 
 Menu.defaultProps = {
-  currentUser: {}
+  user: {},
 };
 
 Menu.propTypes = {
-  currentUser: Proptypes.object,
+  user: Proptypes.object,
 };
 
 export default Menu;

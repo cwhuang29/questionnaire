@@ -11,7 +11,7 @@ import NavBar from 'pages/NavBar';
 import Form from 'pages/Form';
 
 const App = () => {
-  const { user: currentUser } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,14 +22,15 @@ const App = () => {
 
   return (
     <Router history={history}>
-      <NavBar currentUser={currentUser} />
+      <NavBar user={user} />
       <Switch>
         <Route exact path='/' component={Home} />
-        <Route exact path='/register' component={Register} />
-        <Route exact path='/login' component={Login} />
+        <Route path='/home' component={Home} />
+        <Route path='/register' component={Register} />
+        <Route path='/login' render={(routeProps) => <Login />} />
         <Route path='/form/:formId' component={Form} />
         <Route
-          path='*'
+          path=''
           render={() => <Paper sx={{ textAlign: 'center' }}>404</Paper>}
         />
       </Switch>

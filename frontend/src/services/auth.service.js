@@ -31,12 +31,14 @@ const login = ({ email, password }) =>
         };
       }
 
+      // write csrf token to cookie
       localStorage.setItem('user', JSON.stringify(allResponse));
 
       return allResponse;
     });
 
 const logout = () => {
+  // clear cookie
   localStorage.removeItem('user');
 };
 

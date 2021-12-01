@@ -11,25 +11,26 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useHistory } from 'react-router-dom';
-import { useFormik } from 'formik';
+import { useFormik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 import ROLES from 'shared/constant/roles';
 import { register } from 'actions/auth';
+import { validateMsg } from 'shared/constant/messages';
 
 const validationSchema = Yup.object({
-  firstName: Yup.string('Enter your first name').required(
-    'First name is required'
-  ),
-  lastName: Yup.string('Enter your last name').required(
-    'Last name is required'
-  ),
-  email: Yup.string('Enter your email')
+  firstName: Yup.string()
+    .required(validateMsg.REGISTER.FIRST_NAME_REQUIRED)
+    .max(50, validateMsg.TOO_LONG),
+  lastName: Yup.string()
+    .required(validateMsg.REGISTER.LAST_NAME_REQUIRED)
+    .max(50, validateMsg.TOO_LONG),
+  email: Yup.string()
     .email('Enter a valid email')
-    .required('Email is required'),
-  password: Yup.string('Enter your password')
+    .required(validateMsg.REGISTER.EMAIL_REQUIRED),
+  password: Yup.string()
     .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
+    .required(validateMsg.REGISTER.PASSWORD_REQUIRED),
   changepassword: Yup.string().when('password', {
     is: (val) => !!(val && val.length > 0),
     then: Yup.string().oneOf(
@@ -37,7 +38,7 @@ const validationSchema = Yup.object({
       'Both password need to be the same'
     ),
   }),
-  role: Yup.string('Select a role').required('Role is required'),
+  role: Yup.string().required(validateMsg.REGISTER.ROLE_REQUIRED),
 });
 
 const Register = () => {
@@ -61,15 +62,39 @@ const Register = () => {
 
       await dispatch(register(values))
         .then(() => history.push('/login'))
-        .catch((error) => {
+        .catch((err) => {
           setLoading(false);
-          setErrorMessage(error);
+          console.log(err);
+
+          if (err.errHead) {
+            setErrorMessage(err.errHead + err.errBody);
+          } else {
+            const msg = Object.entries(err.error)
+              .map(([key, val]) => `${key}: ${val}`)
+              .join('<br>');
+            setErrorMessage(msg);
+          }
         });
     },
   });
 
   return (
-    <Box component='form' onSubmit={formik.handleSubmit} sx={{ mt: 20 }}>
+    <Box
+      component='form'
+      onSubmit={formik.handleSubmit}
+      sx={{
+        mt: 20,
+        width: '500px',
+        ml: 'auto',
+        mr: 'auto',
+        textAlign: 'center',
+      }}
+    >
+      {errorMessage && (
+        <Alert severity='error' style={{ marginBottom: '20px' }}>
+          {errorMessage}
+        </Alert>
+      )}
       <TextField
         fullWidth
         id='firstName'
@@ -79,6 +104,7 @@ const Register = () => {
         onChange={formik.handleChange}
         error={formik.touched.firstName && Boolean(formik.errors.firstName)}
         helperText={formik.touched.firstName && formik.errors.firstName}
+        style={{ marginBottom: '20px' }}
       />
       <TextField
         fullWidth
@@ -89,6 +115,7 @@ const Register = () => {
         onChange={formik.handleChange}
         error={formik.touched.lastName && Boolean(formik.errors.lastName)}
         helperText={formik.touched.lastName && formik.errors.lastName}
+        style={{ marginBottom: '20px' }}
       />
       <TextField
         fullWidth
@@ -99,6 +126,7 @@ const Register = () => {
         onChange={formik.handleChange}
         error={formik.touched.email && Boolean(formik.errors.email)}
         helperText={formik.touched.email && formik.errors.email}
+        style={{ marginBottom: '20px' }}
       />
       <TextField
         fullWidth
@@ -110,17 +138,18 @@ const Register = () => {
         onChange={formik.handleChange}
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
+        style={{ marginBottom: '20px' }}
       />
-
-      <FormControl fullWidth>
-        <InputLabel id='role-label'>Role</InputLabel>
+      <FormControl fullWidth style={{ marginBottom: '20px' }}>
+        <InputLabel id='role'>Role</InputLabel>
         <Select
           labelId='role-label'
           id='role'
           name='role'
           value={formik.values.role}
-          label='Age'
+          label='role'
           onChange={formik.handleChange}
+          error={formik.touched.role && Boolean(formik.errors.role)}
         >
           {ROLES.map(({ value, label }) => (
             <MenuItem key={value} value={value}>
@@ -128,15 +157,21 @@ const Register = () => {
             </MenuItem>
           ))}
         </Select>
+        {formik.touched.role && formik.errors.role && (
+          <span className='MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root'>
+            {formik.errors.role}
+          </span>
+        )}
       </FormControl>
 
       <LoadingButton loading={loading} variant='contained' type='submit'>
         Submit
       </LoadingButton>
-
-      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
     </Box>
   );
 };
+
+// TODO
+// {formik.touched.password && Boolean(formik.errors.password) && <ErrorMessage formik={formik} name="password" componen="div" className="text-red-500 text-xs" />}
 
 export default Register;

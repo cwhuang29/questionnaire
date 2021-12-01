@@ -2,18 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Menu from 'components/Menu';
 
-const NavBar = ({ currentUser }) => (
+const NavBar = ({ user }) => (
   <header className='App-header'>
-    <Menu currentUser={currentUser} />
+    <Menu user={user} />
   </header>
 );
 
 NavBar.defaultProps = {
-  currentUser: {},
+  user: {},
 };
 
 NavBar.propTypes = {
-  currentUser: PropTypes.object,
+  user: PropTypes.object,
 };
 
 export default NavBar;

@@ -1,11 +1,48 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
 import Proptypes from 'prop-types';
 
-const Greeting = ({ greeting, isShow }) => isShow ? <h1>{greeting}</h1> : null;
+const Title = styled.h1`
+  font-size: 1.5em;
+  text-align: center;
+  color: palevioletred;
+`;
+
+const Wrapper = styled.section`
+  padding: 4em;
+  background: papayawhip;
+`;
+
+const Link = ({ className, children }) => (
+  <a id={className} href='http://test.com' className={className}>
+    {children}
+  </a>
+);
+
+Link.defaultProps = {
+  className: 'HELLO !!!',
+  children: {},
+};
+
+Link.propTypes = {
+  className: Proptypes.string,
+  children: Proptypes.object,
+};
+
+const StyledLink = styled(Link)`
+  color: palevioletred;
+  font-weight: bold;
+`;
+
+const Greeting = ({ greeting, isShow }) =>
+  isShow ? <h1>{greeting}</h1> : null;
 
 const Form = () => {
-  const [form, setForm] = React.useState({title: 'form01', 'description': 'gogogo'});
+  const [form, setForm] = React.useState({
+    title: 'form01',
+    description: 'gogogo',
+  });
   const { formId } = useParams();
 
   const [greeting, setGreeting] = useState('Hello');
@@ -23,8 +60,13 @@ const Form = () => {
 
   return (
     <>
+      <Wrapper>
+        <Title>Hello !!!!</Title>
+      </Wrapper>
+      <StyledLink>Styled, exciting Link</StyledLink>
+
       <Greeting greeting={greeting} isShow={isShowGreeting} />
-      <button onClick={changeGreeting} type="button">
+      <button onClick={changeGreeting} type='button'>
         Toggle Show
       </button>
       <h1>{form.title}</h1>
@@ -35,12 +77,12 @@ const Form = () => {
 
 Greeting.defaultProps = {
   greeting: 'HELLO !!!',
-  isShow: true
-}
+  isShow: true,
+};
 
 Greeting.propTypes = {
   greeting: Proptypes.string,
-  isShow: Proptypes.bool
-}
+  isShow: Proptypes.bool,
+};
 
 export default Form;

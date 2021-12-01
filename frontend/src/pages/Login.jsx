@@ -7,13 +7,15 @@ import { login } from 'actions/auth';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
+import { validateMsg } from 'shared/constant/messages';
+
 const validationSchema = Yup.object({
   email: Yup.string('Enter your email')
     .email('Enter a valid email')
-    .required('Email is required'),
+    .required(validateMsg.LOGIN.EMAIL_REQUIRED),
   password: Yup.string('Enter your password')
     .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
+    .required(validateMsg.LOGIN.PASSWORD_REQUIRED),
 });
 
 const Login = () => {
@@ -42,7 +44,17 @@ const Login = () => {
   });
 
   return (
-    <Box component='form' sx={{ mt: 20 }} onSubmit={formik.handleSubmit}>
+    <Box
+      component='form'
+      onSubmit={formik.handleSubmit}
+      sx={{
+        mt: 20,
+        width: '500px',
+        ml: 'auto',
+        mr: 'auto',
+        textAlign: 'center',
+      }}
+    >
       <TextField
         fullWidth
         id='email'
@@ -52,6 +64,8 @@ const Login = () => {
         onChange={formik.handleChange}
         error={formik.touched.email && Boolean(formik.errors.email)}
         helperText={formik.touched.email && formik.errors.email}
+        autoFocus
+        style={{ marginBottom: '20px' }}
       />
       <TextField
         fullWidth
@@ -63,9 +77,14 @@ const Login = () => {
         onChange={formik.handleChange}
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
+        style={{ marginBottom: '20px' }}
       />
-
-      <LoadingButton loading={loading} variant='contained' type='submit'>
+      <LoadingButton
+        loading={loading}
+        variant='contained'
+        type='submit'
+        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+      >
         Submit
       </LoadingButton>
 
