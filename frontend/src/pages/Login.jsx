@@ -30,15 +30,15 @@ const Login = () => {
       password: '',
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       setLoading(true);
       setErrorMessage('');
 
       await dispatch(login(values))
         .then(() => history.push('/'))
-        .catch((error) => {
+        .catch(err => {
           setLoading(false);
-          setErrorMessage(JSON.stringify(error));
+          setErrorMessage(JSON.stringify(err));
         });
     },
   });

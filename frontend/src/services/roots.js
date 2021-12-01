@@ -18,4 +18,6 @@ const httpConfig = {
   headers: { 'Content-Type': 'application/json' },
 };
 
-export const localAPI = axios.create(httpConfig);
+const fetch = axios.create(httpConfig);
+
+export default fetch;

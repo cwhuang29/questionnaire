@@ -52,11 +52,9 @@ const Form = () => {
 
   React.useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/posts/${formId}`)
-      .then((res) => res.json())
-      .then((data) => setForm(data));
+      .then(res => res.json())
+      .then(data => setForm(data));
   }, [formId]);
-
-  // if (!form) return null;
 
   return (
     <>

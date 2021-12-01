@@ -3,5 +3,5 @@ export default [
   { value: 1, label: '家長' },
   { value: 2, label: '老師' },
   { value: 3, label: '研究者' },
-  // { value: 4, label: 'Admin' },
+  { value: 4, label: '管理者' },
 ];

@@ -1,10 +1,4 @@
-import {
-  REGISTER_FAIL,
-  REGISTER_SUCCESS,
-  LOGIN_FAIL,
-  LOGIN_SUCCESS,
-  LOGOUT,
-} from '../actions/types';
+import { AUTH_STATUS } from '../actions/types';
 
 const user = null;
 
@@ -16,29 +10,29 @@ const auth = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case REGISTER_SUCCESS:
+    case AUTH_STATUS.REGISTER_SUCCESS:
       return {
         ...state,
         isLoggedIn: false,
       };
-    case REGISTER_FAIL:
+    case AUTH_STATUS.REGISTER_FAIL:
       return {
         ...state,
         isLoggedIn: false,
       };
-    case LOGIN_SUCCESS:
+    case AUTH_STATUS.LOGIN_SUCCESS:
       return {
         ...state,
         isLoggedIn: true,
         user: payload.user,
       };
-    case LOGIN_FAIL:
+    case AUTH_STATUS.LOGIN_FAIL:
       return {
         ...state,
         isLoggedIn: false,
         user: null,
       };
-    case LOGOUT:
+    case AUTH_STATUS.LOGOUT:
       return {
         ...state,
         isLoggedIn: false,

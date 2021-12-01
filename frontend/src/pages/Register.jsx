@@ -32,7 +32,7 @@ const validationSchema = Yup.object({
     .min(8, 'Password should be of minimum 8 characters length')
     .required(validateMsg.REGISTER.PASSWORD_REQUIRED),
   changepassword: Yup.string().when('password', {
-    is: (val) => !!(val && val.length > 0),
+    is: val => !!(val && val.length > 0),
     then: Yup.string().oneOf(
       [Yup.ref('password')],
       'Both password need to be the same'
@@ -56,13 +56,13 @@ const Register = () => {
       role: '',
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       setLoading(true);
       setErrorMessage('');
 
       await dispatch(register(values))
         .then(() => history.push('/login'))
-        .catch((err) => {
+        .catch(err => {
           setLoading(false);
           console.log(err);
 

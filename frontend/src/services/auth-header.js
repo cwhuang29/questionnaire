@@ -4,7 +4,7 @@ const authHeader = () => {
   // const headers = { 'X-CSRF-TOKEN': csrfToken };
 
   if (user && user.token) {
-    return { Authorization: user.token };
+    return { Authorization: `Bearer ${user.token}` };
   }
   return {};
 };

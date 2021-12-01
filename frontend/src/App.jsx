@@ -11,7 +11,7 @@ import NavBar from 'pages/NavBar';
 import Form from 'pages/Form';
 
 const App = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const App = () => {
         <Route exact path='/' component={Home} />
         <Route path='/home' component={Home} />
         <Route path='/register' component={Register} />
-        <Route path='/login' render={(routeProps) => <Login />} />
+        <Route path='/login' render={routeProps => <Login />} />
         <Route path='/form/:formId' component={Form} />
         <Route
           path=''

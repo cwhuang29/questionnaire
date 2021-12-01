@@ -1,8 +1,8 @@
-import { localAPI } from './roots';
+import fetch from './roots';
 import userService from './user.service';
 
 const register = ({ firstName, lastName, email, password, role }) =>
-  localAPI.post('/v2/register', {
+  fetch.post('/v2/register', {
     first_name: firstName,
     last_name: lastName,
     email,
@@ -11,19 +11,19 @@ const register = ({ firstName, lastName, email, password, role }) =>
   });
 
 const login = ({ email, password }) =>
-  localAPI
+  fetch
     .post('/v2/login', {
       email,
       password,
     })
-    .then(async (response) => {
+    .then(async response => {
       let allResponse = { ...response.data };
 
       if (response.data.token) {
         const header = { Authorization: `Bearer ${response.data.token}` };
         const userData = await userService
           .getCurrentUserData(header)
-          .catch((error) => Promise.reject(error));
+          .catch(error => Promise.reject(error));
 
         allResponse = {
           ...allResponse,
@@ -38,7 +38,6 @@ const login = ({ email, password }) =>
     });
 
 const logout = () => {
-  // clear cookie
   localStorage.removeItem('user');
 };
 
