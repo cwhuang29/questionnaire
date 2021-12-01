@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/cwhuang29/questionnaire/constants"
-	"github.com/cwhuang29/questionnaire/handlers"
 	"github.com/cwhuang29/questionnaire/logger"
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
@@ -19,7 +18,8 @@ var (
 
 func AllowCORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:3000") // No slash in the end
+		c.Header("Access-Control-Allow-Credentials", "true")             // To set cookies, frontend send requests with withCredentials = true // No slash in the en
 		c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
 		c.Header("Access-Control-Max-Age", "600")
@@ -39,8 +39,14 @@ func AuthRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
 		auth := c.GetHeader("Authorization")
-		token := strings.Split(auth, "Bearer ")[1]
+		tokens := strings.Split(auth, "Bearer ")
 
+		if len(tokens) < 2 {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": constants.JWTPayloadMalformed})
+			return
+		}
+
+		token := tokens[1]
 		tokenClaims, err := jwt.ParseWithClaims(token, &utils.JWTClaim{}, func(token *jwt.Token) (i interface{}, err error) {
 			// if someErrorOccurs { return nil, customizedErr }
 			return utils.GetJWTSecretKeyFromConfig(), nil
@@ -69,7 +75,7 @@ func AuthRequired() gin.HandlerFunc {
 			"latency": time.Since(t),
 			"email":   claims.Email,
 			"name":    claims.Name,
-			"role":    claims.Role,
+			"role":    utils.RoleType(claims.Role).String(),
 		}
 		log.Info(fields)
 	}
@@ -90,25 +96,23 @@ func AdminRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
 
-		userStatus, _ := handlers.GetUserStatus(c)
-		if userStatus < handlers.IsAdmin {
-			status := http.StatusUnauthorized
-			if userStatus == handlers.IsMember {
-				status = http.StatusForbidden
-			}
+		email := c.MustGet("email").(string)
+		role := c.MustGet("role").(int)
+
+		// if !utils.RoleType(role).IsAdmin() { // TODO For develop only
+		if !utils.RoleType(role).IsValid() {
 			// If use JSON(), handler functions will be triggered subsequentlly
-			c.AbortWithStatusJSON(status, gin.H{"errHead": constants.GeneralErr, "errBody": constants.PermissionDenied})
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"errHead": constants.GeneralErr, "errBody": constants.PermissionDenied})
 		}
 
 		c.Next()
 
-		cookieEmail, _ := c.Cookie(constants.CookieLoginEmail)
 		fields := map[string]interface{}{
 			"method":  c.Request.Method,
 			"url":     c.Request.URL.String(),
 			"status":  c.Writer.Status(),
 			"latency": time.Since(t),
-			"email":   cookieEmail,
+			"email":   email,
 		}
 		log.Info(fields)
 	}

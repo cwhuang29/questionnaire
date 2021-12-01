@@ -13,7 +13,7 @@ import (
 type JWTClaim struct {
 	Email string `json:"email"`
 	Name  string `json:"name"`
-	Role  string `json:"role"`
+	Role  int    `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -26,9 +26,9 @@ func GenerateJWTToken(user models.User) (string, error) {
 	claims := JWTClaim{
 		Email: user.Email,
 		Name:  user.GetName(),
-		Role:  RoleType(user.Role).String(),
+		Role:  user.Role,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: now.Add(20 * time.Second).Unix(),
+			ExpiresAt: now.Add(24 * time.Hour).Unix(),
 			Id:        user.Email + strconv.FormatInt(now.Unix(), 10),
 			IssuedAt:  now.Unix(),
 			NotBefore: 0,

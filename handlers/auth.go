@@ -18,7 +18,7 @@ func HandlePreflight(c *gin.Context) {
 func Me(c *gin.Context) {
 	email := c.MustGet("email").(string)
 	name := c.MustGet("name").(string)
-	role := c.MustGet("role").(string)
+	role := c.MustGet("role").(int)
 
 	user := databases.GetUser(email)
 	c.JSON(http.StatusOK, gin.H{
@@ -33,18 +33,18 @@ func RegisterV2(c *gin.Context) {
 	var newUser models.User
 
 	if err := c.ShouldBindJSON(&newUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"bindingError": true, "errHead": err.Error(), "errBody": constants.TryAgain})
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": err.Error(), "errBody": constants.TryAgain})
 		return
 	}
 
 	invalids := validator.ValidateRegisterForm(newUser)
 	if len(invalids) != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"bindingError": false, "error": invalids})
+		c.JSON(http.StatusBadRequest, gin.H{"error": invalids})
 		return
 	}
 
 	if tmp := databases.GetUser(newUser.Email); tmp.ID != 0 {
-		c.JSON(http.StatusConflict, gin.H{"bindingError": false, "errHead": constants.EmailOccupied, "errBody": constants.EmailOccupied})
+		c.JSON(http.StatusConflict, gin.H{"errHead": constants.EmailOccupied, "errBody": ""})
 		return
 	}
 
@@ -54,14 +54,14 @@ func RegisterV2(c *gin.Context) {
 
 	hashedPwd, err := utils.HashPassword(newUser.Password)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
 		return
 	}
 
 	newUser.Password = string(hashedPwd)
 	_, res := databases.InsertUser(newUser)
 	if !res {
-		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
 		return
 	}
 
