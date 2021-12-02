@@ -3,7 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Button, Grid } from '@mui/material';
 
-import { getAllForm } from 'actions/form';
+import { getAllForms } from 'actions/form';
+import { TitleText } from 'components/styledComponents';
 
 const FormWrapper = () => {
   const [formAll, setFormAll] = useState([]);
@@ -13,7 +14,7 @@ const FormWrapper = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllForm())
+    dispatch(getAllForms())
       .then(data => setFormAll(data.data))
       .catch(resp => {
         if (resp?.status === 401) {
@@ -25,19 +26,42 @@ const FormWrapper = () => {
   }, []);
 
   return (
-    <Grid container spacing={3}>
-      {loading ? <div>Fetching data ...</div> : null}
+    <>
+      <br />
+      <br />
+      <br />
+      <br />
+      <Grid container spacing={3}>
+        {loading ? <div>Fetching data ...</div> : null}
 
-      {formAll.map(form => (
-        <Grid item xs={12} key={form.id}>
-          {form.role}
-          <Button variant='text' onClick={() => history.push('/login')}>
-            {form.name}
-          </Button>
-        </Grid>
-      ))}
-    </Grid>
+        <TitleText width='400px' height='35px' lineHeight='1.5' fontSize='18px'>
+          This is title
+        </TitleText>
+
+        {formAll.map(form => (
+          <Grid item xs={12} key={form.id}>
+            {form.role}
+            <Button variant='text' onClick={() => history.push('/login')}>
+              {form.name}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 };
 
 export default FormWrapper;
+
+// Require purchase
+// import { DataGridPro } from '@mui/x-data-grid-pro';
+// <DataGridPro
+//   columns={[
+//     { field: 'id', hide: true },
+//     { field: 'name', headerName: 'researcher name', minWidth: 150 },
+//     { field: 'role', description: 'What is this for', resizable: false },
+//     { field: 'author', resizable: false },
+//     { field: 'createdAt', resizable: false },
+//   ]}
+//   rows={formAll}
+// />

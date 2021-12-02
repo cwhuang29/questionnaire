@@ -2,9 +2,9 @@ import formService from 'services/form.service';
 import { FORM_STATUS } from './types';
 
 // Get all forms
-export const getAllForm = () => dispatch =>
+export const getAllForms = () => dispatch =>
   formService
-    .getAllForm()
+    .getAllForms()
     .then(resp => {
       dispatch({
         type: FORM_STATUS.FETCH_FORMS_SUCCESS,
