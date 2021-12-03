@@ -7,7 +7,7 @@ import { login } from 'actions/auth';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { validateMsg } from 'shared/constant/messages';
+import msg, { validateMsg } from 'shared/constant/messages';
 
 const validationSchema = Yup.object({
   email: Yup.string('Enter your email')
@@ -38,7 +38,11 @@ const Login = () => {
         .then(() => history.push('/'))
         .catch(err => {
           setLoading(false);
-          setErrorMessage(JSON.stringify(err));
+          const errMsg =
+            err?.errHead || err?.errBody
+              ? JSON.stringify(err)
+              : msg.UNKNOWN_ERROR;
+          setErrorMessage(errMsg);
         });
     },
   });
@@ -55,6 +59,8 @@ const Login = () => {
         textAlign: 'center',
       }}
     >
+      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+      <br />
       <TextField
         fullWidth
         id='email'
@@ -87,8 +93,6 @@ const Login = () => {
       >
         Submit
       </LoadingButton>
-
-      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
     </Box>
   );
 };

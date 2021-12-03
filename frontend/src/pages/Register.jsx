@@ -151,7 +151,7 @@ const Register = () => {
           onChange={formik.handleChange}
           error={formik.touched.role && Boolean(formik.errors.role)}
         >
-          {ROLES.map(({ value, label }) => (
+          {Object.entries(ROLES).map(([value, label]) => (
             <MenuItem key={value} value={value}>
               {label}
             </MenuItem>
