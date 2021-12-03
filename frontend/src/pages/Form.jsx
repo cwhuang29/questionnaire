@@ -1,86 +1,39 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import Proptypes from 'prop-types';
 
-const Title = styled.h1`
-  font-size: 1.5em;
-  text-align: center;
-  color: palevioletred;
-`;
-
-const Wrapper = styled.section`
-  padding: 4em;
-  background: papayawhip;
-`;
-
-const Link = ({ className, children }) => (
-  <a id={className} href='http://test.com' className={className}>
-    {children}
-  </a>
-);
-
-Link.defaultProps = {
-  className: 'HELLO !!!',
-  children: {},
-};
-
-Link.propTypes = {
-  className: Proptypes.string,
-  children: Proptypes.object,
-};
-
-const StyledLink = styled(Link)`
-  color: palevioletred;
-  font-weight: bold;
-`;
-
-const Greeting = ({ greeting, isShow }) =>
-  isShow ? <h1>{greeting}</h1> : null;
+import apis from 'shared/constant/apis';
+import history from 'helpers/history';
+import ROLES from 'shared/constant/roles';
+import { getFormById } from 'actions/form';
+import LoadingNotification from 'components/LoadingNotification';
 
 const Form = () => {
-  const [form, setForm] = React.useState({
-    title: 'form01',
-    description: 'gogogo',
-  });
+  const [form, setForm] = React.useState(null);
+  const [isShow, setIsShow] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const dispatch = useDispatch();
   const { formId } = useParams();
 
-  const [greeting, setGreeting] = useState('Hello');
-  const [isShowGreeting, setShowGreeting] = useState(true);
-
-  const changeGreeting = () => setShowGreeting(!isShowGreeting);
-
   React.useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/posts/${formId}`)
-      .then(res => res.json())
-      .then(data => setForm(data));
+    setIsShow(true);
+    dispatch(getFormById(formId))
+      .then(data => setForm(data.data))
+      .catch(resp => {
+        if (resp && Object.prototype.hasOwnProperty.call(resp, 'status') && resp.status === 401) {
+          history.goBack();
+        }
+        setErrorMessage(`(${resp.statusText}) ${resp.data.error}`); // TODO Show error
+      })
+      .finally(() => setIsShow(false));
   }, [formId]);
 
   return (
     <>
-      <Wrapper>
-        <Title>Hello !!!!</Title>
-      </Wrapper>
-      <StyledLink>Styled, exciting Link</StyledLink>
-
-      <Greeting greeting={greeting} isShow={isShowGreeting} />
-      <button onClick={changeGreeting} type='button'>
-        Toggle Show
-      </button>
-      <h1>{form.title}</h1>
-      <p>{form.description}</p>
+      <LoadingNotification msg='Fetching data ...' isShow={isShow} />
+      <h1>{JSON.stringify(form)}</h1>
     </>
   );
-};
-
-Greeting.defaultProps = {
-  greeting: 'HELLO !!!',
-  isShow: true,
-};
-
-Greeting.propTypes = {
-  greeting: Proptypes.string,
-  isShow: Proptypes.bool,
 };
 
 export default Form;

@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  Box,
-  TextField,
-  Alert,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
+import { Box, TextField, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useHistory } from 'react-router-dom';
 import { useFormik, ErrorMessage } from 'formik';
@@ -19,24 +11,15 @@ import { register } from 'actions/auth';
 import { validateMsg } from 'shared/constant/messages';
 
 const validationSchema = Yup.object({
-  firstName: Yup.string()
-    .required(validateMsg.REGISTER.FIRST_NAME_REQUIRED)
-    .max(50, validateMsg.TOO_LONG),
-  lastName: Yup.string()
-    .required(validateMsg.REGISTER.LAST_NAME_REQUIRED)
-    .max(50, validateMsg.TOO_LONG),
-  email: Yup.string()
-    .email('Enter a valid email')
-    .required(validateMsg.REGISTER.EMAIL_REQUIRED),
+  firstName: Yup.string().required(validateMsg.REGISTER.FIRST_NAME_REQUIRED).max(50, validateMsg.TOO_LONG),
+  lastName: Yup.string().required(validateMsg.REGISTER.LAST_NAME_REQUIRED).max(50, validateMsg.TOO_LONG),
+  email: Yup.string().email('Enter a valid email').required(validateMsg.REGISTER.EMAIL_REQUIRED),
   password: Yup.string()
     .min(8, 'Password should be of minimum 8 characters length')
     .required(validateMsg.REGISTER.PASSWORD_REQUIRED),
   changepassword: Yup.string().when('password', {
     is: val => !!(val && val.length > 0),
-    then: Yup.string().oneOf(
-      [Yup.ref('password')],
-      'Both password need to be the same'
-    ),
+    then: Yup.string().oneOf([Yup.ref('password')], 'Both password need to be the same'),
   }),
   role: Yup.string().required(validateMsg.REGISTER.ROLE_REQUIRED),
 });
@@ -64,7 +47,6 @@ const Register = () => {
         .then(() => history.push('/login'))
         .catch(err => {
           setLoading(false);
-          console.log(err);
 
           if (err.errHead) {
             setErrorMessage(err.errHead + err.errBody);

@@ -10,9 +10,7 @@ import { useDispatch } from 'react-redux';
 import msg, { validateMsg } from 'shared/constant/messages';
 
 const validationSchema = Yup.object({
-  email: Yup.string('Enter your email')
-    .email('Enter a valid email')
-    .required(validateMsg.LOGIN.EMAIL_REQUIRED),
+  email: Yup.string('Enter your email').email('Enter a valid email').required(validateMsg.LOGIN.EMAIL_REQUIRED),
   password: Yup.string('Enter your password')
     .min(8, 'Password should be of minimum 8 characters length')
     .required(validateMsg.LOGIN.PASSWORD_REQUIRED),
@@ -38,10 +36,7 @@ const Login = () => {
         .then(() => history.push('/'))
         .catch(err => {
           setLoading(false);
-          const errMsg =
-            err?.errHead || err?.errBody
-              ? JSON.stringify(err)
-              : msg.UNKNOWN_ERROR;
+          const errMsg = err?.errHead || err?.errBody ? JSON.stringify(err) : msg.UNKNOWN_ERROR;
           setErrorMessage(errMsg);
         });
     },

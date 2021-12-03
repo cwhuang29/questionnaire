@@ -5,11 +5,10 @@ import { useDispatch } from 'react-redux';
 import { Box } from '@mui/material';
 
 import FormWrapper from 'components/FormWrapper';
+import { TitleText } from 'components/styledComponents/Text';
 
 const Home = () => {
-  const [errorMessage, setErrorMessage] = useState('');
   const history = useHistory();
-  const dispatch = useDispatch();
 
   return (
     <Box
@@ -23,7 +22,9 @@ const Home = () => {
         textAlign: 'center',
       }}
     >
-      Thie is Home Page
+      <TitleText width='400px' height='35px' lineHeight='1.5' fontSize='18px'>
+        This is home page
+      </TitleText>
       <FormWrapper />
     </Box>
   );

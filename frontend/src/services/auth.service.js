@@ -21,9 +21,7 @@ const login = ({ email, password }) =>
 
       if (response.data.token) {
         const header = { Authorization: `Bearer ${response.data.token}` };
-        const userData = await userService
-          .getCurrentUserData(header)
-          .catch(error => Promise.reject(error));
+        const userData = await userService.getCurrentUserData(header).catch(error => Promise.reject(error));
 
         allResponse = {
           ...allResponse,

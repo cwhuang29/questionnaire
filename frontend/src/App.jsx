@@ -9,6 +9,7 @@ import Login from 'pages/Login';
 import Home from 'pages/Home';
 import NavBar from 'pages/NavBar';
 import Form from 'pages/Form';
+import Test from 'pages/Test';
 
 const App = () => {
   const { user } = useSelector(state => state.auth);
@@ -29,10 +30,8 @@ const App = () => {
         <Route path='/register' component={Register} />
         <Route path='/login' render={routeProps => <Login />} />
         <Route path='/form/:formId' component={Form} />
-        <Route
-          path=''
-          render={() => <Paper sx={{ textAlign: 'center' }}>404</Paper>}
-        />
+        <Route path='/test' component={Test} />
+        <Route path='' render={() => <Paper sx={{ textAlign: 'center' }}>404</Paper>} />
       </Switch>
     </Router>
   );

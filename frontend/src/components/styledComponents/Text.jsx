@@ -38,10 +38,10 @@ export const TitleText = styled(Text)`
   margin-top: ${props => (props.marginTop ? props.marginTop : null)};
   width: ${props => (props.width ? props.width : null)};
   height: ${props => (props.height ? props.height : '22px')};
-  font-size: ${props => (props.fontSize ? props.fontSize : '24px')};
+  font-size: ${props => (props.fontSize ? props.fontSize : '1.8em')};
   font-weight: bold;
+  text-align: center;
   white-space: pre;
-  line-height: ${props =>
-    props.lineHeight ? props.lineHeight : '1.5'} !important;
+  line-height: ${props => (props.lineHeight ? props.lineHeight : '1.5')} !important;
   color: #40485a;
 `;

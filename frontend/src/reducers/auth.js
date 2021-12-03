@@ -2,9 +2,7 @@ import { AUTH_STATUS } from '../actions/types';
 
 const user = null;
 
-const initialState = user
-  ? { isLoggedIn: true, user }
-  : { isLoggedIn: false, user: null };
+const initialState = user ? { isLoggedIn: true, user } : { isLoggedIn: false, user: null };
 
 const auth = (state = initialState, action) => {
   const { type, payload } = action;

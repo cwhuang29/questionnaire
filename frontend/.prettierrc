@@ -8,4 +8,5 @@
   jsxBracketSameLine: false,
   useTabs: false,
   arrowParens: 'avoid',
+  printWidth: 120
 }

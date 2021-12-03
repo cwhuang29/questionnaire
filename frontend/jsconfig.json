@@ -1,20 +1,19 @@
 {
-    "compilerOptions": {
-        "baseUrl": "src",
-        "target": "ES2017",
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "declaration": false,
-        "downlevelIteration": true,
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "jsx": "react",
-        "paths": {
-            "/*":["./*"],
-            "@/*": ["src/*"],
-            "@shared": ["src/shared/*"]
-        }
-    },
-    "include": [ "src/*" ],
-	  "exclude": [ "node_modules" ]
+  "compilerOptions": {
+    "baseUrl": "src",
+    "target": "ES2017",
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "paths": {
+      "/*": ["./*"],
+      "@shared": ["src/shared/*"]
+    }
+  },
+  "include": ["src/*"],
+  "exclude": ["node_modules"]
 }
