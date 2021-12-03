@@ -227,18 +227,13 @@ func handleForm(c *gin.Context) (newArticle *models.Article, invalids map[string
 }
 
 func Forms(c *gin.Context) {
-	var formNames = []struct {
-		Id        int    `json:"id"`
-		Name      string `json:"name"`
-		Role      int    `json:"role"`
-		Author    string `json:"author"`
-		CreatedAt string `json:"createdAt"`
-	}{
-		{1, "form 01", 0, "Amy", "2021-12-01"},
-		{2, "form 01", 1, "Amy", "2021-12-01"},
-		{3, "form 01", 2, "Amy", "2021-12-02"},
-		{4, "form 02", 1, "Jack", "2021-12-02"},
-		{5, "form 03", 1, "Jack", "2021-12-03"},
+	id, err := getParamArticleID(c)
+	if err != nil {
+		allForms := getAllForms()
+		c.JSON(http.StatusOK, gin.H{"data": allForms})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": formNames})
+
+	form := getFormByID(id)
+	c.JSON(http.StatusOK, gin.H{"data": form})
 }

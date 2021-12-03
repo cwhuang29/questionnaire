@@ -24,6 +24,10 @@ func getQueryPara(c *gin.Context, key string) string {
 	return c.DefaultQuery(key, "")
 }
 
+func getParamFormId(c *gin.Context) (int, error) {
+	return utils.Str2PosInt(getURLPara(c, constants.ParamFormID))
+}
+
 func getParamArticleID(c *gin.Context) (int, error) {
 	return utils.Str2PosInt(getURLPara(c, constants.ParamArticleID))
 }
@@ -108,4 +112,24 @@ func fetchData(types, query string, offset, limit int, isAdmin bool) (articleLis
 		articleList[i] = articleFormatDBToOverview(a)
 	}
 	return
+}
+
+func getAllForms() []models.Form {
+	// TODO
+	CreatedAt := time.Date(2009, 11, 17, 20, 34, 58, 651387237, time.UTC)
+	UpdatedAt := time.Now()
+	return []models.Form{
+		{1, "form 01", 0, "Amy", 1, CreatedAt, UpdatedAt},
+		{2, "form 01", 1, "Amy", 1, CreatedAt, UpdatedAt},
+		{3, "form 01", 2, "Amy", 1, CreatedAt, UpdatedAt},
+		{4, "form 02", 1, "Jack", 1, CreatedAt, UpdatedAt},
+		{5, "form 03", 1, "Jack", 1, CreatedAt, UpdatedAt},
+	}
+}
+
+func getFormByID(id int) models.Form {
+	// TODO
+	CreatedAt := time.Date(2009, 11, 17, 20, 34, 58, 651387237, time.UTC)
+	UpdatedAt := time.Now()
+	return models.Form{3, "form 01", 2, "Amy", 1, CreatedAt, UpdatedAt}
 }

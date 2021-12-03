@@ -1,6 +1,8 @@
 package constants
 
 const (
+	ParamFormID = "formId"
+
 	ParamArticleID = "articleId"
 
 	QueryArticleID  = "articleId"

@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type FormStatus struct {
+type Form struct {
 	ID        int       `gorm:"primaryKey" json:"id"`
 	Name      string    `gorm:"size:50" json:"name"`
 	Role      int       `gorm:"not null" json:"role"`

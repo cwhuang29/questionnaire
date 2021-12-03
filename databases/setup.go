@@ -56,8 +56,8 @@ func createTables() {
 	if !(db.Migrator().HasTable(&models.Notify{})) {
 		db.Migrator().CreateTable(&models.Notify{})
 	}
-	if !(db.Migrator().HasTable(&models.FormStatus{})) {
-		db.Migrator().CreateTable(&models.FormStatus{})
+	if !(db.Migrator().HasTable(&models.Form{})) {
+		db.Migrator().CreateTable(&models.Form{})
 	}
 	if !(db.Migrator().HasTable(&models.FormHistory{})) {
 		db.Migrator().CreateTable(&models.FormHistory{})
