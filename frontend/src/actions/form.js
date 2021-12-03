@@ -15,7 +15,7 @@ export const getAllForms = () => (dispatch) =>
 
 export const getFormById = (id) => (dispatch) =>
   formService
-    .getForm(id)
+    .getFormById(id)
     .then((resp) => {
       dispatch({
         type: FORM_STATUS.FETCH_FORM_SUCCESS,

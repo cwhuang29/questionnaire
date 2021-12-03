@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import Menu from 'components/Menu';
 
 const NavBar = ({ user }) => (
-  <header className='App-header'>
+  <div style={{display: 'block', height: '64px'}}>
     <Menu user={user} />
-  </header>
+  </div>
 );
 
 NavBar.defaultProps = {
