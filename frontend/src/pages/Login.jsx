@@ -28,13 +28,13 @@ const Login = () => {
       password: '',
     },
     validationSchema,
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       setLoading(true);
       setErrorMessage('');
 
       await dispatch(login(values))
         .then(() => history.push('/'))
-        .catch(err => {
+        .catch((err) => {
           setLoading(false);
           const errMsg = err?.errHead || err?.errBody ? JSON.stringify(err) : msg.UNKNOWN_ERROR;
           setErrorMessage(errMsg);

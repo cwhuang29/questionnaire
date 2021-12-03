@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { Box } from '@mui/material';
 
-import FormWrapper from 'components/FormWrapper';
+import FormList from 'components/FormList';
 import { TitleText } from 'components/styledComponents/Text';
 
 const Home = () => {
@@ -25,7 +25,7 @@ const Home = () => {
       <TitleText width='400px' height='35px' lineHeight='1.5' fontSize='18px'>
         This is home page
       </TitleText>
-      <FormWrapper />
+      <FormList />
     </Box>
   );
 };

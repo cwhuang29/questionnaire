@@ -16,12 +16,12 @@ const login = ({ email, password }) =>
       email,
       password,
     })
-    .then(async response => {
+    .then(async (response) => {
       let allResponse = { ...response.data };
 
       if (response.data.token) {
         const header = { Authorization: `Bearer ${response.data.token}` };
-        const userData = await userService.getCurrentUserData(header).catch(error => Promise.reject(error));
+        const userData = await userService.getCurrentUserData(header).catch((error) => Promise.reject(error));
 
         allResponse = {
           ...allResponse,

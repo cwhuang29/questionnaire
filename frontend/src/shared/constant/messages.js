@@ -5,6 +5,8 @@ export default {
   RELOAD_AND_RETRY: 'Please reload the page and try again',
   GO_BACK_AND_RETRY: 'Go back to previous page and try again',
   TRY_TOO_OFTEN: 'You are trying too often',
+  NO_DATA: 'There are no data',
+  SERVER_CRASH: 'We will be back as soon as possible. Thank you for your patience and please try again later',
 };
 
 export const validateMsg = {

@@ -12,7 +12,7 @@ import Form from 'pages/Form';
 import Test from 'pages/Test';
 
 const App = () => {
-  const { user } = useSelector(state => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const App = () => {
         <Route exact path='/' component={Home} />
         <Route path='/home' component={Home} />
         <Route path='/register' component={Register} />
-        <Route path='/login' render={routeProps => <Login />} />
+        <Route path='/login' render={(routeProps) => <Login />} />
         <Route path='/form/:formId' component={Form} />
         <Route path='/test' component={Test} />
         <Route path='' render={() => <Paper sx={{ textAlign: 'center' }}>404</Paper>} />

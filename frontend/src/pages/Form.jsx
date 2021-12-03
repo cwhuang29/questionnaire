@@ -6,7 +6,7 @@ import apis from 'shared/constant/apis';
 import history from 'helpers/history';
 import ROLES from 'shared/constant/roles';
 import { getFormById } from 'actions/form';
-import LoadingNotification from 'components/LoadingNotification';
+import MessageBar from 'components/MessageBar';
 
 const Form = () => {
   const [form, setForm] = React.useState(null);
@@ -18,8 +18,8 @@ const Form = () => {
   React.useEffect(() => {
     setIsShow(true);
     dispatch(getFormById(formId))
-      .then(data => setForm(data.data))
-      .catch(resp => {
+      .then((data) => setForm(data.data))
+      .catch((resp) => {
         if (resp && Object.prototype.hasOwnProperty.call(resp, 'status') && resp.status === 401) {
           history.goBack();
         }
@@ -30,7 +30,6 @@ const Form = () => {
 
   return (
     <>
-      <LoadingNotification msg='Fetching data ...' isShow={isShow} />
       <h1>{JSON.stringify(form)}</h1>
     </>
   );

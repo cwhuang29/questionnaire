@@ -1,6 +1,6 @@
 import { MESSAGE_STATUS } from './types';
 
-export const setMessage = message => ({
+export const setMessage = (message) => ({
   type: MESSAGE_STATUS.SET_MESSAGE,
   payload: message,
 });
