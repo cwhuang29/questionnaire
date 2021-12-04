@@ -15,6 +15,7 @@
     "axios": "0.24.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "formik": "2.2.9",
     "history": "4.10.1",
     "prettier": "^2.4.1",

@@ -59,7 +59,7 @@ const SortedAscendingIcon = () => <ExpandLessIcon className='icon' />;
 
 const FormList = () => {
   const [formAll, setFormAll] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
 

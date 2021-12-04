@@ -31,7 +31,10 @@ const App = () => {
         <Route path='/login' render={(routeProps) => <Login />} />
         <Route path='/form/:formId' component={Form} />
         <Route path='/test' component={Test} />
-        <Route path='' render={() => <Paper sx={{ textAlign: 'center' }}>404</Paper>} />
+        <Route
+          path=''
+          render={() => <Paper sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '3em' }}>Not Found</Paper>}
+        />
       </Switch>
     </Router>
   );
