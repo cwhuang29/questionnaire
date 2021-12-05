@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Proptypes from 'prop-types';
-import { AppBar, Box, Toolbar, Typography, Button, IconButton, Link } from '@mui/material';
+import { AppBar, Box, Toolbar, Typography, Button, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
@@ -23,9 +23,19 @@ const MenuBarDivider = () => (
   />
 );
 
+const MenuBarItem = ({ menu, onClick }) => (
+  <MenuItem sx={{ fontWeight: 'bold' }} onClick={onClick}>
+    {toCapitalize(menu)}
+  </MenuItem>
+);
+
 const Menu = ({ user }) => {
   const history = useHistory();
+
+  const onClick = (menu) => () => history.push(`/${menu}`);
   const menuBarItems = ['spend', 'borrow', 'invest', 'insure', 'health'];
+  const userStatusItems = user ? ['profile'] : ['login', 'register'];
+  const menuBarItemsWithUser = [...menuBarItems, ...userStatusItems];
 
   return (
     <Box>
@@ -44,34 +54,21 @@ const Menu = ({ user }) => {
             HNCB Bank
           </Typography>
 
-          {menuBarItems.map((menu) => (
+          {menuBarItemsWithUser.map((menu, idx) => (
             <>
-              <MenuItem sx={{ fontWeight: 'bold' }} onClick={() => history.push(`/${menu}`)}>
-                {toCapitalize(menu)}
-              </MenuItem>
-              <MenuBarDivider />
+              <MenuBarItem key={menu} menu={menu} onClick={onClick(menu)} />
+              {idx !== menuBarItemsWithUser.length - 1 && <MenuBarDivider key={`${menu}-divider`} />}
             </>
           ))}
-
-          {user ? (
-            <Link href='/profile' sx={{ color: 'white', fontWeight: 'bold' }}>
-              Profile
-            </Link>
-          ) : (
-            <>
-              <Button sx={{ fontWeight: 'bold' }} color='inherit' onClick={() => history.push('/login')}>
-                Login
-              </Button>
-              <MenuBarDivider />
-              <Button sx={{ fontWeight: 'bold' }} color='inherit' onClick={() => history.push('/register')}>
-                Register
-              </Button>
-            </>
-          )}
         </Toolbar>
       </AppBar>
     </Box>
   );
+};
+
+MenuBarItem.propTypes = {
+  menu: Proptypes.string.isRequired,
+  onClick: Proptypes.func.isRequired,
 };
 
 Menu.defaultProps = {

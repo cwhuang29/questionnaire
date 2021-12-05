@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Box, TextField, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { login } from 'actions/auth';
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
 import msg, { validateMsg } from 'shared/constant/messages';
 
@@ -21,6 +21,11 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  if (isLoggedIn) {
+    history.push('/');
+  }
 
   const formik = useFormik({
     initialValues: {

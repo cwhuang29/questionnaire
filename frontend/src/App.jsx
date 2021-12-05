@@ -12,7 +12,7 @@ import Test from 'pages/Test';
 import useGlobalMessageContext from 'hooks/useGlobalMessageContext';
 
 const App = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth); // Change user to isLoggedIn
   const { clearAllGlobalMessages } = useGlobalMessageContext();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const App = () => {
         <Route path='/test' component={Test} />
         <Route
           path=''
-          render={() => <Paper sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '3em' }}>Not Found</Paper>}
+          render={() => <Paper sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '2em' }}>Not Found</Paper>}
         />
       </Switch>
     </Router>

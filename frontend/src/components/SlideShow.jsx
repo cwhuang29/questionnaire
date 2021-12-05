@@ -20,6 +20,10 @@ const Slideshow = () => {
       setIndex(1); // The timeout will be reset (and not execute) due to index changes
       setShowAnimation(false); // There is a time span before reseting to true. If user clicks dot before that time, slides will move without animation
     }
+    // if (index === 0 && isMovingBackward) {
+    //   setIndex(images.length - 2);
+    //   setShowAnimation(false);
+    // }
   };
 
   useEffect(() => {
@@ -52,18 +56,26 @@ const Slideshow = () => {
           position: 'relative',
         }}
       >
-        {images.map((backgroundColor, slideIdx) => (
+        {images.map((image, slideIdx) => (
           <div
+            key={image}
             className={`slide${index === slideIdx ? ' active' : ''}`}
-            style={{ backgroundColor, display: 'inline-block', height: '600px', width: '100%', borderRadius: '10px' }}
+            style={{
+              backgroundColor: image,
+              display: 'inline-block',
+              height: '600px',
+              width: '100%',
+              borderRadius: '10px',
+            }}
           />
         ))}
       </div>
 
       <div className='slideShowDots' style={{ textAlign: 'center', marginTop: '-42px', paddingBottom: '10px' }}>
-        {images.map((_, dotIdx) =>
+        {images.map((image, dotIdx) =>
           dotIdx === 0 || dotIdx === images.length - 1 ? null : (
             <button
+              key={image}
               className={`slideShowDot${index === dotIdx ? ' active' : ''}`}
               onClick={() => setIndex(dotIdx)}
               type='button'
@@ -77,7 +89,11 @@ const Slideshow = () => {
                 cursor: 'pointer',
                 margin: '15px 7px 0px',
                 backgroundColor:
-                  index === dotIdx || (dotIdx === 1 && index === images.length - 1) ? '#565656' : '#eeeeee',
+                  index === dotIdx ||
+                  (dotIdx === 1 && index === images.length - 1) ||
+                  (dotIdx === images.length - 2 && index === 0)
+                    ? '#565656'
+                    : '#eeeeee',
               }}
             />
           )
