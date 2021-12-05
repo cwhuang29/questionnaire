@@ -33,7 +33,7 @@ const App = () => {
         <Route path='/test' component={Test} />
         <Route
           path=''
-          render={() => <Paper sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '3em' }}>Not Found</Paper>}
+          render={() => <Paper sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '2em' }}>Not Found</Paper>}
         />
       </Switch>
     </Router>

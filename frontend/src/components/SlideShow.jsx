@@ -52,18 +52,26 @@ const Slideshow = () => {
           position: 'relative',
         }}
       >
-        {images.map((backgroundColor, slideIdx) => (
+        {images.map((image, slideIdx) => (
           <div
+            key={image}
             className={`slide${index === slideIdx ? ' active' : ''}`}
-            style={{ backgroundColor, display: 'inline-block', height: '600px', width: '100%', borderRadius: '10px' }}
+            style={{
+              backgroundColor: image,
+              display: 'inline-block',
+              height: '600px',
+              width: '100%',
+              borderRadius: '10px',
+            }}
           />
         ))}
       </div>
 
       <div className='slideShowDots' style={{ textAlign: 'center', marginTop: '-42px', paddingBottom: '10px' }}>
-        {images.map((_, dotIdx) =>
+        {images.map((image, dotIdx) =>
           dotIdx === 0 || dotIdx === images.length - 1 ? null : (
             <button
+              key={image}
               className={`slideShowDot${index === dotIdx ? ' active' : ''}`}
               onClick={() => setIndex(dotIdx)}
               type='button'
