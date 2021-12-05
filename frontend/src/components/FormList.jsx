@@ -61,7 +61,7 @@ const SortedAscendingIcon = () => <ExpandLessIcon className='icon' />;
 
 const FormList = () => {
   const [formAll, setFormAll] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
   const { addGlobalMessage } = useGlobalMessageContext();
@@ -83,31 +83,29 @@ const FormList = () => {
         });
       })
       .finally(() => setIsLoading(false));
-  }, [addGlobalMessage, dispatch]);
+  }, []);
 
   return (
-    <>
-      <DataGrid
-        autoHeight
-        loading={isLoading}
-        hideFooterSelectedRowCount
-        editMode='row'
-        density='standard'
-        components={{
-          Toolbar: GridToolbar,
-          LoadingOverlay: CustomLoadingOverlay,
-          NoRowsOverlay: CustomNoRowsOverlay,
-          ColumnSortedDescendingIcon: SortedDescendingIcon,
-          ColumnSortedAscendingIcon: SortedAscendingIcon,
-        }}
-        onCellDoubleClick={onCellDoubleClick}
-        columns={columns}
-        rows={formAll}
-        style={{ cursor: 'pointer' }}
-        // checkboxSelection
-        // componentsProps={{ cell: { onMouseEnter: handlePopoverOpen, onMouseLeave: handlePopoverClose, }, }}
-      />
-    </>
+    <DataGrid
+      autoHeight
+      loading={isLoading}
+      hideFooterSelectedRowCount
+      editMode='row'
+      density='standard'
+      components={{
+        Toolbar: GridToolbar,
+        LoadingOverlay: CustomLoadingOverlay,
+        NoRowsOverlay: CustomNoRowsOverlay,
+        ColumnSortedDescendingIcon: SortedDescendingIcon,
+        ColumnSortedAscendingIcon: SortedAscendingIcon,
+      }}
+      onCellDoubleClick={onCellDoubleClick}
+      columns={columns}
+      rows={formAll}
+      style={{ cursor: 'pointer' }}
+      // checkboxSelection
+      // componentsProps={{ cell: { onMouseEnter: handlePopoverOpen, onMouseLeave: handlePopoverClose, }, }}
+    />
   );
 };
 
