@@ -10,6 +10,6 @@ type Form struct {
 	Role      int       `gorm:"not null" json:"role"`
 	Author    string    `gorm:"not null" json:"author"`
 	Status    int       `gorm:"not null" json:"status"`
-	CreatedAt time.Time `gorm:"autoCreateTime"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime"`
+	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
