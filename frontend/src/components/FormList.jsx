@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { DataGrid, GridToolbar, GridOverlay } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -7,11 +7,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { getAllForms } from 'actions/form';
 import messages from 'shared/constant/messages';
-import MessageBar from 'components/MessageBar';
 import history from 'helpers/history';
 import ROLES from 'shared/constant/roles';
 import useGlobalMessageContext from 'hooks/useGlobalMessageContext';
 import { GLOBAL_MESSAGE_SERVERITY } from 'shared/constant/styles';
+// import GlobalMessageContext from 'components/MessageBar';
 
 const onCellDoubleClick = (params) => {
   if (params.field === 'name') {
@@ -53,8 +53,6 @@ const CustomLoadingOverlay = () => (
   </GridOverlay>
 );
 
-const CustomNoRowsOverlay = () => <MessageBar msgHead={messages.NO_DATA} isShow isShowButton={false} />;
-
 const SortedDescendingIcon = () => <ExpandMoreIcon className='icon' />;
 
 const SortedAscendingIcon = () => <ExpandLessIcon className='icon' />;
@@ -65,6 +63,16 @@ const FormList = () => {
   const dispatch = useDispatch();
 
   const { addGlobalMessage } = useGlobalMessageContext();
+  // const context = useContext(GlobalMessageContext); // Use context.addGlobalMessage({}) instead of addGlobalMessage
+
+  const CustomNoRowsOverlay = () =>
+    addGlobalMessage({
+      title: messages.NO_DATA,
+      content: '',
+      severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+      timestamp: Date.now(),
+      enableClose: true,
+    });
 
   useEffect(() => {
     dispatch(getAllForms())
