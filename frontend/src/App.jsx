@@ -1,25 +1,25 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Router, Switch, Route } from 'react-router-dom';
 import { Paper } from '@mui/material';
 import history from 'helpers/history';
-import { clearMessage } from 'actions/message';
 import Register from 'pages/Register';
 import Login from 'pages/Login';
 import Home from 'pages/Home';
 import NavBar from 'pages/NavBar';
 import Form from 'pages/Form';
 import Test from 'pages/Test';
+import useGlobalMessageContext from 'hooks/useGlobalMessageContext';
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  const { clearAllGlobalMessages } = useGlobalMessageContext();
 
   useEffect(() => {
-    history.listen(() => {
-      dispatch(clearMessage());
+    history.listen((location) => {
+      clearAllGlobalMessages();
     });
-  }, [dispatch]);
+  }, []);
 
   return (
     <Router history={history}>

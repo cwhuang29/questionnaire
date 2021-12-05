@@ -1,89 +1,69 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback, createContext } from 'react';
 import Proptypes from 'prop-types';
 import styled from 'styled-components';
+import { Alert, AlertTitle } from '@mui/material';
+import { GLOBAL_MESSAGE_DISAPPEAR_PERIOD } from 'shared/constant/styles';
 
-import RoundButton from 'components/styledComponents/RoundButton';
+const GlobalMessageContext = createContext();
 
-const Wrapper = styled.div`
-  display: block;
-  background-color: #f8cdbb;
-  box-shadow: 3px 5px 2px 1px #555555;
+export default GlobalMessageContext;
+
+const GlobalMessageWrapper = styled.div`
+  z-index: 99999999;
   position: fixed;
-  width: 510px;
-  max-width: 94%; /* For mobile devices */
-  margin-left: max(-47%, -255px);
-  height: 160px;
-  margin-top: max(-50%, -80px);
-  left: 50%;
-  top: 50%;
-  cursor: default;
-  z-index: 2147483647;
-`;
+  bottom: 1rem;
+  right: 2rem;
 
-const MessageHead = styled.p`
-  margin-top: 25px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-`;
-
-const MessageBody = styled.p`
-  text-align: center;
-  font-size: 17px;
-  word-break: break-all;
-  margin-left: 20px;
-  margin-right: 20px;
-`;
-
-const Cross = styled.a`
-  position: absolute;
-  right: 11.1px;
-  top: 4px;
-  opacity: 0.55;
-  :hover {
-    opacity: 1;
-  }
-  &::before,
-  &::after {
-    position: absolute;
-    content: ' ';
-    height: 13px;
-    width: 3.3px;
-    background-color: #fff;
-  }
-  &::before {
-    transform: rotate(45deg);
-  }
-  &::after {
-    transform: rotate(-45deg);
+  > * {
+    margin: 5px 0;
   }
 `;
 
-const MessageBar = ({ isShow, isShowButton, msgHead, msgBody }) => {
-  const [showMsgBar, setShowMsgBar] = useState(isShow);
-  const crossOnClick = () => setShowMsgBar(!showMsgBar);
+export const MessageBar = ({ children }) => {
+  const [messages, setMessages] = useState([]);
 
-  return showMsgBar ? (
-    <Wrapper>
-      <RoundButton warning isShow={isShowButton} disabled>
-        <Cross onClick={crossOnClick} />
-      </RoundButton>
-      <MessageHead>{msgHead}</MessageHead>
-      <MessageBody>{msgBody}</MessageBody>
-    </Wrapper>
-  ) : null;
-};
+  useEffect(() => {
+    if (messages.length > 0) {
+      const timer = setTimeout(
+        () => setMessages((prevMessages) => prevMessages.slice(1)),
+        GLOBAL_MESSAGE_DISAPPEAR_PERIOD
+      );
+      return () => clearTimeout(timer);
+    }
+    return null;
+  }, [messages]);
 
-MessageBar.defaultProps = {
-  msgHead: '',
-  msgBody: '',
+  const addGlobalMessage = useCallback((message) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  }, []);
+
+  const onClose = (timestamp) => () => {
+    setMessages((prevMessages) => prevMessages.filter((message) => message.timestamp !== timestamp));
+  };
+
+  const clearAllGlobalMessages = useCallback(() => {
+    setMessages([]);
+  }, []);
+
+  return (
+    <GlobalMessageContext.Provider value={{ addGlobalMessage, clearAllGlobalMessages }}>
+      <GlobalMessageWrapper>
+        {messages.map((message) => (
+          <Alert
+            severity={message.severity}
+            key={message.timestamp}
+            onClose={message.enableClose ? onClose(message.timestamp) : null}
+          >
+            <AlertTitle>{message.title}</AlertTitle>
+            {message.content}
+          </Alert>
+        ))}
+      </GlobalMessageWrapper>
+      {children}
+    </GlobalMessageContext.Provider>
+  );
 };
 
 MessageBar.propTypes = {
-  isShow: Proptypes.bool.isRequired,
-  isShowButton: Proptypes.bool.isRequired,
-  msgHead: Proptypes.string,
-  msgBody: Proptypes.string,
+  children: Proptypes.element.isRequired,
 };
-
-export default MessageBar;
