@@ -5,11 +5,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './store';
+import { MessageBar } from './components/MessageBar';
 
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <MessageBar>
+        <App />
+      </MessageBar>
     </React.StrictMode>
   </Provider>,
   document.getElementById('root')

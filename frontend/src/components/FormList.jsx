@@ -10,8 +10,10 @@ import messages from 'shared/constant/messages';
 import MessageBar from 'components/MessageBar';
 import history from 'helpers/history';
 import ROLES from 'shared/constant/roles';
+import useGlobalMessageContext from 'hooks/useGlobalMessageContext';
+import { GLOBAL_MESSAGE_SERVERITY } from 'shared/constant/styles';
 
-const onCellDoubleClick = (params, evt) => {
+const onCellDoubleClick = (params) => {
   if (params.field === 'name') {
     history.push(`/form/${params.id}`);
   }
@@ -60,32 +62,34 @@ const SortedAscendingIcon = () => <ExpandLessIcon className='icon' />;
 const FormList = () => {
   const [formAll, setFormAll] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
+
+  const { addGlobalMessage } = useGlobalMessageContext();
 
   useEffect(() => {
     dispatch(getAllForms())
       .then((data) => setFormAll(data.data))
       .catch((resp) => {
-        if (resp && Object.prototype.hasOwnProperty.call(resp, 'status') && resp.status === 401) {
+        if (!resp || !Object.prototype.hasOwnProperty.call(resp, 'status') || resp.status === 401) {
           history.push('/login');
         }
-        setErrorMessage(`(${resp.statusText}) ${resp.data.error}`); // TODO Show error
+
+        addGlobalMessage({
+          title: resp.data.errHead,
+          content: resp.data.errBody || resp.data.error || '',
+          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          timestamp: Date.now(),
+          enableClose: true,
+        });
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [addGlobalMessage, dispatch]);
 
   return (
     <>
-      <MessageBar
-        className='messageBar12345'
-        msgHead='Fetching data ...'
-        msgBody='Hold on for a second'
-        isShow={isLoading}
-      />
       <DataGrid
         autoHeight
-        loading
+        loading={isLoading}
         hideFooterSelectedRowCount
         editMode='row'
         density='standard'
