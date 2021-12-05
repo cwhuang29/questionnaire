@@ -7,7 +7,7 @@ const Slideshow = () => {
   const [showAnimation, setShowAnimation] = useState(true);
   const timeoutRef = useRef(null);
 
-  const colors = ['#FFBB28', '#0088FE', '#00C49F', '#FFBB28', '#0088FE']; // Duplicate first slide in the end and last slide in the beginning
+  const images = ['#FFBB28', '#0088FE', '#00C49F', '#FFBB28', '#0088FE']; // Duplicate first slide in the end and last slide in the beginning
 
   const resetTimeout = () => {
     if (timeoutRef.current) {
@@ -16,16 +16,16 @@ const Slideshow = () => {
   };
 
   const transitionEnd = () => {
-    if (index === colors.length - 1) {
+    if (index === images.length - 1) {
       setIndex(1); // The timeout will be reset (and not execute) due to index changes
-      setShowAnimation(false);
+      setShowAnimation(false); // There is a time span before reseting to true. If user clicks dot before that time, slides will move without animation
     }
   };
 
   useEffect(() => {
     resetTimeout();
     timeoutRef.current = setTimeout(() => {
-      setIndex((prevIndex) => (prevIndex === colors.length - 1 ? 2 : prevIndex + 1));
+      setIndex((prevIndex) => (prevIndex === images.length - 1 ? 2 : prevIndex + 1));
       setShowAnimation(true);
     }, SLIDE_SHOW_DELAY);
     return () => resetTimeout();
@@ -52,7 +52,7 @@ const Slideshow = () => {
           position: 'relative',
         }}
       >
-        {colors.map((backgroundColor, slideIdx) => (
+        {images.map((backgroundColor, slideIdx) => (
           <div
             className={`slide${index === slideIdx ? ' active' : ''}`}
             style={{ backgroundColor, display: 'inline-block', height: '600px', width: '100%', borderRadius: '10px' }}
@@ -61,8 +61,8 @@ const Slideshow = () => {
       </div>
 
       <div className='slideShowDots' style={{ textAlign: 'center', marginTop: '-42px', paddingBottom: '10px' }}>
-        {colors.map((_, dotIdx) =>
-          dotIdx === 0 || dotIdx === colors.length - 1 ? null : (
+        {images.map((_, dotIdx) =>
+          dotIdx === 0 || dotIdx === images.length - 1 ? null : (
             <button
               className={`slideShowDot${index === dotIdx ? ' active' : ''}`}
               onClick={() => setIndex(dotIdx)}
@@ -77,7 +77,7 @@ const Slideshow = () => {
                 cursor: 'pointer',
                 margin: '15px 7px 0px',
                 backgroundColor:
-                  index === dotIdx || (dotIdx === 1 && index === colors.length - 1) ? '#565656' : '#eeeeee',
+                  index === dotIdx || (dotIdx === 1 && index === images.length - 1) ? '#565656' : '#eeeeee',
               }}
             />
           )
