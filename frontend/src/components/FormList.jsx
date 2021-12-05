@@ -38,7 +38,7 @@ const columns = [
   },
   { field: 'author', headerName: 'Author', width: 150 },
   {
-    field: 'createdAt',
+    field: 'created_at',
     headerName: 'Created At',
     width: 200,
     type: 'dateTime',
@@ -75,8 +75,8 @@ const FormList = () => {
         }
 
         addGlobalMessage({
-          title: resp.data.errHead,
-          content: resp.data.errBody || resp.data.error || '',
+          title: resp.data.errHead || resp.data.error,
+          content: resp.data.errBody || '',
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           timestamp: Date.now(),
           enableClose: true,
