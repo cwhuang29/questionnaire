@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Box, TextField, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useHistory } from 'react-router-dom';
@@ -29,6 +29,11 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  if (isLoggedIn) {
+    history.push('/');
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -72,6 +77,7 @@ const Register = () => {
         textAlign: 'center',
       }}
     >
+      {formik.touched.role && formik.errors.role && <Alert severity='error'>{formik.errors.role}</Alert>}
       {errorMessage && (
         <Alert severity='error' style={{ marginBottom: '20px' }}>
           {errorMessage}
@@ -139,11 +145,6 @@ const Register = () => {
             </MenuItem>
           ))}
         </Select>
-        {formik.touched.role && formik.errors.role && (
-          <span className='MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root'>
-            {formik.errors.role}
-          </span>
-        )}
       </FormControl>
 
       <LoadingButton loading={loading} variant='contained' type='submit'>

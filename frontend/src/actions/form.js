@@ -19,7 +19,7 @@ export const getFormById = (id) => (dispatch) =>
     .then((resp) => {
       dispatch({
         type: FORM_STATUS.FETCH_FORM_SUCCESS,
-        payload: { id: resp.data.id, form: resp.data },
+        payload: { form: resp.data },
       });
 
       return Promise.resolve(resp.data);
@@ -32,7 +32,7 @@ export const getFormDetailById = (id) => (dispatch) =>
     .then((resp) => {
       dispatch({
         type: FORM_STATUS.FETCH_FORM_DATAIL_SUCCESS,
-        payload: { id: resp.data.id, form: resp.data },
+        payload: { form: resp.data },
       });
 
       return Promise.resolve(resp.data);
