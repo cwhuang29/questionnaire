@@ -7,7 +7,13 @@ const Slideshow = () => {
   const [showAnimation, setShowAnimation] = useState(true);
   const timeoutRef = useRef(null);
 
-  const images = ['#FFBB28', '#0088FE', '#00C49F', '#FFBB28', '#0088FE']; // Duplicate first slide in the end and last slide in the beginning
+  const images = [
+    { src: '/assets/slideShow/yellow.png', key: 0 },
+    { src: '/assets/slideShow/blue.png', key: 1 },
+    { src: '/assets/slideShow/green.png', key: 2 },
+    { src: '/assets/slideShow/yellow.png', key: 3 },
+    { src: '/assets/slideShow/blue.png', key: 4 },
+  ]; // Duplicate first slide in the end and last slide in the beginning
 
   const resetTimeout = () => {
     if (timeoutRef.current) {
@@ -58,10 +64,10 @@ const Slideshow = () => {
       >
         {images.map((image, slideIdx) => (
           <div
-            key={image}
+            key={image.key}
             className={`slide${index === slideIdx ? ' active' : ''}`}
             style={{
-              backgroundColor: image,
+              background: `url(${image.src})`,
               display: 'inline-block',
               height: '600px',
               width: '100%',
@@ -75,7 +81,7 @@ const Slideshow = () => {
         {images.map((image, dotIdx) =>
           dotIdx === 0 || dotIdx === images.length - 1 ? null : (
             <button
-              key={image}
+              key={image.key}
               className={`slideShowDot${index === dotIdx ? ' active' : ''}`}
               onClick={() => setIndex(dotIdx)}
               type='button'
