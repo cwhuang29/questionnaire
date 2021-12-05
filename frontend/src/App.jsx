@@ -12,7 +12,7 @@ import Form from 'pages/Form';
 import Test from 'pages/Test';
 
 const App = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth); // Change user to isLoggedIn
   const dispatch = useDispatch();
 
   useEffect(() => {

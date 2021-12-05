@@ -24,7 +24,7 @@ const Slideshow = () => {
     //   setIndex(images.length - 2);
     //   setShowAnimation(false);
     // }
-};
+  };
 
   useEffect(() => {
     resetTimeout();
@@ -89,7 +89,11 @@ const Slideshow = () => {
                 cursor: 'pointer',
                 margin: '15px 7px 0px',
                 backgroundColor:
-                  index === dotIdx || (dotIdx === 1 && index === images.length - 1) || (dotIdx === images.length - 2 && index === 0) ? '#565656' : '#eeeeee',
+                  index === dotIdx ||
+                  (dotIdx === 1 && index === images.length - 1) ||
+                  (dotIdx === images.length - 2 && index === 0)
+                    ? '#565656'
+                    : '#eeeeee',
               }}
             />
           )

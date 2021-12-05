@@ -7,7 +7,7 @@ const messages = (state = initialState, action) => {
 
   switch (type) {
     case MESSAGE_STATUS.SET_MESSAGE:
-      return { message: payload };
+      return { message: payload.message };
     case MESSAGE_STATUS.CLEAR_MESSAGE:
       return { message: '' };
     default:
