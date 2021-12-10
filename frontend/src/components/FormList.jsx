@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import { DataGrid, GridToolbar, GridOverlay } from '@mui/x-data-grid';
+import { Box, Alert } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -12,12 +14,6 @@ import ROLES from 'shared/constant/roles';
 import useGlobalMessageContext from 'hooks/useGlobalMessageContext';
 import { GLOBAL_MESSAGE_SERVERITY } from 'shared/constant/styles';
 // import GlobalMessageContext from 'components/MessageBar';
-
-const onCellDoubleClick = (params) => {
-  if (params.field === 'name') {
-    history.push(`/form/${params.id}`);
-  }
-};
 
 const columns = [
   {
@@ -45,6 +41,12 @@ const columns = [
   },
 ];
 
+const onCellDoubleClick = (params) => {
+  if (params.field === 'name') {
+    history.push(`/form/${params.id}`);
+  }
+};
+
 const CustomLoadingOverlay = () => (
   <GridOverlay>
     <div style={{ position: 'absolute', top: 0, width: '100%' }}>
@@ -57,42 +59,57 @@ const SortedDescendingIcon = () => <ExpandMoreIcon className='icon' />;
 
 const SortedAscendingIcon = () => <ExpandLessIcon className='icon' />;
 
+const CustomNoRowsOverlay = () => (
+  <div
+    style={{
+      display: 'flex',
+      top: '58px',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      height: 'auto',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      overflow: 'hidden',
+    }}
+  >
+    {messages.NO_DATA}
+  </div>
+);
+
 const FormList = () => {
   const [formAll, setFormAll] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const { addGlobalMessage } = useGlobalMessageContext();
   // const context = useContext(GlobalMessageContext); // Use context.addGlobalMessage({}) instead of addGlobalMessage
 
-  const CustomNoRowsOverlay = () =>
-    addGlobalMessage({
-      title: messages.NO_DATA,
-      content: '',
-      severity: GLOBAL_MESSAGE_SERVERITY.INFO,
-      timestamp: Date.now(),
-      enableClose: true,
-    });
-
   useEffect(() => {
     dispatch(getAllForms())
-      .then((data) => setFormAll(data.data))
+      .then((data) => {
+        setFormAll(data.data);
+        setIsLoading(false);
+      })
       .catch((resp) => {
-        if (!resp || !Object.prototype.hasOwnProperty.call(resp, 'status') || resp.status === 401) {
+        if (!resp || !Object.prototype.hasOwnProperty.call(resp, 'status')) {
+          // TODO Handle unknown error on server (e.g. server crashed)
+        } else if (resp.status === 401) {
           history.push('/login');
         }
 
         addGlobalMessage({
-          title: resp.data.errHead || resp.data.error,
-          content: resp.data.errBody || '',
+          title: resp?.data.errHead || resp?.data.error || messages.UNKNOWN_ERROR,
+          content: resp?.data.errBody || '',
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           timestamp: Date.now(),
           enableClose: true,
         });
-      })
-      .finally(() => setIsLoading(false));
+      });
   }, []);
 
+  // https://mui.com/api/data-grid/data-grid/
   return (
     <DataGrid
       autoHeight
@@ -100,19 +117,18 @@ const FormList = () => {
       hideFooterSelectedRowCount
       editMode='row'
       density='standard'
+      disableDensitySelector
       components={{
         Toolbar: GridToolbar,
         LoadingOverlay: CustomLoadingOverlay,
-        NoRowsOverlay: CustomNoRowsOverlay,
         ColumnSortedDescendingIcon: SortedDescendingIcon,
         ColumnSortedAscendingIcon: SortedAscendingIcon,
+        NoRowsOverlay: CustomNoRowsOverlay,
       }}
       onCellDoubleClick={onCellDoubleClick}
       columns={columns}
       rows={formAll}
       style={{ cursor: 'pointer' }}
-      // checkboxSelection
-      // componentsProps={{ cell: { onMouseEnter: handlePopoverOpen, onMouseLeave: handlePopoverClose, }, }}
     />
   );
 };

@@ -1,5 +1,7 @@
-import React from 'react';
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import React, { useEffect, useState, useContext } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import useGlobalMessageContext from 'hooks/useGlobalMessageContext';
+import { GLOBAL_MESSAGE_SERVERITY } from 'shared/constant/styles';
 
 const rows = [
   { id: 1, col1: 'Hello', col2: 'World' },
@@ -13,8 +15,49 @@ const columns = [
 ];
 
 export default function Test() {
+  const { addGlobalMessage } = useGlobalMessageContext();
+
+  useEffect(() => {
+    addGlobalMessage({
+      title: 'This is title 01',
+      content: '',
+      severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+      timestamp: Date.now(),
+      enableClose: true,
+    });
+
+    addGlobalMessage({
+      title: 'This is title 02',
+      severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+      timestamp: Date.now(),
+      enableClose: true,
+    });
+    setTimeout(
+      () =>
+        addGlobalMessage({
+          title: 'This is title',
+          content: 'This is content',
+          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          timestamp: Date.now(),
+        }),
+      3
+    );
+    setTimeout(
+      () =>
+        addGlobalMessage({
+          title: 'This is title',
+          content:
+            'As part of the customization API, the grid allows you to override internal components with the components prop. The prop accepts an object of type GridSlotsComponent. \n If you wish to pass additional props in a component slot, you can do it using the componentsProps prop. This prop is of type GridSlotsComponentsProps.',
+          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          timestamp: Date.now(),
+          enableClose: true,
+        }),
+      6
+    );
+  }, []);
+
   return (
-    <div style={{ height: 300, width: '80%' }}>
+    <div style={{ marginTop: '50px', height: 300, width: '80%' }}>
       <DataGrid rows={rows} columns={columns} />
     </div>
   );
