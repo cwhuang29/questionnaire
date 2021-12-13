@@ -17,12 +17,15 @@ const Home = () => {
       <Box
         component='form'
         sx={{
-          mt: 20,
-          pl: '10%',
-          pr: '10%',
+          mt: '20px',
           ml: 'auto',
           mr: 'auto',
           textAlign: 'center',
+        }}
+        style={{
+          paddingLeft: 'min(25px, 10%)',
+          paddingRight: 'min(25px, 10%)',
+          overflowX: 'hidden'
         }}
       >
         <TitleText width='400px' height='35px' lineHeight='1.5' fontSize='18px'>

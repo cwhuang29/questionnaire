@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Proptypes from 'prop-types';
-import { AppBar, Box, Toolbar, Typography, Button, IconButton } from '@mui/material';
+import { AppBar, Box, Toolbar, Typography, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';

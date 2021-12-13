@@ -7,7 +7,7 @@ export const snakeCaseToTitleCase = (s) =>
     .map((sss) => toCapitalize(sss))
     .join('');
 
-export const toCamelCase = (s) => {
+export const snakeCaseToCamelCase = (s) => {
   const tmp = snakeCaseToTitleCase(s);
   return `${tmp.charAt(0).toLowerCase()}${tmp.slice(1)}`;
 };

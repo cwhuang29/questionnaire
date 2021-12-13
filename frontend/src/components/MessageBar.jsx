@@ -14,6 +14,7 @@ const GlobalMessageWrapper = styled.div`
   top: 1rem;
   right: 1rem;
   max-width: min(500px, 70%);
+  cursor: default;
   > * {
     margin: 5px 0;
   }

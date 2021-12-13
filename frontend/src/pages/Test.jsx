@@ -30,14 +30,14 @@ export default function Test() {
       title: 'This is title 02',
       severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
       timestamp: Date.now(),
-      enableClose: true,
     });
     setTimeout(
       () =>
         addGlobalMessage({
           title: 'This is title',
-          content: 'This is content',
+          content: 'This is content. As part of the customization API, the grid allows you to override internal components with the components prop.',
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          enableClose: true,
           timestamp: Date.now(),
         }),
       3

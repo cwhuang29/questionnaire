@@ -63,15 +63,17 @@ const MessageBarArchive = ({ isShow, isShowButton, msgHead, msgBody }) => {
   const [showMsgBar, setShowMsgBar] = useState(isShow);
   const crossOnClick = () => setShowMsgBar(!showMsgBar);
 
-  return showMsgBar ? (
-    <Wrapper>
-      <RoundButton warning isShow={isShowButton} disabled>
-        <Cross onClick={crossOnClick} />
-      </RoundButton>
-      <MessageHead>{msgHead}</MessageHead>
-      <MessageBody>{msgBody}</MessageBody>
-    </Wrapper>
-  ) : null;
+  return (
+    showMsgBar && (
+      <Wrapper>
+        <RoundButton warning isShow={isShowButton} disabled>
+          <Cross onClick={crossOnClick} />
+        </RoundButton>
+        <MessageHead>{msgHead}</MessageHead>
+        <MessageBody>{msgBody}</MessageBody>
+      </Wrapper>
+    )
+  );
 };
 
 MessageBar.defaultProps = {

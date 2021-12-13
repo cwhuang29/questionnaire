@@ -47,7 +47,7 @@ const (
 	JWTValidationErrorMalformed        = "Token is malformed"
 	JWTValidationErrorUnverifiable     = "Token could not be verified because of signing problems"
 	JWTValidationErrorSignatureInvalid = "Signature validation failed"
-	JWTValidationErrorExpired          = "Token is expired"
+	JWTValidationErrorExpired          = "You have to relogin" // Token is expired
 	JWTValidationErrorNotValidYet      = "Token is not yet valid before sometime"
 	JWTPayloadMalformed                = "JWT token payload is improper"
 	JWTUnknown                         = "Can not handle this token"

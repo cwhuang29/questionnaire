@@ -52,11 +52,13 @@ const Login = () => {
       component='form'
       onSubmit={formik.handleSubmit}
       sx={{
-        mt: 20,
-        width: '500px',
+        mt: '80px',
         ml: 'auto',
         mr: 'auto',
         textAlign: 'center',
+      }}
+      style={{
+        width: 'min(500px, 85%)',
       }}
     >
       {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}

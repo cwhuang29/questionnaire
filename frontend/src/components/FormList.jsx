@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
 import { DataGrid, GridToolbar, GridOverlay } from '@mui/x-data-grid';
-import { Box, Alert } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
