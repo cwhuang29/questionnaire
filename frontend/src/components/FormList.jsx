@@ -99,7 +99,7 @@ const FormList = () => {
 
         addGlobalMessage({
           title: resp?.data.errHead || resp?.data.error || messages.UNKNOWN_ERROR,
-          content: resp?.data.errBody || '',
+          content: resp?.data.errBody || messages.SERVER_UNSTABLE,
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           timestamp: Date.now(),
           enableClose: true,

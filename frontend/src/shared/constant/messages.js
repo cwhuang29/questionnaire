@@ -7,6 +7,7 @@ export default {
   TRY_TOO_OFTEN: 'You are trying too often',
   NO_DATA: 'There are no data',
   SERVER_CRASH: 'We will be back as soon as possible. Thank you for your patience and please try again later',
+  SERVER_UNSTABLE: 'Some functions may not work properly due to server error',
 };
 
 export const validateMsg = {

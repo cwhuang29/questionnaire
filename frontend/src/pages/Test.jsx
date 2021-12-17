@@ -34,8 +34,9 @@ export default function Test() {
     setTimeout(
       () =>
         addGlobalMessage({
-          title: 'This is title',
-          content: 'This is content. As part of the customization API, the grid allows you to override internal components with the components prop.',
+          title: 'Title 03',
+          content:
+            'This is content. As part of the customization API, the grid allows you to override internal components with the components prop.',
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           enableClose: true,
           timestamp: Date.now(),
@@ -45,7 +46,7 @@ export default function Test() {
     setTimeout(
       () =>
         addGlobalMessage({
-          title: 'This is title',
+          title: 'Title 04',
           content:
             'As part of the customization API, the grid allows you to override internal components with the components prop. The prop accepts an object of type GridSlotsComponent. \n If you wish to pass additional props in a component slot, you can do it using the componentsProps prop. This prop is of type GridSlotsComponentsProps.',
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,

@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback, createContext } from 'react';
 import Proptypes from 'prop-types';
 import styled from 'styled-components';
-import { Alert, AlertTitle } from '@mui/material';
 import { GLOBAL_MESSAGE_DISAPPEAR_PERIOD, MAX_Z_INDEX } from 'shared/constant/styles';
+import Stack from '@mui/material/Stack';
+import { MessageBarItem } from './MessageBarItem';
 
 const GlobalMessageContext = createContext();
 
@@ -22,17 +23,35 @@ const GlobalMessageWrapper = styled.div`
 
 export const MessageBar = ({ children }) => {
   const [messages, setMessages] = useState([]);
+  const [isClosedManually, setIsClosedManually] = useState(false);
+  const [startNextTimer, setStartNextTimer] = useState(true);
+  const generateKey = ({ timestamp, title, content }) => `${timestamp}${title}${content}`;
 
   useEffect(() => {
     if (messages.length === 0) {
-      return null;
+      return;
     }
-    const timer = setTimeout(
-      () => setMessages((prevMessages) => prevMessages.slice(1)),
-      GLOBAL_MESSAGE_DISAPPEAR_PERIOD
-    );
-    return () => clearTimeout(timer);
+    if (isClosedManually) {
+      // Prevent the first message lasts more than GLOBAL_MESSAGE_DISAPPEAR_PERIOD when user removes messages manually
+      setIsClosedManually(false);
+      return;
+    }
+    if (!startNextTimer) {
+      // Prevent the first message lasts more than GLOBAL_MESSAGE_DISAPPEAR_PERIOD when new message is added
+      return;
+    }
+    setTimeout(() => {
+      setStartNextTimer(true);
+      setMessages((prevMessages) => prevMessages.slice(1));
+    }, GLOBAL_MESSAGE_DISAPPEAR_PERIOD);
+    setStartNextTimer(false);
   }, [messages]);
+
+  // Problem: when a message is added afterward, it may lasts less than GLOBAL_MESSAGE_DISAPPEAR_PERIOD time
+  // useEffect(() => {
+  //   const timer = setInterval(() => setMessages((prevMessages) => prevMessages.slice(1)), GLOBAL_MESSAGE_DISAPPEAR_PERIOD);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   const addGlobalMessage = useCallback((message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -42,31 +61,19 @@ export const MessageBar = ({ children }) => {
     setMessages([]);
   }, []);
 
-  const generateKey = ({ timestamp, title, content }) => `${timestamp}${title}${content}`;
+  const onClose = (msg) => () => {
+    setIsClosedManually(true);
+    setMessages((prevMessages) => prevMessages.filter((prevMsg) => generateKey(prevMsg) !== generateKey(msg)));
+  };
 
-  const onClose = (message) => () =>
-    setMessages((prevMessages) => prevMessages.filter((prevMsg) => generateKey(prevMsg) !== generateKey(message)));
-
-  // https://mui.com/components/alert/
   return (
     <GlobalMessageContext.Provider value={{ addGlobalMessage, clearAllGlobalMessages }}>
       <GlobalMessageWrapper>
-        {messages.map((message) => (
-          <Alert
-            severity={message.severity}
-            key={`${generateKey(message)}`}
-            onClose={message.enableClose ? onClose(message) : null}
-          >
-            {message.content ? (
-              <>
-                <AlertTitle>{message.title}</AlertTitle>
-                {message.content}
-              </>
-            ) : (
-              <div style={{ fontSize: '1rem' }}>{message.title}</div>
-            )}
-          </Alert>
-        ))}
+        <Stack spacing={1}>
+          {messages.map((message) => (
+            <MessageBarItem key={`${generateKey(message)}`} message={message} onClose={onClose} />
+          ))}
+        </Stack>
       </GlobalMessageWrapper>
       {children}
     </GlobalMessageContext.Provider>

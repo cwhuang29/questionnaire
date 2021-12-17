@@ -23,9 +23,10 @@ const Home = () => {
           textAlign: 'center',
         }}
         style={{
-          paddingLeft: 'min(25px, 10%)',
-          paddingRight: 'min(25px, 10%)',
-          overflowX: 'hidden'
+          paddingLeft: 'min(70px, 8%)',
+          paddingRight: 'min(70px, 8%)',
+          overflowX: 'hidden',
+          maxWidth: '1800px',
         }}
       >
         <TitleText width='400px' height='35px' lineHeight='1.5' fontSize='18px'>

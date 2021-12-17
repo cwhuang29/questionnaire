@@ -48,7 +48,7 @@ const Slideshow = () => {
         margin: '0 auto',
         overflow: 'hidden',
         position: 'relative',
-        // maxWidth: '800px',
+        maxWidth: '1800px',
       }}
     >
       <div
