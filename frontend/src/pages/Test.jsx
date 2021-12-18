@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import useGlobalMessageContext from 'hooks/useGlobalMessageContext';
 import { GLOBAL_MESSAGE_SERVERITY } from 'shared/constant/styles';
+import FormList from 'components/FormList';
 
 const rows = [
   { id: 1, col1: 'Hello', col2: 'World' },
@@ -58,8 +59,12 @@ export default function Test() {
   }, []);
 
   return (
-    <div style={{ marginTop: '50px', height: 300, width: '80%' }}>
-      <DataGrid rows={rows} columns={columns} />
-    </div>
+    <>
+      <div style={{ marginTop: '50px', height: 300, width: '80%' }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>
+      <div> !!!!!!!!!!!!</div>
+      <FormList />
+    </>
   );
 }
