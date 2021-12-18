@@ -20,8 +20,8 @@ const HomePageImageList = () => (
       textAlign: 'center',
     }}
   >
-    <img src={images.web.img} alt='Web' height='500' />
-    <img src={images.app.img} alt='App' height='300' />
+    <img src={images.web.img} alt='Web mockup' height='500' />
+    <img src={images.app.img} alt='App mockup' height='300' />
   </Box>
 );
 // <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>

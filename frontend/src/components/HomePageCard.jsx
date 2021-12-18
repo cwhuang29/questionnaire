@@ -8,30 +8,35 @@ const scenarios = [
     title: '學生族群',
     content: '一二三四五六七八',
     backgroundColor: '#F3B3DD',
+    img: '/assets/scenario/student.png',
   },
   {
     redirectTo: '/ecosystem/workers',
     title: '小資族群',
     content: '一二三四五六七八',
     backgroundColor: '#F9C140',
+    img: '/assets/scenario/worker.png',
   },
   {
     redirectTo: '/ecosystem/couples',
     title: '新婚夫婦',
     content: '一二三四五六七八',
     backgroundColor: '#32C39F',
+    img: '/assets/scenario/couple.png',
   },
   {
     redirectTo: '/ecosystem/business',
     title: '微型企業',
     content: '一二三四五六七八九十',
     backgroundColor: '#2588FE',
+    img: '/assets/scenario/business.png',
   },
   {
     redirectTo: '/ecosystem/retirees',
     title: '退休族群',
     content: '一二三四五六七八九十',
     backgroundColor: '#A07BF9',
+    img: '/assets/scenario/retiree.png',
   },
 ];
 
@@ -54,9 +59,9 @@ const HomePageCard = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box>
-        <Grid container rowSpacing={{ sm: 1, md: 2, lg: 3 }} columnSpacing={{ sm: 2, md: 3, lg: 4 }}>
+        <Grid container rowSpacing={{ xs: 1, sm: 1, md: 2, lg: 3 }} columnSpacing={{ sm: 2, md: 3, lg: 4 }}>
           {scenarios.map((scenario) => (
-            <Grid item xs={12} sm={6} key={scenario.title}>
+            <Grid item xs={12} sm={12} md={6} key={scenario.title}>
               <HomePageCardItem key={scenario.title} prop={scenario} />
             </Grid>
           ))}
