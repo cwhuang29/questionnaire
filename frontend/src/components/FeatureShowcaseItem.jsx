@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 import Proptypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 

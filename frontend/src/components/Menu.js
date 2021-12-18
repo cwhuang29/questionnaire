@@ -55,10 +55,10 @@ const Menu = ({ user }) => {
           </Typography>
 
           {menuBarItemsWithUser.map((menu, idx) => (
-            <>
-              <MenuBarItem key={menu} menu={menu} onClick={onClick(menu)} />
+            <React.Fragment key={menu}>
+              <MenuBarItem key={`${menu}-word`} menu={menu} onClick={onClick(menu)} />
               {idx !== menuBarItemsWithUser.length - 1 && <MenuBarDivider key={`${menu}-divider`} />}
-            </>
+            </React.Fragment>
           ))}
         </Toolbar>
       </AppBar>

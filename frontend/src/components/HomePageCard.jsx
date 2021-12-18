@@ -59,10 +59,10 @@ const HomePageCard = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box>
-        <Grid container rowSpacing={{ xs: 1, sm: 1, md: 2, lg: 3 }} columnSpacing={{ sm: 2, md: 3, lg: 4 }}>
+        <Grid container rowSpacing={{ xs: 2, sm: 2, md: 3, lg: 3 }} columnSpacing={{ sm: 2, md: 3, lg: 4 }}>
           {scenarios.map((scenario) => (
             <Grid item xs={12} sm={12} md={6} key={scenario.title}>
-              <HomePageCardItem key={scenario.title} prop={scenario} />
+              <HomePageCardItem prop={scenario} />
             </Grid>
           ))}
         </Grid>

@@ -61,8 +61,8 @@ const FeatureShowcase = () => {
       <Box>
         <Grid container rowSpacing={{ sm: 1, md: 2, lg: 3 }} columnSpacing={{ sm: 2, md: 4, lg: 5 }}>
           {features.map((feature) => (
-            <Grid item xs={12} sm={6} md={4}>
-              <FeatureShowcaseItem key={feature.title} prop={feature} />
+            <Grid item xs={12} sm={6} md={4} key={feature.title}>
+              <FeatureShowcaseItem prop={feature} />
             </Grid>
           ))}
         </Grid>
