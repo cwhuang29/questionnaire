@@ -1,7 +1,14 @@
 import React from 'react';
 import WcIcon from '@mui/icons-material/Wc';
 
-export const flows = {
+export const scenarioFlowTitles = {
+  students: '專為剛畢業的你所打造',
+  workers: '',
+  couples: '',
+  business: '',
+  retirees: '',
+};
+export const scenarioFlows = {
   students: [
     { label: '開始還學貸囉', icon: <WcIcon /> },
     { label: '如何申請薪轉戶', icon: <WcIcon /> },
@@ -14,7 +21,7 @@ export const flows = {
   retirees: [],
 };
 
-export const flowDetails = {
+export const scenarioFlowDetails = {
   students: [
     {
       title: '開始還學貸囉',

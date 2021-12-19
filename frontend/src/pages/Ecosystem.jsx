@@ -5,7 +5,7 @@ import { Box, Chip, Typography } from '@mui/material';
 import { SectionWrapper } from 'components/styledComponents/SectionWrapper';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
-import { flows, flowDetails } from 'shared/constant/scenarioFlows';
+import { scenarioFlowTitles, scenarioFlows, scenarioFlowDetails } from 'shared/constant/scenarioFlows';
 
 const FlowChip = ({ flow }) => (
   <Chip
@@ -30,35 +30,36 @@ FlowChip.propTypes = {
 
 const Ecosystem = () => {
   const { ecosystem } = useParams();
-  const currFlow = flows[ecosystem];
-  const currFlowDetail = flowDetails[ecosystem];
+  const title = scenarioFlowTitles[ecosystem];
+  const flow = scenarioFlows[ecosystem];
+  const flowDetail = scenarioFlowDetails[ecosystem];
 
   return (
     <Box sx={{ color: '#EFEFEF' }}>
       <SectionWrapper padding='8em 0' background='#E8D8BD'>
         <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-          專為剛畢業的你所打造
+          {title}
         </Typography>
         <div style={{ padding: '35px 0' }} />
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          {currFlow.map((flow, idx) => (
-            <React.Fragment key={flow.label}>
-              <FlowChip flow={flow} />
-              {idx !== currFlow.length - 1 && <DoubleArrowIcon sx={{ color: '#5B5B5B', fontSize: '31px', position: 'relative', top: '7px' }} />}
+          {flow.map((f, idx) => (
+            <React.Fragment key={f.label}>
+              <FlowChip flow={f} />
+              {idx !== flow.length - 1 && <DoubleArrowIcon sx={{ color: '#5B5B5B', fontSize: '31px', position: 'relative', top: '7px' }} />}
             </React.Fragment>
           ))}
         </div>
       </SectionWrapper>
-      {currFlowDetail.map((desc) => (
-        <SectionWrapper padding='3em 0 1.7em 0' background={desc.backgroundColor}>
+      {flowDetail.map((detail) => (
+        <SectionWrapper padding='3em 0 1.7em 0' background={detail.backgroundColor}>
           <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-            {desc.title}
+            {detail.title}
           </Typography>
           <div style={{ padding: '35px min(40px, 3%)', display: 'flex', justifyContent: 'center' }}>
-            <img src={desc.image} alt='' height='380' style={{ borderRadius: '20px', width: 'min(40%, 600px)' }} />
+            <img src={detail.image} alt='' height='380' style={{ borderRadius: '20px', width: 'min(40%, 580px)' }} />
             <div style={{ width: 'min(10%, 100px)' }} />
             <Typography variant='h6' component='div' sx={{ width: '45%', whiteSpace: 'pre-line' }}>
-              {desc.content}
+              {detail.content}
             </Typography>
           </div>
         </SectionWrapper>
