@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Proptypes from 'prop-types';
-import { AppBar, Box, Toolbar, Typography, IconButton } from '@mui/material';
+import { AppBar, Box, Divider, IconButton, MenuItem, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Divider from '@mui/material/Divider';
 import { toCapitalize } from 'shared/utils/stringHelpers';
 
 const MenuBarDivider = () => (
@@ -45,19 +43,14 @@ const Menu = ({ user }) => {
             <MenuIcon />
           </IconButton>
 
-          <Typography
-            variant='h6'
-            component='div'
-            onClick={() => history.push('/')}
-            sx={{ flexGrow: 1, cursor: 'default', fontWeight: 'bold' }}
-          >
+          <Typography variant='h6' component='div' onClick={() => history.push('/')} sx={{ flexGrow: 1, cursor: 'default', fontWeight: 'bold' }}>
             HNCB Bank
           </Typography>
 
           {menuBarItemsWithUser.map((menu, idx) => (
             <React.Fragment key={menu}>
-              <MenuBarItem key={`${menu}-word`} menu={menu} onClick={onClick(menu)} />
-              {idx !== menuBarItemsWithUser.length - 1 && <MenuBarDivider key={`${menu}-divider`} />}
+              <MenuBarItem menu={menu} onClick={onClick(menu)} />
+              {idx !== menuBarItemsWithUser.length - 1 && <MenuBarDivider />}
             </React.Fragment>
           ))}
         </Toolbar>

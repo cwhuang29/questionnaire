@@ -18,9 +18,7 @@ const forms = (state = initialState, action) => {
       if (state.formDetails.find(({ id }) => id === payload.formDetail.id)) {
         return {
           ...state,
-          formDetails: state.formDetails.map((formDetail) =>
-            formDetail.id === payload.formDetail.id ? payload.formDetail : formDetail
-          ),
+          formDetails: state.formDetails.map((formDetail) => (formDetail.id === payload.formDetail.id ? payload.formDetail : formDetail)),
         };
       }
       return { ...state, formDetails: [...state.formDetails, payload.formDetail] };

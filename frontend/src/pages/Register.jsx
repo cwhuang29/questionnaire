@@ -14,9 +14,7 @@ const validationSchema = Yup.object({
   firstName: Yup.string().required(validateMsg.REGISTER.FIRST_NAME_REQUIRED).max(50, validateMsg.TOO_LONG),
   lastName: Yup.string().required(validateMsg.REGISTER.LAST_NAME_REQUIRED).max(50, validateMsg.TOO_LONG),
   email: Yup.string().email('Enter a valid email').required(validateMsg.REGISTER.EMAIL_REQUIRED),
-  password: Yup.string()
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required(validateMsg.REGISTER.PASSWORD_REQUIRED),
+  password: Yup.string().min(8, 'Password should be of minimum 8 characters length').required(validateMsg.REGISTER.PASSWORD_REQUIRED),
   changepassword: Yup.string().when('password', {
     is: (val) => !!(val && val.length > 0),
     then: Yup.string().oneOf([Yup.ref('password')], 'Both password need to be the same'),

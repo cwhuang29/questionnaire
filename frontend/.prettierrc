@@ -5,8 +5,7 @@
   singleQuote: true,
   bracketSpacing: true,
   jsxSingleQuote: true,
-  jsxBracketSameLine: false,
   useTabs: false,
   arrowParens: 'always',
-  printWidth: 120
+  printWidth: 160
 }

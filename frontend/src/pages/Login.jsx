@@ -11,9 +11,7 @@ import msg, { validateMsg } from 'shared/constant/messages';
 
 const validationSchema = Yup.object({
   email: Yup.string('Enter your email').email('Enter a valid email').required(validateMsg.LOGIN.EMAIL_REQUIRED),
-  password: Yup.string('Enter your password')
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required(validateMsg.LOGIN.PASSWORD_REQUIRED),
+  password: Yup.string('Enter your password').min(8, 'Password should be of minimum 8 characters length').required(validateMsg.LOGIN.PASSWORD_REQUIRED),
 });
 
 const Login = () => {
@@ -87,12 +85,7 @@ const Login = () => {
         helperText={formik.touched.password && formik.errors.password}
         style={{ marginBottom: '20px' }}
       />
-      <LoadingButton
-        loading={loading}
-        variant='contained'
-        type='submit'
-        style={{ marginLeft: 'auto', marginRight: 'auto' }}
-      >
+      <LoadingButton loading={loading} variant='contained' type='submit' style={{ marginLeft: 'auto', marginRight: 'auto' }}>
         Submit
       </LoadingButton>
     </Box>

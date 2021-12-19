@@ -1,6 +1,10 @@
 import React from 'react';
-import { Box, createTheme, Grid, useMediaQuery, ThemeProvider } from '@mui/material';
+import PropTypes from 'prop-types';
+import { Box, createTheme, Grid, ThemeProvider } from '@mui/material';
 import CardWithImageItem from 'components/CardWithImageItem';
+
+// import { useMediaQuery } fdrom '@mui/material';
+// const minWidthCheck = useMediaQuery('(min-width:750px)'); // Equals to true when screen width is larger than # px
 
 // https://mui.com/customization/breakpoints
 const theme = createTheme({
@@ -15,7 +19,6 @@ const theme = createTheme({
   },
 });
 
-// const minWidthCheck = useMediaQuery('(min-width:750px)'); // When screen width is larger than # px, minWidthCheck equals to true
 const CardWithImage = ({ scenarios }) => (
   <ThemeProvider theme={theme}>
     <Box>

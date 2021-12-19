@@ -5,8 +5,8 @@ import { Paper } from '@mui/material';
 import history from 'helpers/history';
 import Register from 'pages/Register';
 import Login from 'pages/Login';
-import Scenario from 'pages/Scenario';
 import Home from 'pages/Home';
+import Ecosystem from 'pages/Ecosystem';
 import NavBar from 'pages/NavBar';
 import Form from 'pages/Form';
 import Test from 'pages/Test';
@@ -30,13 +30,10 @@ const App = () => {
         <Route path='/home' component={Home} />
         <Route path='/register' component={Register} />
         <Route path='/login' render={(routeProps) => <Login />} />
-        <Route path='/scenarios/:scenario' render={(routeProps) => <Scenario />} />
+        <Route path='/ecosystem/:ecosystem' render={(routeProps) => <Ecosystem />} />
         <Route path='/form/:formId' component={Form} />
         <Route path='/test' component={Test} />
-        <Route
-          path=''
-          render={() => <Paper sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '2em' }}>Not Found</Paper>}
-        />
+        <Route path='' render={() => <Paper sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '2em' }}>Not Found</Paper>} />
       </Switch>
     </Router>
   );

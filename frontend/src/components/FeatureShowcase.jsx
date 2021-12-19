@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, createTheme, Grid, useMediaQuery, ThemeProvider } from '@mui/material';
+import { Box, createTheme, Grid, ThemeProvider } from '@mui/material';
 import FeatureShowcaseItem from 'components/FeatureShowcaseItem';
 
 // https://mui.com/customization/breakpoints/
@@ -16,7 +16,6 @@ const theme = createTheme({
   },
 });
 
-// const minWidthCheck = useMediaQuery('(min-width:750px)'); // When screen width is larger than # px, minWidthCheck equals to true
 const FeatureShowcase = ({ features }) => (
   <ThemeProvider theme={theme}>
     <Box>

@@ -36,8 +36,7 @@ export default function Test() {
       () =>
         addGlobalMessage({
           title: 'Title 03',
-          content:
-            'This is content. As part of the customization API, the grid allows you to override internal components with the components prop.',
+          content: 'This is content. As part of the customization API, the grid allows you to override internal components with the components prop.',
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           enableClose: true,
           timestamp: Date.now(),
