@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Proptypes from 'prop-types';
-import { Card, CardContent, CardActionArea, CardMedia, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 
 // https://mui.com/system/basics/#demo
 // https://mui.com/components/cards
-const HomePageCardItem = ({ prop }) => {
+const CardWithImageItem = ({ prop }) => {
   const history = useHistory();
 
   return (
@@ -42,8 +42,8 @@ const HomePageCardItem = ({ prop }) => {
   );
 };
 
-HomePageCardItem.propTypes = {
+CardWithImageItem.propTypes = {
   prop: Proptypes.object.isRequired,
 };
 
-export default HomePageCardItem;
+export default CardWithImageItem;

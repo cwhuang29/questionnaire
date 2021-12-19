@@ -23,9 +23,9 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const { isLoggedIn } = useSelector((state) => state.auth);
-  // if (isLoggedIn) {
-  //   history.push('/');
-  // }
+  if (isLoggedIn) {
+    history.push('/');
+  }
 
   const formik = useFormik({
     initialValues: {

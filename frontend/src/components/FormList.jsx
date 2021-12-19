@@ -132,14 +132,3 @@ const FormList = () => {
 };
 
 export default FormList;
-
-// <Grid container spacing={3}>
-//   {formAll.map(form => (
-//     <Grid item xs={12} key={form.id}>
-//       {form.role}
-//       <Button variant='text' onClick={() => history.push(`/${form.id}`)}>
-//         {form.name}
-//       </Button>
-//     </Grid>
-//   ))}
-// </Grid>

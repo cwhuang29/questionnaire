@@ -1,8 +1,8 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 
-const FeatureShowcaseItem = ({ prop }) => (
+const FeatureShowcaseItem = ({ feature }) => (
   <Box
     sx={{
       ml: 'auto',
@@ -11,18 +11,22 @@ const FeatureShowcaseItem = ({ prop }) => (
       textAlign: 'center',
     }}
   >
-    {prop.icon}
+    {feature.icon}
     <Typography variant='h5' component='div' sx={{ paddingBottom: '15px', fontWeight: 'bold', whiteSpace: 'pre' }}>
-      {prop.title}
+      {feature.title}
     </Typography>
     <Typography variant='body1' component='div' sx={{}}>
-      {prop.content}
+      {feature.content}
     </Typography>
   </Box>
 );
 
 FeatureShowcaseItem.propTypes = {
-  prop: Proptypes.object.isRequired,
+  feature: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string,
+    icon: PropTypes.elementType.isRequired,
+  }).isRequired,
 };
 
 export default FeatureShowcaseItem;

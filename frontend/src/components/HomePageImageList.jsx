@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, ImageList, ImageListItem } from '@mui/material';
+import { Box } from '@mui/material';
 
 const images = {
   app: {
