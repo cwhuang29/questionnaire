@@ -25,7 +25,7 @@ FeatureShowcaseItem.propTypes = {
   feature: PropTypes.shape({
     title: PropTypes.string.isRequired,
     content: PropTypes.string,
-    icon: PropTypes.elementType.isRequired,
+    icon: PropTypes.element.isRequired,
   }).isRequired,
 };
 
