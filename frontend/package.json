@@ -40,20 +40,12 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc --ignore-unknown"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "airbnb",
-      "plugin:import/errors",
-      "plugin:import/warnings"
-    ],
+    "extends": ["react-app", "airbnb", "plugin:import/errors", "plugin:import/warnings"],
     "rules": {
       "react/jsx-filename-extension": [
         1,
         {
-          "extensions": [
-            ".js",
-            ".jsx"
-          ]
+          "extensions": [".js", ".jsx"]
         }
       ],
       "react/function-component-definition": [
@@ -66,25 +58,14 @@
     "settings": {
       "import/resolver": {
         "node": {
-          "moduleDirectory": [
-            "node_modules",
-            "src/"
-          ]
+          "moduleDirectory": ["node_modules", "src/"]
         }
       }
     }
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   },
   "devDependencies": {
     "eslint": "^7.11.0",

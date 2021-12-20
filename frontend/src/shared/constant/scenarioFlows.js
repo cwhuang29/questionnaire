@@ -13,7 +13,7 @@ export const scenarioFlows = {
     { label: '開始還學貸囉', icon: <WcIcon /> },
     { label: '如何申請薪轉戶', icon: <WcIcon /> },
     { label: '幫自己保一張職業工作意外險吧', icon: <WcIcon /> },
-    { label: '定期定額信用卡繳款', icon: <WcIcon /> },
+    { label: '定期信用卡繳款', icon: <WcIcon /> },
   ],
   workers: [],
   couples: [],
@@ -45,7 +45,7 @@ export const scenarioFlowDetails = {
       backgroundColor: '#034B61',
     },
     {
-      title: '定期定額信用卡繳款',
+      title: '定期信用卡繳款',
       content:
         '我覺得這是我們這一代人需要一起省思的議題。我身邊的家庭主婦很多戶頭裡都沒有自己的積蓄或收入，平時用先生賺來的錢也會感到不好意思，用錢也會自己看看先生的臉色，也絕不敢開口說想要照顧自己父母，女性如果開口聊到錢的話題就會被我們的社會譴責為市信或是質疑是不是拜金女，只是圖男生的錢。對於長期都以家庭為重，沒有在外工作的女性，如果沒有做錯什麼卻因為男方無正當理由而被迫離婚，通常會不知所措。所以女孩們!一定要好好的防範於未然，我從來也沒有想過自己會經歷這些你也許也會跟我一樣覺得不可能!但未雨綢繆的為自己和孩子的將來做打算一定沒錯。',
       image: '/assets/scenario/scenario-01.png',

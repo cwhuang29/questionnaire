@@ -4,29 +4,34 @@ import { useParams } from 'react-router-dom';
 import { Box, Chip, Typography } from '@mui/material';
 import { SectionWrapper } from 'components/styledComponents/SectionWrapper';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
-
 import { scenarioFlowTitles, scenarioFlows, scenarioFlowDetails } from 'shared/constant/scenarioFlows';
 
 const FlowChip = ({ flow }) => (
   <Chip
-    label={flow.label}
     clickable
+    label={flow.label}
     icon={flow.icon}
     sx={{
       backgroundColor: '#EBEBEB',
       height: '45px',
       borderRadius: '23px',
-      fontSize: '1.2rem',
+      fontSize: '1.24rem',
       padding: '0 5px',
-      margin: '0 min(32px, 2.5%)',
+      margin: '0 min(32px, 2.2%) 10px min(32px, 2.2%)',
     }}
-    onClick={null}
+    onClick={() => document.getElementById(`#${flow.label}`).scrollIntoView({ behavior: 'smooth', block: 'start' })}
   />
 );
 
-FlowChip.propTypes = {
-  flow: PropTypes.object.isRequired,
-};
+const FlowIntro = ({ detail }) => (
+  <div style={{ padding: '35px min(40px, 3%)', display: 'flex', justifyContent: 'center' }}>
+    <img src={detail.image} alt='' height='380' style={{ borderRadius: '20px', width: 'min(40%, 550px)' }} />
+    <div style={{ width: 'min(10%, 100px)' }} />
+    <Typography variant='h6' component='div' sx={{ width: '45%', whiteSpace: 'pre-line' }}>
+      {detail.content}
+    </Typography>
+  </div>
+);
 
 const Ecosystem = () => {
   const { ecosystem } = useParams();
@@ -41,7 +46,7 @@ const Ecosystem = () => {
           {title}
         </Typography>
         <div style={{ padding: '35px 0' }} />
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
           {flow.map((f, idx) => (
             <React.Fragment key={f.label}>
               <FlowChip flow={f} />
@@ -51,21 +56,26 @@ const Ecosystem = () => {
         </div>
       </SectionWrapper>
       {flowDetail.map((detail) => (
-        <SectionWrapper padding='3em 0 1.7em 0' background={detail.backgroundColor}>
-          <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-            {detail.title}
-          </Typography>
-          <div style={{ padding: '35px min(40px, 3%)', display: 'flex', justifyContent: 'center' }}>
-            <img src={detail.image} alt='' height='380' style={{ borderRadius: '20px', width: 'min(40%, 580px)' }} />
-            <div style={{ width: 'min(10%, 100px)' }} />
-            <Typography variant='h6' component='div' sx={{ width: '45%', whiteSpace: 'pre-line' }}>
-              {detail.content}
+        <React.Fragment key={detail.title}>
+          <div id={`#${detail.title}`} />
+          <SectionWrapper padding='4em 0 1.8em 0' background={detail.backgroundColor}>
+            <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', textAlign: 'center', cursor: 'default' }}>
+              {detail.title}
             </Typography>
-          </div>
-        </SectionWrapper>
+            <FlowIntro detail={detail} />
+          </SectionWrapper>
+        </React.Fragment>
       ))}
     </Box>
   );
+};
+
+FlowChip.propTypes = {
+  flow: PropTypes.object.isRequired,
+};
+
+FlowIntro.propTypes = {
+  detail: PropTypes.object.isRequired,
 };
 
 export default Ecosystem;
