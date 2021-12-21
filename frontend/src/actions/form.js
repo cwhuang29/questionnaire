@@ -11,7 +11,7 @@ export const getAllForms = () => (dispatch) =>
       });
       return Promise.resolve(resp.data);
     })
-    .catch((resp) => Promise.reject(resp.response));
+    .catch((err) => Promise.reject(err.response));
 
 export const getFormById = (id) => (dispatch) =>
   formService
@@ -24,7 +24,7 @@ export const getFormById = (id) => (dispatch) =>
 
       return Promise.resolve(resp.data);
     })
-    .catch((resp) => Promise.reject(resp.response));
+    .catch((err) => Promise.reject(err.response));
 
 export const getFormDetailById = (id) => (dispatch) =>
   formService
@@ -37,4 +37,4 @@ export const getFormDetailById = (id) => (dispatch) =>
 
       return Promise.resolve(resp.data);
     })
-    .catch((resp) => Promise.reject(resp.response));
+    .catch((err) => Promise.reject(err.response));

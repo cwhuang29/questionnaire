@@ -10,6 +10,10 @@ const images = {
     title: 'Web',
     img: '/assets/mockup/mockup-hncb-imac-front.png',
   },
+  mascot: {
+    title: '小恩',
+    img: '/assets/mascot/mascot_gif.gif',
+  },
 };
 
 const HomePageImageList = () => (
@@ -22,6 +26,7 @@ const HomePageImageList = () => (
   >
     <img src={images.web.img} alt='Web mockup' height='500' />
     <img src={images.app.img} alt='App mockup' height='300' />
+    <img src={images.mascot.img} alt='SnY mascot' width='300' />
   </Box>
 );
 // <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>

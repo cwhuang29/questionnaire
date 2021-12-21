@@ -20,9 +20,12 @@ const Form = () => {
     dispatch(getFormById(formId))
       .then((data) => setForm(data.data))
       .catch((resp) => {
-        if (resp && Object.prototype.hasOwnProperty.call(resp, 'status') && resp.status === 401) {
+        if (!resp || !Object.prototype.hasOwnProperty.call(resp, 'status')) {
           history.goBack();
+        } else if (resp.status === 401) {
+          history.push('/login');
         }
+
         addGlobalMessage({
           title: resp?.data.errHead || resp?.data.error || messages.UNKNOWN_ERROR,
           content: resp?.data.errBody || messages.SERVER_UNSTABLE,

@@ -19,7 +19,7 @@ const FlowChip = ({ flow }) => (
       padding: '0 5px',
       margin: '0 min(32px, 2.2%) 10px min(32px, 2.2%)',
     }}
-    onClick={() => document.getElementById(`#${flow.label}`).scrollIntoView({ behavior: 'smooth', block: 'start' })}
+    onClick={() => document.getElementById(`${flow.label}`).scrollIntoView({ behavior: 'smooth', block: 'start' })}
   />
 );
 
@@ -41,6 +41,28 @@ const Ecosystem = () => {
 
   return (
     <Box sx={{ color: '#EFEFEF' }}>
+      <img
+        src='/assets/mascot/mascot_gif.gif'
+        alt='SnY mascot'
+        width='250'
+        style={{
+          position: 'absolute',
+          top: '95px',
+          left: '50px',
+          transform: 'scaleX(-1)',
+          WebkitTransform: 'scaleX(-1)',
+        }}
+      />
+      <img
+        src='/assets/mascot/mascot_gif.gif'
+        alt='SnY mascot'
+        width='250'
+        style={{
+          position: 'absolute',
+          top: '95px',
+          right: '50px',
+        }}
+      />
       <SectionWrapper padding='8em 0' background='#E8D8BD'>
         <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
           {title}
@@ -57,8 +79,7 @@ const Ecosystem = () => {
       </SectionWrapper>
       {flowDetail.map((detail) => (
         <React.Fragment key={detail.title}>
-          <div id={`#${detail.title}`} />
-          <SectionWrapper padding='4em 0 1.8em 0' background={detail.backgroundColor}>
+          <SectionWrapper id={`${detail.title}`} padding='4em 0 1.8em 0' background={detail.backgroundColor}>
             <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', textAlign: 'center', cursor: 'default' }}>
               {detail.title}
             </Typography>

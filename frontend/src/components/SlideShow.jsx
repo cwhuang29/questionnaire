@@ -8,11 +8,11 @@ const Slideshow = () => {
   const timeoutRef = useRef(null);
 
   const images = [
-    { src: '/assets/slideShow/yellow.png', key: 0 },
-    { src: '/assets/slideShow/blue.png', key: 1 },
-    { src: '/assets/slideShow/green.png', key: 2 },
-    { src: '/assets/slideShow/yellow.png', key: 3 },
-    { src: '/assets/slideShow/blue.png', key: 4 },
+    { src: '/assets/mascot/mascot_rocket.png', key: 0 },
+    { src: '/assets/mascot/mascot_money_pig.png', key: 1 },
+    { src: '/assets/mascot/mascot_walk.gif', key: 2 },
+    { src: '/assets/mascot/mascot_rocket.png', key: 3 },
+    { src: '/assets/mascot/mascot_money_pig.png', key: 4 },
   ]; // Duplicate first slide in the end and last slide in the beginning
 
   const resetTimeout = () => {
