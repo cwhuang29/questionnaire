@@ -1,6 +1,6 @@
-import styled from 'styled-components';
 import React from 'react';
 import Proptypes from 'prop-types';
+import styled from 'styled-components';
 
 const Link = ({ href, className, children }) => (
   <a id={className} href={href} className={className}>

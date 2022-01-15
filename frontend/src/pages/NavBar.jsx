@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Menu from 'components/Menu';
 
-const NavBar = ({ user }) => (
+import Menu from '@components/Menu';
+
+const NavBar = ({ auth }) => (
   <div style={{ display: 'block', height: '64px' }}>
-    <Menu user={user} />
+    <Menu auth={auth} />
   </div>
 );
 
 NavBar.defaultProps = {
-  user: {},
+  auth: {},
 };
 
 NavBar.propTypes = {
-  user: PropTypes.object,
+  auth: PropTypes.object,
 };
 
 export default NavBar;

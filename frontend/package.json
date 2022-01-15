@@ -1,8 +1,10 @@
 {
-  "name": "t_web",
+  "name": "my_web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/eslint-parser": "^7.16.5",
+    "@craco/craco": "^6.4.3",
     "@emotion/react": "11.6.0",
     "@emotion/styled": "11.6.0",
     "@mui/icons-material": "5.1.1",
@@ -13,8 +15,13 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "0.24.0",
+    "babel-plugin-module-resolver": "^4.1.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-babel-module": "^5.3.1",
+    "eslint-import-resolver-webpack": "^0.13.2",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "formik": "2.2.9",
     "history": "4.10.1",
@@ -23,21 +30,27 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "7.2.6",
-    "react-router-dom": "5.2.0",
+    "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
     "redux": "4.1.2",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.0",
+    "standard": "^16.0.4",
     "styled-components": "^5.3.3",
     "web-vitals": "^1.0.1",
     "yup": "0.32.11"
   },
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc --ignore-unknown"
+    "start": "BROWSER=none craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc --ignore-unknown",
+    "lint": "eslint . --fix"
+  },
+  "resolutions": {
+    "//": "Consider upgrade react-scripts to V5.0.0. See https://stackoverflow.com/questions/70368760/react-uncaught-referenceerror-process-is-not-defined & https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9"
   },
   "eslintConfig": {
     "extends": ["react-app", "airbnb", "plugin:import/errors", "plugin:import/warnings"],
@@ -70,6 +83,7 @@
   "devDependencies": {
     "eslint": "^7.11.0",
     "eslint-config-airbnb": "18.2.1",
-    "eslint-plugin-import": "^2.25.3"
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-simple-import-sort": "^7.0.0"
   }
 }
