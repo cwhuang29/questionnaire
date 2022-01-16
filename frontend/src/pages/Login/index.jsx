@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { login } from '@actions/auth';
 import msg, { validateMsg } from '@constants/messages';
+import useAuth from '@hooks/useAuth';
 
 import { LoadingButton } from '@mui/lab';
 import { Alert, Box, TextField } from '@mui/material';
 
 const validationSchema = Yup.object({
   email: Yup.string('Enter your email').email('Enter a valid email').required(validateMsg.LOGIN.EMAIL_REQUIRED),
-  password: Yup.string('Enter your password').min(8, 'Password should be of minimum 8 characters length').required(validateMsg.LOGIN.PASSWORD_REQUIRED),
+  password: Yup.string('Enter your password').min(8, validateMsg.LOGIN.PASSWORD_MIN).required(validateMsg.LOGIN.PASSWORD_REQUIRED),
 });
 
 const Login = () => {
@@ -20,9 +21,9 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const auth = useAuth();
 
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  if (isLoggedIn) {
+  if (!auth) {
     navigate('/');
   }
 
@@ -55,9 +56,11 @@ const Login = () => {
         ml: 'auto',
         mr: 'auto',
         textAlign: 'center',
+        overflowX: 'hidden',
       }}
       style={{
-        width: 'min(500px, 85%)',
+        width: '80%',
+        maxWidth: '600px',
       }}
     >
       {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}

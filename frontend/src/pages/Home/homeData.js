@@ -45,8 +45,6 @@ export const homePageScenarios = [
     redirectTo: '',
     title: '行動支付',
     img: '/assets/services/mobile-payment.jpeg',
-
-    disable: true,
   },
   {
     redirectTo: '',

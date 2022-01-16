@@ -13,6 +13,8 @@ export default {
 
 export const validateMsg = {
   TOO_LONG: 'This value is too long',
+  REQUIRED: 'This field is required',
+  IS_NUMBER: 'The value of this field should be a number',
   REGISTER: {
     FIRST_NAME_REQUIRED: 'First name is required',
     LAST_NAME_REQUIRED: 'Last name is required',
@@ -24,5 +26,6 @@ export const validateMsg = {
   LOGIN: {
     EMAIL_REQUIRED: 'Email is required',
     PASSWORD_REQUIRED: 'Password is required',
+    PASSWORD_MIN: 'Password should be of minimum 8 characters length',
   },
 };

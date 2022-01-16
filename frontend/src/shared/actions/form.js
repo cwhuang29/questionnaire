@@ -38,3 +38,16 @@ export const getFormDetailById = (id) => (dispatch) =>
       return Promise.resolve(resp.data);
     })
     .catch((err) => Promise.reject(err.response));
+
+export const getFormByUser = () => (dispatch) =>
+  formService
+    .getFormByUser()
+    .then((resp) => {
+      dispatch({
+        type: FORM_STATUS.FETCH_FORM_SUCCESS,
+        payload: { form: resp.data },
+      });
+
+      return Promise.resolve(resp.data);
+    })
+    .catch((err) => Promise.reject(err.response));

@@ -39,7 +39,7 @@
     "no-use-before-define": 1,
     "no-extra-semi": 1,
     "prettier/prettier": "warn",
-    "react-hooks/rules-of-hooks": 'error',
+    "react-hooks/rules-of-hooks": ['error', { printWidth: 180 }],
     "simple-import-sort/exports": "error",
     "simple-import-sort/imports": ['error', {
         // https://github.com/lydell/eslint-plugin-simple-import-sort#custom-grouping

@@ -8,8 +8,11 @@ const getFormById = (id, token = authHeader()) => fetch.get(`${apis.V2.FORMS}/${
 
 const getFormDetailById = (id, token = authHeader()) => fetch.get(`${apis.V2.FORMS_DETAIL}/${id}`, { headers: token });
 
+const getFormByUser = (token = authHeader()) => fetch.get(`${apis.V2.FORMS}`, { headers: token });
+
 export default {
   getAllForms,
   getFormById,
   getFormDetailById,
+  getFormByUser,
 };

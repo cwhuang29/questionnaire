@@ -6,5 +6,8 @@ export default {
     FORMS_DETAIL: '/v2/forms-detail',
 
     LOAN: '/loan/getAllRecord',
+
+    LOGIN: '/v2/login',
+    REGISTER: '/v2/register',
   },
 };

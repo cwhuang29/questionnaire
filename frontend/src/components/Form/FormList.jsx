@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import { getAllForms } from '@actions/form';
 import messages from '@constants/messages';
 import ROLES from '@constants/roles';
-import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
-import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import history from '@shared/history';
+import withFetchService from '@shared/hooks/withFetchService';
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -75,37 +74,11 @@ const CustomNoRowsOverlay = () => (
   </div>
 );
 
-const FormList = () => {
-  const [formAll, setFormAll] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
+const getAllFormsForComponent = () => () => getAllForms();
 
-  const { addGlobalMessage } = useGlobalMessageContext();
+const FormListView = (props) => {
+  const { data: formAll, isLoading } = props;
 
-  useEffect(() => {
-    dispatch(getAllForms())
-      .then((data) => {
-        setFormAll(data.data);
-        setIsLoading(false);
-      })
-      .catch((resp) => {
-        if (!resp || !Object.prototype.hasOwnProperty.call(resp, 'status')) {
-          // TODO Handle unknown error on server (e.g. server crashed)
-        } else if (resp.status === 401) {
-          history.push('/login');
-        }
-
-        addGlobalMessage({
-          title: resp?.data.errHead || resp?.data.error || messages.UNKNOWN_ERROR,
-          content: resp?.data.errBody || messages.SERVER_UNSTABLE,
-          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
-          timestamp: Date.now(),
-          enableClose: true,
-        });
-      });
-  }, [addGlobalMessage, dispatch]);
-
-  // https://mui.com/api/data-grid/data-grid/
   return (
     <DataGrid
       autoHeight
@@ -127,6 +100,16 @@ const FormList = () => {
       style={{ cursor: 'pointer' }}
     />
   );
+};
+
+const FormList = () => {
+  const FormWithData = withFetchService(FormListView, getAllFormsForComponent());
+  return <FormWithData />;
+};
+
+FormListView.propTypes = {
+  data: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 export default FormList;

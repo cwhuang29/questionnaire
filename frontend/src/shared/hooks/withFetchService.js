@@ -23,7 +23,7 @@ const ServiceFetcher = (props) => {
       .then((resp) => setData(resp.data))
       .catch((resp) => {
         if (!resp || !Object.prototype.hasOwnProperty.call(resp, 'status')) {
-          navigate.goBack();
+          // navigate(-1);
         } else if (resp.status === 401) {
           navigate('/login');
         }

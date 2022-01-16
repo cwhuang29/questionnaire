@@ -73,9 +73,11 @@ const Register = () => {
         ml: 'auto',
         mr: 'auto',
         textAlign: 'center',
+        overflowX: 'hidden',
       }}
       style={{
-        width: 'min(500px, 85%)',
+        width: '80%',
+        maxWidth: '600px',
       }}
     >
       {formik.touched.role && formik.errors.role && <Alert severity='error'>{formik.errors.role}</Alert>}

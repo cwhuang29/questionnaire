@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { getFormById } from '@actions/form';
 import withFetchService from '@shared/hooks/withFetchService';
 
+import { CreateForm } from './CreateForm';
+
 const getFormByIdForComponent = (formId) => () => getFormById(formId);
 
 const FormView = (props) => {
@@ -30,4 +32,4 @@ const Form = () => {
   return <FormWithData />;
 };
 
-export default Form;
+export { CreateForm, Form as default };

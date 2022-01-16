@@ -1,8 +1,9 @@
+import API from '@constants/apis';
 import fetch from '@services/roots';
 import userService from '@services/user.service';
 
 const register = ({ firstName, lastName, email, password, role }) =>
-  fetch.post('/v2/register', {
+  fetch.post(API.V2.REGISTER, {
     first_name: firstName,
     last_name: lastName,
     email,
@@ -12,7 +13,7 @@ const register = ({ firstName, lastName, email, password, role }) =>
 
 const login = ({ email, password }) =>
   fetch
-    .post('/v2/login', {
+    .post(API.V2.LOGIN, {
       email,
       password,
     })

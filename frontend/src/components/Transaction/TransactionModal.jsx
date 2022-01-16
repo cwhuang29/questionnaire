@@ -13,7 +13,7 @@ const TransactionModal = (props) => {
   } = props;
 
   return (
-    <MuiModal open={open} onClose={onClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+    <MuiModal open={open} onClose={onClose} aria-labelledby='modal-title' aria-describedby='modal-description'>
       <Box
         sx={{
           position: 'absolute',
