@@ -31,9 +31,9 @@ export const TestMemo = () => {
 
   return (
     <div className={styles['text-memo-blue-wrapper']}>
-      The blue component contains three sub-components. 1 input field and 2 black tiles. If you typed something, you have seen that the left tile and the blue tile have updated
-      with every keystroke, while the number of paints of the right tile didnt change. The right tile is wrapped in a React.memo function which prevents the function from
-      re-rendering when the props dont change.
+      The blue component contains three sub-components. 1 input field and 2 black tiles. If you typed something, you have seen that the left tile and the blue
+      tile have updated with every keystroke, while the number of paints of the right tile didnt change. The right tile is wrapped in a React.memo function
+      which prevents the function from re-rendering when the props dont change.
       <input value={text} placeholder='Write something' onChange={(e) => setText(e.target.value)} />
       <Updates updates={updates.current} />
       <Tile />

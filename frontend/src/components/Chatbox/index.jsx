@@ -9,7 +9,13 @@ const Chatbox = ({ children }) => {
   useScript({ body: ibmChatBox });
   return (
     <>
-      <img id='chatBoxIcon' src='/assets/mascot/mascot_rocket.png' alt='' width='130' style={{ position: 'fixed', bottom: 16, right: 12, zIndex: MAX_Z_INDEX }} />
+      <img
+        id='chatBoxIcon'
+        src='/assets/mascot/mascot_rocket.png'
+        alt=''
+        width='130'
+        style={{ position: 'fixed', bottom: 16, right: 12, zIndex: MAX_Z_INDEX }}
+      />
       {children}
     </>
   );

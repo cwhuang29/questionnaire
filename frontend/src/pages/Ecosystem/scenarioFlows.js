@@ -227,7 +227,8 @@ export const scenarioFlows = {
           icon: null,
           info: {
             title: '早安晨之美',
-            content: '使用SnY Pay於Q Burger、全聯、家樂福、麥當勞、肯德基、摩斯漢堡等指定通路享95折優惠，每月消費滿5000元再享5%現金回饋，讓你天天早上享受美味早餐。',
+            content:
+              '使用SnY Pay於Q Burger、全聯、家樂福、麥當勞、肯德基、摩斯漢堡等指定通路享95折優惠，每月消費滿5000元再享5%現金回饋，讓你天天早上享受美味早餐。',
           },
         },
         {

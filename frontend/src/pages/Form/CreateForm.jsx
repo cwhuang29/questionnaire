@@ -174,7 +174,10 @@ export const CreateForm = () => {
     // if (Object.keys(formik.errors).length === 0 && Object.keys(formik.touched).length !== 0) { } // This is not always the freshest data
   };
 
-  const handleChildChange = ({ role }) => (value) => questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
+  const handleChildChange =
+    ({ role }) =>
+    (value) =>
+      questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
 
   return (
     <Box
