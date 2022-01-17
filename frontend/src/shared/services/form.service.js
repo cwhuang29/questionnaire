@@ -10,9 +10,17 @@ const getFormDetailById = (id, token = authHeader()) => fetch.get(`${apis.V2.FOR
 
 const getFormByUser = (token = authHeader()) => fetch.get(`${apis.V2.FORMS}`, { headers: token });
 
+const createForm = (data, token = authHeader()) =>
+  fetch.post(apis.V2.CREATE_FORM, data, { headers: token }).then(async (resp) => {
+    const respData = { ...resp.data };
+    console.log(`Endpoint createForm response: ${respData}`);
+  });
+
 export default {
   getAllForms,
   getFormById,
   getFormDetailById,
   getFormByUser,
+
+  createForm,
 };

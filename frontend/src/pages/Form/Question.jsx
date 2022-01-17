@@ -87,7 +87,7 @@ export const Question = (props) => {
         handleHomeEndKeys
         clearOnBlur
         options={[]}
-        renderOption={(_props, option) => <li {..._props}>{option.label}</li>}
+        renderOption={(_props, option) => <li {..._props}>{option}</li>}
         renderInput={(params) => <TextField {...params} label='Options' name={`${role}-${id}-option`} value={state.options} />}
         onChange={handleOptionsChange}
       />

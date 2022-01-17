@@ -38,9 +38,9 @@ const ServiceFetcher = (props) => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const componentProps = { ...notForHOCProps, data, isLoading };
-  return render(componentProps); // Method 1 (render props)
-  // return <Component {...componentProps} />; // Method 2
+  const injectedProps = { ...notForHOCProps, data, isLoading };
+  return render(injectedProps); // Method 1 (render props)
+  // return <Component {...injectedProps} />; // Method 2
 };
 
 const render = (Component, props) => <Component {...props} />;
@@ -53,8 +53,8 @@ const withFetchService =
 
 // Method 2
 // const withFetchService = (Component, fetchService) => {
-//   const hocProps = { Component, fetchService }; // Method 2
-//   return ({ ...props }) => <ServiceFetcher {...props} {...hocProps} />;
+//   const injectedProps = { Component, fetchService }; // Method 2
+//   return ({ ...props }) => <ServiceFetcher {...props} {...injectedProps} />;
 // };
 
 ServiceFetcher.propTypes = {

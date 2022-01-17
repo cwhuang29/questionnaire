@@ -19,6 +19,8 @@ export const optionsCountList = [
   { value: 6, label: '6' },
   { value: 7, label: '7' },
   { value: 8, label: '8' },
+  { value: 9, label: '9' },
+  { value: 10, label: '10' },
 ];
 
 export const getDefaultQuestionState = (id) => ({ id, label: '', options: [] });
@@ -39,6 +41,7 @@ export const initialQuestionsState = {
 export const createFormActionType = {
   ADD_QUESTION: 'ADD_QUESTION',
   SET_QUESTION: 'SET_QUESTION',
+  REMOVE_QUESTION: 'REMOVE_QUESTION',
   ADD_STUDENT_QUESTION: 'ADD_STUDENT_QUESTION_COUNT',
   ADD_PARENT_QUESTION: 'ADD_PARENT_QUESTION_COUNT',
   ADD_TEACHER_QUESTION: 'ADD_TEACHER_QUESTION_COUNT',

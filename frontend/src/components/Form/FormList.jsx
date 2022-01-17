@@ -74,8 +74,6 @@ const CustomNoRowsOverlay = () => (
   </div>
 );
 
-const getAllFormsForComponent = () => () => getAllForms();
-
 const FormListView = (props) => {
   const { data: formAll, isLoading } = props;
 
@@ -102,10 +100,9 @@ const FormListView = (props) => {
   );
 };
 
-const FormList = () => {
-  const FormWithData = withFetchService(FormListView, getAllFormsForComponent());
-  return <FormWithData />;
-};
+const getAllFormsForComponent = () => () => getAllForms();
+
+const FormList = withFetchService(FormListView, getAllFormsForComponent());
 
 FormListView.propTypes = {
   data: PropTypes.object.isRequired,

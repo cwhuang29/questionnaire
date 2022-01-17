@@ -31,14 +31,9 @@ const FormParentData = ({ field, value }) => (
 // </Typography>
 
 export const FormModal = (props) => {
-  const { open, onClose, data } = props;
+  const { open, onClose, onSubmit, data } = props;
   const { researchName, formName, formCustId, minScore, optionsCount, ...questionData } = data || {};
-
   const cancelButtonClick = () => onClose();
-
-  const submitButtonClick = () => {
-    console.log(data);
-  };
 
   return (
     open && (
@@ -94,13 +89,13 @@ export const FormModal = (props) => {
           <br />
           <br />
 
-          <Box style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+          <Box style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '30px' }}>
             <ListItemButton style={{ width: '47%', backgroundColor: '#F95C5C' }} onClick={cancelButtonClick}>
               <ListItemText primary='取消' style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
             </ListItemButton>
             <div style={{ width: '6%' }} />
-            <ListItemButton style={{ width: '47%', backgroundColor: '#4780DD' }} onClick={submitButtonClick}>
-              <ListItemText primary='確認送出' type='submit' style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
+            <ListItemButton style={{ width: '47%', backgroundColor: '#4780DD' }} onClick={onSubmit}>
+              <ListItemText primary='確認送出' style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
             </ListItemButton>
           </Box>
         </Box>
@@ -112,6 +107,7 @@ export const FormModal = (props) => {
 FormModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   data: PropTypes.object,
 };
 

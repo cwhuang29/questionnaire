@@ -107,10 +107,7 @@ const CardWithImageView = (props) => {
 
 const getFormByUserForComponent = () => () => getFormByUser();
 
-const CardWithImage = () => {
-  const CardWithData = withFetchService(CardWithImageView, getFormByUserForComponent());
-  return <CardWithData />;
-};
+const CardWithImage = withFetchService(CardWithImageView, getFormByUserForComponent());
 
 CardWithImageView.propTypes = {
   data: PropTypes.object.isRequired,

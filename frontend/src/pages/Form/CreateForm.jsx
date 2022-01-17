@@ -5,10 +5,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { login } from '@actions/auth';
-import msg, { validateMsg } from '@constants/messages';
+import messages, { validateMsg } from '@constants/messages';
+import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
+import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 
 import { LoadingButton } from '@mui/lab';
-import { Autocomplete, Box, createFilterOptions, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, createFilterOptions, MenuItem, Stack, TextField, Typography } from '@mui/material';
 
 import { createFormActionType, getDefaultQuestionState, initialQuestionsState, optionsCountList, roles } from './createFormData';
 import { FormModal } from './FormModal';
@@ -45,12 +47,26 @@ const questionsReducer = (state, action) => {
           [payload.role]: state.questions[payload.role].map((question) => (question.id === payload.value.id ? payload.value : question)),
         },
       };
+    case createFormActionType.REMOVE_QUESTION:
+      return {
+        ...state,
+        counter: { ...state.counter, [payload.role]: state.counter[payload.role] > 0 ? state.counter[payload.role] - 1 : 0 },
+        questions: { ...state.questions, [payload.role]: state.questions[payload.role].slice(0, -1) },
+      };
     default:
       return state;
   }
 };
 
-const validationSchema = Yup.object({
+const formikInitialValues = {
+  researchName: '',
+  formName: '',
+  formCustId: '',
+  minScore: '',
+  optionsCount: '',
+};
+
+const formikValidationSchema = Yup.object({
   researchName: Yup.string().required(validateMsg.REQUIRED),
   formName: Yup.string().required(validateMsg.REQUIRED),
   formCustId: Yup.string().required(validateMsg.REQUIRED),
@@ -63,50 +79,102 @@ const validationSchema = Yup.object({
 export const CreateForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { addGlobalMessage, clearAllGlobalMessages } = useGlobalMessageContext();
+  const [questionState, questionDispatch] = useReducer(questionsReducer, initialQuestionsState);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState();
-  const [questionState, questionDispatch] = useReducer(questionsReducer, initialQuestionsState);
-
-  const handleChildChange =
-    ({ role }) =>
-    (value) =>
-      questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
-
-  const modalOnClose = () => {
-    setModalOpen(false);
-    setLoading(false);
-  };
+  // const [canSubmit, setCanSubmit] = useState(false); // Only set to true by button in the preview modal
 
   const formik = useFormik({
-    initialValues: {
-      researchName: '',
-      formName: '',
-      formCustId: '',
-      minScore: '',
-      optionsCount: '',
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      setLoading(true);
-      console.log('Going to submit');
+    initialValues: formikInitialValues,
+    validationSchema: formikValidationSchema,
+    validateOnChange: true,
+    validate: (values) => {
+      let hasError = false;
 
-      await dispatch(login(values))
+      if (!loading) {
+        // Ensure the 'Form is creating' message persists on the webpage
+        clearAllGlobalMessages();
+      }
+
+      if (values.optionsCount === '') {
+        hasError = true;
+        addGlobalMessage({
+          title: `The options count should not be empty`,
+          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          timestamp: Date.now(),
+        });
+      }
+      roles.forEach((role) =>
+        questionState.questions[role.label].forEach((question) => {
+          if (question.label === '') {
+            hasError = true;
+            addGlobalMessage({
+              title: 'Question should not be empty',
+              content: `Role: ${role.display}. Question ID: ${question.id + 1}`,
+              severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+              timestamp: Date.now(),
+            });
+          }
+          if (question.options.length !== values.optionsCount) {
+            hasError = true;
+            addGlobalMessage({
+              title: `Number of options is not correct (should have ${values.optionsCount} options)`,
+              content: `Role: ${role.display}. Question ID: ${question.id + 1}. Number of options: ${question.options.length}`,
+              severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+              timestamp: Date.now(),
+            });
+          }
+        })
+      );
+      return hasError ? { questionError: '' } : {};
+    },
+    onSubmit: async (values) => {
+      if (!loading) return;
+
+      addGlobalMessage({
+        title: `The questionnaire is creating. Hold on please`,
+        severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+        timestamp: Date.now(),
+        canClose: false,
+      });
+
+      const finalValue = { ...values, ...questionState };
+      await dispatch(login(finalValue))
         .then(() => navigate('/'))
         .catch((err) => {
+          const errMsg = err?.errHead || err?.errBody ? JSON.stringify(err) : messages.UNKNOWN_ERROR;
+          console.log(errMsg);
+        })
+        .finally(() => {
           setLoading(false);
-          const errMsg = err?.errHead || err?.errBody ? JSON.stringify(err) : msg.UNKNOWN_ERROR;
-          setErrorMessage(errMsg);
         });
     },
   });
 
-  const previewButtonOnClick = () => {
-    const finalValue = { ...formik.values, ...questionState };
-    setModalData(finalValue);
-    setModalOpen(true);
-    console.log(JSON.stringify(finalValue, null, 4));
+  const submitForm = () => {
+    setLoading(true);
+    formik.handleSubmit(); // Run valdidate() then onSubmit()
   };
+
+  const modalOnClose = () => {
+    setModalOpen(false);
+  };
+
+  const showPreview = () => {
+    formik.validateForm().then((formErrors) => {
+      if (Object.keys(formErrors).length === 0) {
+        const finalValue = { ...formik.values, ...questionState };
+        setModalData(finalValue);
+        setModalOpen(true);
+        console.log(JSON.stringify(finalValue, null, 4));
+      }
+    });
+    // if (Object.keys(formik.errors).length === 0 && Object.keys(formik.touched).length !== 0) { } // This is not always the freshest data
+  };
+
+  const handleChildChange = ({ role }) => (value) => questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
 
   return (
     <Box
@@ -118,9 +186,9 @@ export const CreateForm = () => {
         maxWidth: '1000px',
       }}
     >
-      <FormModal open={modalOpen} onClose={modalOnClose} data={modalData} />
+      <FormModal open={modalOpen} onClose={modalOnClose} data={modalData} onSubmit={submitForm} />
       <Typography variant='h2' component='div' sx={{ fontWeight: '500', textAlign: 'center', marginBottom: '25px' }}>
-        創建一份新問卷
+        創建一份新問卷 {loading ? 'true' : 'false'}
       </Typography>
       <Stack spacing={3} sx={{ textAlign: 'center' }}>
         <Autocomplete
@@ -221,21 +289,37 @@ export const CreateForm = () => {
           {questionState.questions[role.label].map((question, idx) => (
             <Question id={question.id || idx} role={role.label} key={question.id || idx} handleChange={handleChildChange({ role: role.label })} />
           ))}
-          <Box style={{ position: 'relative', textAlign: 'right' }}>
-            <LoadingButton
+          <Box style={{ position: 'relative', textAlign: 'right', marginTop: '20px' }}>
+            <Button
+              disabled={questionState.questions[role.label].length === 0}
               variant='contained'
               type='button'
-              style={{ marginLeft: '20px' }}
+              style={{ marginLeft: '20px', backgroundColor: '#ED5656' }}
+              onClick={() => questionDispatch({ type: createFormActionType.REMOVE_QUESTION, payload: { role: role.label } })}
+            >
+              移除最後一題
+            </Button>
+            <Button
+              variant='contained'
+              type='button'
+              style={{ marginLeft: '20px', backgroundColor: '#3A7CEB' }}
               onClick={() => questionDispatch({ type: createFormActionType.ADD_QUESTION, payload: { role: role.label } })}
             >
               創建新題目
-            </LoadingButton>
+            </Button>
           </Box>
         </React.Fragment>
       ))}
 
-      <Stack spacing={2} sx={{ textAlign: 'center' }}>
-        <LoadingButton loading={loading} variant='contained' type='button' style={{ marginLeft: 'auto', marginRight: 'auto' }} onClick={previewButtonOnClick}>
+      <Stack spacing={2} sx={{ textAlign: 'center', mt: '30px', mb: '50px' }}>
+        <LoadingButton
+          size='large'
+          loading={loading}
+          variant='contained'
+          type='submit'
+          style={{ marginLeft: 'auto', marginRight: 'auto', backgroundColor: '#3A7CEB' }}
+          onClick={showPreview}
+        >
           預覽結果
         </LoadingButton>
       </Stack>

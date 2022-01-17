@@ -4,6 +4,7 @@ export default {
 
     FORMS: '/v2/forms',
     FORMS_DETAIL: '/v2/forms-detail',
+    CREATE_FORM: '/v2/create/form',
 
     LOAN: '/loan/getAllRecord',
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { register } from '@actions/auth';
 import { validateMsg } from '@constants/messages';
 import ROLES from '@constants/roles';
+import useAuth from '@hooks/useAuth';
 
 import { LoadingButton } from '@mui/lab';
 import { Alert, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
@@ -28,9 +29,9 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const auth = useAuth();
 
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  if (isLoggedIn) {
+  if (!auth) {
     navigate('/');
   }
 
@@ -81,11 +82,8 @@ const Register = () => {
       }}
     >
       {formik.touched.role && formik.errors.role && <Alert severity='error'>{formik.errors.role}</Alert>}
-      {errorMessage && (
-        <Alert severity='error' style={{ marginBottom: '20px' }}>
-          {errorMessage}
-        </Alert>
-      )}
+      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+      <br />
       <TextField
         fullWidth
         id='firstName'

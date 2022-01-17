@@ -17,23 +17,19 @@ const login = ({ email, password }) =>
       email,
       password,
     })
-    .then(async (response) => {
-      let allResponse = { ...response.data };
+    .then(async (resp) => {
+      let respData = { ...resp.data };
 
-      if (response.data.token) {
-        const header = { Authorization: `Bearer ${response.data.token}` };
+      if (respData.token) {
+        const header = { Authorization: `Bearer ${resp.data.token}` };
         const userData = await userService.getCurrentUserData(header).catch((error) => Promise.reject(error));
-
-        allResponse = {
-          ...allResponse,
-          ...userData.data,
-        };
+        respData = { ...respData, ...userData.data };
       }
 
       // TODO write csrf token to cookie
-      localStorage.setItem('auth', JSON.stringify(allResponse));
+      localStorage.setItem('auth', JSON.stringify(respData));
 
-      return allResponse;
+      return respData;
     });
 
 const logout = () => {

@@ -1,6 +1,6 @@
 import { AUTH_STATUS } from '@constants/actionTypes';
 import AuthService from '@services/auth.service';
-import handleErrorMessage from '@utils/handleErrorMessage';
+import { extractErrorMessage } from '@utils/handleErrorMessage';
 
 export const register = (data) => (dispatch) =>
   AuthService.register(data)
@@ -11,17 +11,19 @@ export const register = (data) => (dispatch) =>
 
       return Promise.resolve();
     })
-    .catch((error) => Promise.reject(handleErrorMessage(error)));
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
 
 export const login = (data) => (dispatch) =>
-  AuthService.login(data).then((response) => {
-    dispatch({
-      type: AUTH_STATUS.LOGIN_SUCCESS,
-      payload: { user: response },
-    });
+  AuthService.login(data)
+    .then((resp) => {
+      dispatch({
+        type: AUTH_STATUS.LOGIN_SUCCESS,
+        payload: { user: resp },
+      });
 
-    return Promise.resolve();
-  });
+      return Promise.resolve();
+    })
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
 
 export const logout = () => (dispatch) => {
   AuthService.logout();

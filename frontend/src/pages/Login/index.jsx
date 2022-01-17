@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { login } from '@actions/auth';
-import msg, { validateMsg } from '@constants/messages';
+import { validateMsg } from '@constants/messages';
 import useAuth from '@hooks/useAuth';
 
 import { LoadingButton } from '@mui/lab';
@@ -41,7 +41,7 @@ const Login = () => {
         .then(() => navigate('/'))
         .catch((err) => {
           setLoading(false);
-          const errMsg = err?.errHead || err?.errBody ? JSON.stringify(err) : msg.UNKNOWN_ERROR;
+          const errMsg = JSON.stringify(err);
           setErrorMessage(errMsg);
         });
     },

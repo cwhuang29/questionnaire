@@ -11,7 +11,7 @@ export const getAllForms = () => (dispatch) =>
       });
       return Promise.resolve(resp.data);
     })
-    .catch((err) => Promise.reject(err.response));
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
 
 export const getFormById = (id) => (dispatch) =>
   formService
@@ -24,7 +24,7 @@ export const getFormById = (id) => (dispatch) =>
 
       return Promise.resolve(resp.data);
     })
-    .catch((err) => Promise.reject(err.response));
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
 
 export const getFormDetailById = (id) => (dispatch) =>
   formService
@@ -37,7 +37,7 @@ export const getFormDetailById = (id) => (dispatch) =>
 
       return Promise.resolve(resp.data);
     })
-    .catch((err) => Promise.reject(err.response));
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
 
 export const getFormByUser = () => (dispatch) =>
   formService
@@ -50,4 +50,10 @@ export const getFormByUser = () => (dispatch) =>
 
       return Promise.resolve(resp.data);
     })
-    .catch((err) => Promise.reject(err.response));
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
+
+export const createForm = (data) => () =>
+  formService
+    .createForm(data)
+    .then((resp) => Promise.resolve(resp.data))
+    .catch((err) => Promise.reject(extractErrorMessage(err)));

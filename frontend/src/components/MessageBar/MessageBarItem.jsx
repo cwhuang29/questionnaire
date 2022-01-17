@@ -5,7 +5,7 @@ import { Alert, AlertTitle } from '@mui/material';
 
 // https://mui.com/components/alert/
 export const MessageBarItem = ({ message: msg, onClose }) => {
-  const canClose = msg.enableClose === true || msg.enableClose === undefined || msg.enableClose === null || false;
+  const canClose = msg.canClose === true || msg.canClose === undefined || msg.canClose === null || false;
 
   return (
     <Alert severity={msg.severity} onClose={canClose ? onClose(msg) : null}>

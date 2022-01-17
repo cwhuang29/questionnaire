@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -28,7 +28,7 @@ FormView.propTypes = {
 
 const Form = () => {
   const { formId } = useParams();
-  const FormWithData = withFetchService(FormView, getFormByIdForComponent(formId));
+  const FormWithData = useCallback(() => withFetchService(FormView, getFormByIdForComponent(formId)), [formId]);
   return <FormWithData />;
 };
 
