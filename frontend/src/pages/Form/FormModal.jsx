@@ -21,9 +21,9 @@ const FormParentData = ({ field, value }) => (
           {field}
         </Typography>
       }
-      style={{ width: '30%', fontWeight: 'bold' }}
+      style={{ width: '25%', fontWeight: 'bold' }}
     />
-    <ListItemText primary={value} style={{ width: '70%', textAlign: 'right' }} />
+    <ListItemText primary={value} style={{ width: '75%', textAlign: 'left' }} />
   </ListItemButton>
 );
 // <Typography variant='subtitle1' style={{}}>
@@ -57,7 +57,7 @@ export const FormModal = (props) => {
             maxWidth: '86%',
           }}
         >
-          <ListSubheader component='div' disableSticky={false} style={{ backgroundColor: 'inherit' }}>
+          <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
             量表資料
           </ListSubheader>
           <FormParentData field={fieldName.researchName} value={researchName} />
@@ -71,7 +71,7 @@ export const FormModal = (props) => {
 
           {roles.map((role) => (
             <React.Fragment key={role.id}>
-              <ListSubheader component='div' disableSticky={false} style={{ backgroundColor: 'inherit' }}>
+              <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
                 給{role.display}的問題
               </ListSubheader>
               {questionData.questions[role.label].map((question, idx) => (

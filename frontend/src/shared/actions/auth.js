@@ -1,5 +1,5 @@
 import { AUTH_STATUS } from '@constants/actionTypes';
-import { LOCAL_STORAGE_NAME } from '@constants/storage';
+import { COOKIE_NAMES, LOCAL_STORAGE_NAME } from '@constants/storage';
 import AuthService from '@services/auth.service';
 import { extractErrorMessage } from '@utils/handleErrorMessage';
 
@@ -37,6 +37,7 @@ export const login = (data) => (dispatch) =>
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem(LOCAL_STORAGE_NAME.AUTH);
+  document.cookie = `${COOKIE_NAMES.IS_ADMIN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 
   dispatch({
     type: AUTH_STATUS.LOGOUT,

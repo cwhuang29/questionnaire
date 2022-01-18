@@ -4,13 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { login } from '@actions/auth';
-import messages, { validateMsg } from '@constants/messages';
+import { createForm } from '@actions/form';
+import { validateMsg } from '@constants/messages';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 
 import { LoadingButton } from '@mui/lab';
 import { Autocomplete, Box, Button, createFilterOptions, MenuItem, Stack, TextField, Typography } from '@mui/material';
+// eslint-disable-next-line no-unused-vars
+import styles from './index.module.css';
 
 import { createFormActionType, getDefaultQuestionState, initialQuestionsState, optionsCountList, roles } from './createFormData';
 import { FormModal } from './FormModal';
@@ -70,7 +72,7 @@ const formikValidationSchema = Yup.object({
   researchName: Yup.string().required(validateMsg.REQUIRED),
   formName: Yup.string().required(validateMsg.REQUIRED),
   formCustId: Yup.string().required(validateMsg.REQUIRED),
-  minScore: Yup.number(validateMsg.IS_NUMBER).required(validateMsg.REQUIRED),
+  minScore: Yup.number(validateMsg.IS_NUMBER).min(0).required(validateMsg.REQUIRED),
   optionsCount: Yup.number().min(1).max(10).required(validateMsg.REQUIRED),
   // date: Yup.date().default(() => new Date()).max(new Date(), "Are you a time traveler?!"),
   // wouldRecommend: Yup.boolean().default(false),
@@ -78,6 +80,7 @@ const formikValidationSchema = Yup.object({
 
 export const CreateForm = () => {
   const dispatch = useDispatch();
+  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
   const { addGlobalMessage, clearAllGlobalMessages } = useGlobalMessageContext();
   const [questionState, questionDispatch] = useReducer(questionsReducer, initialQuestionsState);
@@ -137,15 +140,29 @@ export const CreateForm = () => {
         title: `The questionnaire is creating. Hold on please`,
         severity: GLOBAL_MESSAGE_SERVERITY.INFO,
         timestamp: Date.now(),
-        canClose: false,
+        canClose: false, // In case user keep clicking submit button
       });
 
       const finalValue = { ...values, ...questionState };
-      await dispatch(login(finalValue))
-        .then(() => navigate('/'))
+      await dispatch(createForm(finalValue))
+        .then((resp) => {
+          clearAllGlobalMessages();
+          addGlobalMessage({
+            title: resp.title,
+            severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+            timestamp: Date.now(),
+          });
+          navigate('/');
+        })
         .catch((err) => {
-          const errMsg = err?.errHead || err?.errBody ? JSON.stringify(err) : messages.UNKNOWN_ERROR;
-          console.log(errMsg);
+          clearAllGlobalMessages();
+          addGlobalMessage({
+            title: err.title,
+            content: err.content,
+            severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+            timestamp: Date.now(),
+            canClose: false,
+          });
         })
         .finally(() => {
           setLoading(false);
@@ -158,9 +175,7 @@ export const CreateForm = () => {
     formik.handleSubmit(); // Run valdidate() then onSubmit()
   };
 
-  const modalOnClose = () => {
-    setModalOpen(false);
-  };
+  const modalOnClose = () =>  setModalOpen(false);
 
   const showPreview = () => {
     formik.validateForm().then((formErrors) => {
@@ -176,8 +191,7 @@ export const CreateForm = () => {
 
   const handleChildChange =
     ({ role }) =>
-    (value) =>
-      questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
+    (value) => questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
 
   return (
     <Box
@@ -261,6 +275,7 @@ export const CreateForm = () => {
           <TextField
             name='minScore'
             label='每題選項之最低分'
+            type='number'
             value={formik.values.minScore}
             onChange={formik.handleChange}
             error={formik.touched.minScore && Boolean(formik.errors.minScore)}
