@@ -69,7 +69,7 @@ func CheckPermissionAndArticleExists(c *gin.Context) {
 	}
 
 	if succeed := databases.IsArticleExists(id, true); !succeed {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"errHead": constants.ArticleNotFound, "errBody": constants.TryAgain})
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"errHead": constants.FormNotFound, "errBody": constants.TryAgain})
 		return
 	}
 
@@ -127,7 +127,7 @@ func Browse(c *gin.Context) {
 	if dbFormatArticle.ID == 0 {
 		c.HTML(http.StatusNotFound, "browse.html", gin.H{
 			"currPageCSS": "css/browse.css",
-			"errHead":     constants.ArticleNotFound,
+			"errHead":     constants.FormNotFound,
 			"errBody":     constants.GobackAndRetry,
 		})
 		return

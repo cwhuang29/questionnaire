@@ -30,6 +30,7 @@ func injectRoutesV2() {
 		v2.OPTIONS("/login", handlers.HandlePreflight)
 		v2.OPTIONS("/register", handlers.HandlePreflight)
 		v2.OPTIONS("/users/me", handlers.HandlePreflight)
+		v2.OPTIONS("/create/form", handlers.HandlePreflight)
 		v2.OPTIONS("/forms", handlers.HandlePreflight)
 		v2.OPTIONS("/forms/*formId", handlers.HandlePreflight)
 
@@ -44,6 +45,8 @@ func injectRoutesV2() {
 			{
 				v2.GET("/forms", handlers.Forms)
 				v2.GET("/forms/*formId", handlers.Forms)
+
+				v2.POST("/create/form", handlers.CreateForm)
 			}
 		}
 	}

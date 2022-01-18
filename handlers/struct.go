@@ -14,8 +14,34 @@ func (s UserStatus) String() string {
 	return [...]string{"guest", "member", "verified member", "admin", "verified admin"}[s]
 }
 
-// Notice: The field names should be exact the same as the fields in html template.
-// Rewrite by `json:"customize_name"` won't work (but when fetching data by JS, it works)
+type Form struct {
+	ResearchName string       `json:"researchName,omitempty"`
+	FormName     string       `json:"formName,omitempty"`
+	FormCustId   string       `json:"formCustId,omitempty"`
+	MinScore     int          `json:"minScore,omitempty"`
+	OptionsCount int          `json:"optionsCount,omitempty"`
+	Questions    FormQuestion `json:"questions"`
+}
+
+type FormQuestion struct {
+	Student []Question `json:"student"`
+	Parent  []Question `json:"parent"`
+	Teacher []Question `json:"teacher"`
+}
+
+type Question struct {
+	Id               int      `json:"id"`
+	Label            string   `json:"string"`
+	Options          []string `json:"options"`
+	IsReverseGrading bool     `json:"isReverseGrading"`
+	MaxPoint         int      `json:"maxPoint"`
+}
+
+type Login struct {
+	Email    string `form:"email" json:"email" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
 type Article struct {
 	ID         int      `json:"id"`
 	Title      string   `json:"title"`
@@ -28,9 +54,4 @@ type Article struct {
 	CoverPhoto string   `json:"cover_photo"`
 	Content    string   `json:"content"`
 	AdminOnly  bool     `json:"adminOnly"`
-}
-
-type LoginForm struct {
-	Email    string `form:"email" json:"email" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
 }

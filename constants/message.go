@@ -20,10 +20,10 @@ const (
 
 	PasswordIncorrect = "Password incorrect"
 
-	ArticleNotFound  = "Article Not Found"
-	ArticleCreateErr = "Create Article Failed"
-	ArticleUpdateErr = "Update Article Failed"
-	ArticleDeleteErr = "Delete Article Failed"
+	FormNotFound  = "Form Not Found"
+	FormCreateErr = "Create Form Failed"
+	FormUpdateErr = "Update Form Failed"
+	FormDeleteErr = "Delete Form Failed"
 
 	QueryErr           = "Invalid Parameter"
 	QueryEmptyErr      = "Parameter %s can not be empty"

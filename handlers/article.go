@@ -37,7 +37,7 @@ func UpdateArticleView(c *gin.Context) {
 	if dbFormatArticle.ID == 0 {
 		c.HTML(http.StatusNotFound, "browse.html", gin.H{
 			"currPageCSS": "css/browse.css",
-			"errHead":     constants.ArticleNotFound,
+			"errHead":     constants.FormNotFound,
 			"errBody":     constants.TryAgain,
 		})
 		return
@@ -68,16 +68,16 @@ func UpdateArticleView(c *gin.Context) {
 func CreateArticle(c *gin.Context) {
 	newArticle, invalids, err := handleForm(c)
 	if len(invalids) != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.ArticleCreateErr, "errBody": constants.TryAgain, "errTags": invalids})
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.FormCreateErr, "errBody": constants.TryAgain, "errTags": invalids})
 		return
 	} else if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.ArticleCreateErr, "errBody": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.FormCreateErr, "errBody": err.Error()})
 		return
 	}
 
 	id, res := databases.SubmitArticle(*newArticle, "create")
 	if !res {
-		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.ArticleCreateErr, "errBody": constants.DatabaseErr})
+		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.FormCreateErr, "errBody": constants.DatabaseErr})
 		return
 	}
 
@@ -94,23 +94,23 @@ func UpdateArticle(c *gin.Context) {
 	}
 
 	if succeed := databases.IsArticleExists(id, true); !succeed {
-		c.JSON(http.StatusNotFound, gin.H{"bindingError": false, "errHead": constants.ArticleNotFound, "errBody": constants.TryAgain})
+		c.JSON(http.StatusNotFound, gin.H{"bindingError": false, "errHead": constants.FormNotFound, "errBody": constants.TryAgain})
 		return
 	}
 
 	newArticle, invalids, err := handleForm(c)
 	if len(invalids) != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.ArticleUpdateErr, "errBody": constants.TryAgain, "errTags": invalids})
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.FormUpdateErr, "errBody": constants.TryAgain, "errTags": invalids})
 		return
 	} else if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.ArticleUpdateErr, "errBody": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.FormUpdateErr, "errBody": err.Error()})
 		return
 	}
 	newArticle.ID = id
 
 	id, res := databases.SubmitArticle(*newArticle, "update")
 	if !res {
-		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.ArticleUpdateErr, "errBody": constants.DatabaseErr})
+		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.FormUpdateErr, "errBody": constants.DatabaseErr})
 		return
 	}
 
@@ -127,7 +127,7 @@ func DeleteArticle(c *gin.Context) {
 	}
 
 	if res := databases.DeleteArticle(id, true); !res {
-		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.ArticleDeleteErr, "errBody": constants.TryAgain})
+		c.JSON(http.StatusInternalServerError, gin.H{"bindingError": false, "errHead": constants.FormDeleteErr, "errBody": constants.TryAgain})
 		return
 	}
 

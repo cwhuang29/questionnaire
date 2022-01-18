@@ -79,7 +79,7 @@ func LogoutV2(c *gin.Context) {
 }
 
 func LoginV2(c *gin.Context) {
-	body := LoginForm{}
+	body := Login{}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"inputFormatInvalid": true, "errHead": err.Error(), "errBody": constants.TryAgain})
 		return

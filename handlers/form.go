@@ -13,6 +13,7 @@ import (
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/cwhuang29/questionnaire/utils/validator"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/sirupsen/logrus"
 )
 
@@ -236,4 +237,33 @@ func Forms(c *gin.Context) {
 
 	form := getFormByID(id)
 	c.JSON(http.StatusOK, gin.H{"data": form})
+}
+
+func parseJSONForm(c *gin.Context) (Form, error) {
+	var form Form
+	var err error
+
+	// Note: the error "EOF" occurs when reading from the Request Body twice (e.g. c.GetRawData(), c.Request.Body)
+	err = c.ShouldBindBodyWith(&form, binding.JSON)
+	return form, err
+}
+
+func CreateForm(c *gin.Context) {
+	form, err := parseJSONForm(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.FormCreateErr, "errBody": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"title": "Success", "form": form})
+
+	// id, res := databases.SubmitArticle(form, "create")
+	// if !res {
+	//     c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.FormCreateErr, "errBody": constants.DatabaseErr})
+	//     return
+	// }
+
+	// logrus.Infof("Create form with id %v", id)
+	// c.Header("Location", "/articles/browse?articleId="+strconv.Itoa(id)) // With Location header and status code 3XX (not 2XX), response.redirected becomes true
+	// c.JSON(http.StatusCreated, gin.H{"articleId": id})
 }
