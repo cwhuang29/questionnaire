@@ -33,31 +33,31 @@ export const Question = (props) => {
   const { id, role, handleChange } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const transferStateToParent = (changedInput) => handleChange({id, ...state, ...changedInput});
+  const transferStateToParent = (changedInput) => handleChange({ id, ...state, ...changedInput });
 
   const handleReverseGradingChange = (evt) => {
     const payload = evt.target.checked;
     dispatch({ type: actionType.SET_REVERSE_GRADING, payload });
-    transferStateToParent({  isReverseGrading: payload });
+    transferStateToParent({ isReverseGrading: payload });
   };
 
   // An onChange event on an input of type number will give you the string corresponding to the entered number. That is a browser behaviour
   const handleMaxPointChange = (evt) => {
     const payload = parseInt(evt.target.value, 10);
     dispatch({ type: actionType.SET_MAX_POINT, payload });
-    transferStateToParent({  maxPoint: payload });
+    transferStateToParent({ maxPoint: payload });
   };
 
   const handleQuestionChange = (evt) => {
     const payload = evt.target.value;
     dispatch({ type: actionType.SET_QUESTION, payload });
-    transferStateToParent({  label: payload });
+    transferStateToParent({ label: payload });
   };
 
   const handleOptionsChange = (evt, newValue) => {
     const payload = newValue;
     dispatch({ type: actionType.SET_OPTIONS, payload });
-    transferStateToParent({  options: payload });
+    transferStateToParent({ options: payload });
   };
 
   return (

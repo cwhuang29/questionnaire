@@ -175,7 +175,7 @@ export const CreateForm = () => {
     formik.handleSubmit(); // Run valdidate() then onSubmit()
   };
 
-  const modalOnClose = () =>  setModalOpen(false);
+  const modalOnClose = () => setModalOpen(false);
 
   const showPreview = () => {
     formik.validateForm().then((formErrors) => {
@@ -191,7 +191,8 @@ export const CreateForm = () => {
 
   const handleChildChange =
     ({ role }) =>
-    (value) => questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
+    (value) =>
+      questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
 
   return (
     <Box
