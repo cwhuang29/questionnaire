@@ -1,5 +1,5 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { Box } from '@mui/material';
 
@@ -21,7 +21,7 @@ const HomePageWrapper = ({ children }) => (
 );
 
 HomePageWrapper.propTypes = {
-  children: Proptypes.array.isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired,
 };
 
 export default HomePageWrapper;

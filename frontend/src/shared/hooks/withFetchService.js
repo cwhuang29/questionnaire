@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import messages from '@constants/messages';
@@ -12,33 +11,28 @@ const ServiceFetcher = (props) => {
   // const { Component, fetchService, ...notForHOCProps } = props; // Method 2
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState({});
   const { addGlobalMessage } = useGlobalMessageContext();
 
   useEffect(() => {
     setIsLoading(true);
     dispatch(fetchService())
       .then((resp) => setData(resp.data))
-      .catch((resp) => {
-        if (!resp || !Object.prototype.hasOwnProperty.call(resp, 'status')) {
-          // navigate(-1);
-        } else if (resp.status === 401) {
-          navigate('/login');
-        }
-
+      .catch((err) => {
+        setError(err);
         addGlobalMessage({
-          title: resp?.data.errHead || resp?.data.error || messages.UNKNOWN_ERROR,
-          content: resp?.data.errBody || messages.SERVER_UNSTABLE,
+          title: err.title || messages.UNKNOWN_ERROR,
+          content: err.content || messages.SERVER_UNSTABLE,
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           timestamp: Date.now(),
         });
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoading(false)); // This leads to another re-render
   }, []);
 
-  const injectedProps = { ...notForHOCProps, data, isLoading };
+  const injectedProps = { ...notForHOCProps, data, isLoading, error };
   return render(injectedProps); // Method 1 (render props)
   // return <Component {...injectedProps} />; // Method 2
 };

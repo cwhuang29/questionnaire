@@ -18,26 +18,19 @@ const login = ({ email, password }) =>
       password,
     })
     .then(async (resp) => {
-      let respData = { ...resp.data };
+      const { token: jwtToken } = resp.data;
+      let userData = {}; // The user data stores in user table
 
-      if (respData.token) {
+      if (jwtToken) {
         const header = { Authorization: `Bearer ${resp.data.token}` };
-        const userData = await userService.getCurrentUserData(header).catch((error) => Promise.reject(error));
-        respData = { ...respData, ...userData.data };
+        const user = await userService.getCurrentUserData(header).catch((error) => Promise.reject(error));
+        userData = { ...user.data };
       }
 
-      // TODO write csrf token to cookie
-      localStorage.setItem('auth', JSON.stringify(respData));
-
-      return respData;
+      return { jwt: jwtToken, user: userData };
     });
-
-const logout = () => {
-  localStorage.removeItem('auth');
-};
 
 export default {
   register,
   login,
-  logout,
 };

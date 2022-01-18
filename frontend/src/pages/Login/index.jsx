@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -21,11 +21,14 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const auth = useAuth();
+  const { jwt } = useAuth();
 
-  if (!auth) {
-    navigate('/');
-  }
+  // Without useEffect:
+  // 01. Warning: Cannot update a component (`BrowserRouter`) while rendering a different component (`Login`). To locate the bad setState() call inside `Login`
+  // 02. You should call navigate() in a React.useEffect(), not when your component is first rendered.
+  useEffect(() => {
+    if (jwt) navigate('/');
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -41,8 +44,7 @@ const Login = () => {
         .then(() => navigate('/'))
         .catch((err) => {
           setLoading(false);
-          const errMsg = JSON.stringify(err);
-          setErrorMessage(errMsg);
+          setErrorMessage(`${err.title}. ${err.content || ''}`);
         });
     },
   });
@@ -63,7 +65,11 @@ const Login = () => {
         maxWidth: '600px',
       }}
     >
-      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+      {errorMessage && (
+        <Alert severity='error' style={{ textAlign: 'left' }}>
+          {errorMessage}
+        </Alert>
+      )}
       <br />
       <TextField
         fullWidth

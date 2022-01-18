@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import AuthService from '@services/auth.service';
+import { logout } from '@actions/auth';
 
 const Logout = () => {
-  AuthService.logout();
+  const dispatch = useDispatch();
+
+  useEffect(() => dispatch(logout()), []);
 
   return (
     <div>

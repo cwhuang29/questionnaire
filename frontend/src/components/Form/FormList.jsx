@@ -1,11 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { getAllForms } from '@actions/form';
 import messages from '@constants/messages';
 import ROLES from '@constants/roles';
-import history from '@shared/history';
 import withFetchService from '@shared/hooks/withFetchService';
+import { getDisplayTime } from '@utils/time';
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -34,14 +35,9 @@ const columns = [
     headerName: 'Created At',
     width: 200,
     type: 'dateTime',
+    valueFormatter: ({ value }) => getDisplayTime(new Date(value)),
   },
 ];
-
-const onCellDoubleClick = (params) => {
-  if (params.field === 'name') {
-    history.push(`/form/${params.id}`);
-  }
-};
 
 const CustomLoadingOverlay = () => (
   <GridOverlay>
@@ -75,28 +71,39 @@ const CustomNoRowsOverlay = () => (
 );
 
 const FormListView = (props) => {
-  const { data: formAll, isLoading } = props;
+  const navigate = useNavigate();
+  const { data, isLoading, error } = props;
+
+  const rows = data.constructor === Array ? data : [];
+
+  const onCellDoubleClick = (params) => {
+    if (params.field === 'name') {
+      navigate(`/form/${params.id}`);
+    }
+  };
 
   return (
-    <DataGrid
-      autoHeight
-      loading={isLoading}
-      hideFooterSelectedRowCount
-      editMode='row'
-      density='standard'
-      disableDensitySelector
-      components={{
-        Toolbar: GridToolbar,
-        LoadingOverlay: CustomLoadingOverlay,
-        ColumnSortedDescendingIcon: SortedDescendingIcon,
-        ColumnSortedAscendingIcon: SortedAscendingIcon,
-        NoRowsOverlay: CustomNoRowsOverlay,
-      }}
-      onCellDoubleClick={onCellDoubleClick}
-      columns={columns}
-      rows={formAll}
-      style={{ cursor: 'pointer' }}
-    />
+    Object.keys(error).length === 0 && (
+      <DataGrid
+        autoHeight
+        loading={isLoading}
+        hideFooterSelectedRowCount
+        editMode='row'
+        density='standard'
+        disableDensitySelector
+        components={{
+          Toolbar: GridToolbar,
+          LoadingOverlay: CustomLoadingOverlay,
+          ColumnSortedDescendingIcon: SortedDescendingIcon,
+          ColumnSortedAscendingIcon: SortedAscendingIcon,
+          NoRowsOverlay: CustomNoRowsOverlay,
+        }}
+        onCellDoubleClick={onCellDoubleClick}
+        columns={columns}
+        rows={rows}
+        style={{ cursor: 'pointer' }}
+      />
+    )
   );
 };
 
@@ -105,8 +112,9 @@ const getAllFormsForComponent = () => () => getAllForms();
 const FormList = withFetchService(FormListView, getAllFormsForComponent());
 
 FormListView.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   isLoading: PropTypes.bool.isRequired,
+  error: PropTypes.object.isRequired,
 };
 
 export default FormList;

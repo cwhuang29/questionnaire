@@ -1,5 +1,5 @@
+import { COOKIE_NAMES } from '@constants/storage';
+
 import { getCookie } from './cookie';
 
-const adminCookieName = 'is_admin';
-
-export const isAdmin = () => getCookie(adminCookieName);
+export const isAdmin = () => getCookie(COOKIE_NAMES.IS_ADMIN);

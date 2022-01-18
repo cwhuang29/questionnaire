@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -29,11 +29,14 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const auth = useAuth();
+  const { jwt } = useAuth();
 
-  if (!auth) {
-    navigate('/');
-  }
+  // Without useEffect:
+  // 01. Warning: Cannot update a component (`BrowserRouter`) while rendering a different component (`Login`). To locate the bad setState() call inside `Login`
+  // 02. You should call navigate() in a React.useEffect(), not when your component is first rendered.
+  useEffect(() => {
+    if (jwt) navigate('/');
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -52,15 +55,7 @@ const Register = () => {
         .then(() => navigate('/login'))
         .catch((err) => {
           setLoading(false);
-
-          if (err.errHead) {
-            setErrorMessage(err.errHead + err.errBody);
-          } else {
-            const msg = Object.entries(err.error)
-              .map(([key, val]) => `${key}: ${val}`)
-              .join('<br>');
-            setErrorMessage(msg);
-          }
+          setErrorMessage(`${err.title}. ${err.content || ''}`);
         });
     },
   });
@@ -82,7 +77,11 @@ const Register = () => {
       }}
     >
       {formik.touched.role && formik.errors.role && <Alert severity='error'>{formik.errors.role}</Alert>}
-      {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+      {errorMessage && (
+        <Alert severity='error' style={{ textAlign: 'left' }}>
+          {errorMessage}
+        </Alert>
+      )}
       <br />
       <TextField
         fullWidth
@@ -140,11 +139,14 @@ const Register = () => {
           onChange={formik.handleChange}
           error={formik.touched.role && Boolean(formik.errors.role)}
         >
-          {Object.entries(ROLES).map(([value, label]) => (
-            <MenuItem key={value} value={value}>
-              {label}
-            </MenuItem>
-          ))}
+          {Object.entries(ROLES).map(
+            ([value, label]) =>
+              value < 4 && (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              )
+          )}
         </Select>
       </FormControl>
 

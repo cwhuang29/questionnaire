@@ -1,10 +1,13 @@
-const authHeader = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  // const csrfToken = '';
-  // const headers = { 'X-CSRF-TOKEN': csrfToken };
+import { LOCAL_STORAGE_NAME } from '@constants/storage';
 
-  if (user && user.token) {
-    return { Authorization: `Bearer ${user.token}` };
+// const csrfToken = '';
+// const headers = { 'X-CSRF-TOKEN': csrfToken };
+
+const authHeader = () => {
+  const auth = JSON.parse(localStorage.getItem(LOCAL_STORAGE_NAME.AUTH));
+
+  if (auth.jwt) {
+    return { Authorization: `Bearer ${auth.jwt}` };
   }
   return {};
 };
