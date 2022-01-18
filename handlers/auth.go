@@ -6,9 +6,14 @@ import (
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/cwhuang29/questionnaire/databases/models"
+	"github.com/cwhuang29/questionnaire/logger"
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/cwhuang29/questionnaire/utils/validator"
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	log = logger.New("Middleware")
 )
 
 func HandlePreflight(c *gin.Context) {
@@ -22,10 +27,11 @@ func Me(c *gin.Context) {
 
 	user := databases.GetUser(email)
 	c.JSON(http.StatusOK, gin.H{
-		"email": email,
-		"name":  name,
-		"role":  role,
-		"user":  user,
+		"email":     email,
+		"name":      name,
+		"role":      role,
+		"firstName": user.FirstName,
+		"lastName":  user.LastName,
 	})
 }
 
@@ -106,5 +112,9 @@ func LoginV2(c *gin.Context) {
 
 	// c.Header("Location", constants.URLLandingPage)
 	// c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", false, true)
+	if utils.RoleType(user.Role).IsAdmin() {
+		log.InfoMsg("Setting admin cookie !!!")
+		c.SetCookie(constants.CookieIsAdmin, user.Email, constants.LoginMaxAge, "/", "", false, false)
+	}
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }

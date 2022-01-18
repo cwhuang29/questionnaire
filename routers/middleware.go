@@ -21,7 +21,7 @@ func AllowCORS() gin.HandlerFunc {
 		c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:3000") // No slash in the end
 		c.Header("Access-Control-Allow-Credentials", "true")             // To set cookies, frontend send requests with withCredentials = true // No slash in the en
 		c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-		c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token")
+		c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token,X-Questionnaire-Header")
 		c.Header("Access-Control-Max-Age", "600")
 		// After calling c.JSON(), headers are all set
 		c.Next()

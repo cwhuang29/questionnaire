@@ -18,7 +18,7 @@ type User struct {
 }
 
 func (u User) GetName() string {
-	return u.FirstName + u.LastName
+	return u.FirstName + " " + u.LastName
 }
 
 /*
