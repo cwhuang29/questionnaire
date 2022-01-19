@@ -17,7 +17,9 @@ func (s UserStatus) String() string {
 }
 
 type Form struct {
-	Author       string         `json:"author,omitempty"`
+	ID     int    `json:"id"`
+	Author string `json:"author,omitempty"`
+
 	ResearchName []string       `json:"researchName,omitempty"`
 	FormName     string         `json:"formName,omitempty"`
 	FormCustId   string         `json:"formCustId,omitempty"`
@@ -44,7 +46,7 @@ type FormQuestion struct {
 
 type Question struct {
 	Id               int      `json:"id"`
-	Label            string   `json:"string"`
+	Label            string   `json:"label"`
 	Options          []string `json:"options"`
 	IsReverseGrading bool     `json:"isReverseGrading"`
 	MaxPoint         int      `json:"maxPoint"`

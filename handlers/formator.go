@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/cwhuang29/questionnaire/constants"
@@ -19,6 +20,9 @@ func transformFormToWebFormat(form models.Form) (f Form) {
 	_ = json.Unmarshal([]byte(form.FormIntro), &f.FormIntro)
 	_ = json.Unmarshal([]byte(form.Questions), &f.Questions)
 
+	fmt.Println(form.Questions)
+	fmt.Println(f.Questions)
+	f.ID = form.ID
 	f.Author = form.Author
 	f.CreatedAt = form.CreatedAt
 	return

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/cwhuang29/questionnaire/constants"
@@ -17,19 +18,23 @@ func isUserAdmin(c *gin.Context) bool {
 }
 
 func getURLPara(c *gin.Context, key string) string {
-	return c.Param(key)
+	param := c.Param(key)
+	if strings.HasPrefix(param, "/") {
+		param = param[1:]
+	}
+	return param
 }
 
 func getQueryPara(c *gin.Context, key string) string {
 	return c.DefaultQuery(key, "")
 }
 
-func getParamFormId(c *gin.Context) (int, error) {
+func getParamFormID(c *gin.Context) (int, error) {
 	return utils.Str2PosInt(getURLPara(c, constants.ParamFormID))
 }
 
 func getParamArticleID(c *gin.Context) (int, error) {
-	return utils.Str2PosInt(getURLPara(c, constants.ParamArticleID))
+	return utils.Str2PosInt(getURLPara(c, constants.ParamFormID))
 }
 
 func getQueryArticleID(c *gin.Context) (int, error) {

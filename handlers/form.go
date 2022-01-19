@@ -228,10 +228,19 @@ func handleForm(c *gin.Context) (newArticle *models.Article, invalids map[string
 }
 
 func Forms(c *gin.Context) {
-	id, err := getParamArticleID(c)
-	if err != nil {
+	// id := c.Param("formId") // equals to "/3"
+
+	// if err != nil {
+	isSpecific := c.FullPath() == "/v2/forms/*formId"
+	if isSpecific == false {
 		allForms := getAllForms()
 		c.JSON(http.StatusOK, gin.H{"data": allForms})
+		return
+	}
+
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"data": nil})
 		return
 	}
 

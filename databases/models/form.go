@@ -9,7 +9,7 @@ type Form struct {
 	AuthorID  int    `gorm:"not null"`
 	Author    string `gorm:"not null"`
 	Status    int    `gorm:"not null"`
-	AdminOnly bool   `gorm:"default:false"` // Database stored 0/1
+	AdminOnly bool   `gorm:"default:false"` // Database store 0/1
 
 	ResearchName string `gorm:"not null;size:2048"`
 	FormName     string `gorm:"not null;size:512"`
