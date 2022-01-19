@@ -2,17 +2,16 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import CardWithImageView from '@components/CardWithImage';
+import FormList from '@components/Form/FormList';
+import PageWrapper from '@components/HomePageWrapper';
 // import FeatureShowcase from '@components/FeatureShowcase';
 // import HomePageImageList from '@components/HomePageImageList';
 // import SlideShow from '@components/SlideShow';
 import { CreditCardTransactionRecord } from '@components/Transaction';
-import HomePageWrapper from '@home/HomePageWrapper';
 import { isAdmin } from '@utils/admin.js';
 
 // import { homePageScenarios } from '@pages/Home/homeData';
 import { Typography } from '@mui/material';
-
-import FormList from 'components/Form/FormList';
 
 const Home = () => {
   const [searchParams] = useSearchParams();
@@ -23,11 +22,14 @@ const Home = () => {
   const admin = isAdmin();
 
   return (
-    <HomePageWrapper>
+    <PageWrapper>
       {admin ? (
         <>
-          <Typography variant='h2' component='div' sx={{ fontWeight: 'bold', marginTop: '0.8em', marginBottom: '1.5em' }}>
-            管理員{name}您好，歡迎來到ＸＸＸ問卷系統
+          <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', marginTop: '0.8em' }}>
+            量表清單
+          </Typography>
+          <Typography variant='h5' component='div' sx={{ fontWeight: 'bold', marginTop: '0.3em', marginBottom: '1em' }}>
+            若要看量表的更多資訊，請在名稱上連擊
           </Typography>
           <FormList />
         </>
@@ -46,7 +48,7 @@ const Home = () => {
           {/* <SlideShow /> */}
         </>
       )}
-    </HomePageWrapper>
+    </PageWrapper>
   );
 };
 

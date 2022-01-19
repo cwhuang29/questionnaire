@@ -2,15 +2,21 @@ import { FORM_STATUS } from '@constants/actionTypes';
 import formService from '@services/form.service';
 import { extractErrorMessage } from '@utils/handleErrorMessage';
 
+/*
+ * Axios puts returned data in the object with the key "data"
+ * So to access data in the HTTP response, the syntax is "resp.data"
+ * Besides, in backend, I put all data in the object with the key "data", just like what axios did
+ * So to get the actual data, the syntax is "resp.data.data"
+ */
 export const getAllForms = () => (dispatch) =>
   formService
     .getAllForms()
     .then((resp) => {
       dispatch({
         type: FORM_STATUS.FETCH_FORMS_SUCCESS,
-        payload: { forms: resp.data },
+        payload: { forms: resp.data.data }, // returns [{form01}, {form02}]
       });
-      return Promise.resolve(resp.data);
+      return Promise.resolve(resp.data.data); // returns { data: [{form01}, {form02}] }
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
@@ -20,10 +26,10 @@ export const getFormById = (id) => (dispatch) =>
     .then((resp) => {
       dispatch({
         type: FORM_STATUS.FETCH_FORM_SUCCESS,
-        payload: { form: resp.data },
+        payload: { form: resp.data.data }, // returns {form01}
       });
 
-      return Promise.resolve(resp.data);
+      return Promise.resolve(resp.data.data);
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
@@ -33,7 +39,7 @@ export const getFormDetailById = (id) => (dispatch) =>
     .then((resp) => {
       dispatch({
         type: FORM_STATUS.FETCH_FORM_DATAIL_SUCCESS,
-        payload: { form: resp.data },
+        payload: { forms: resp.data },
       });
 
       return Promise.resolve(resp.data);
@@ -46,10 +52,10 @@ export const getFormByUser = () => (dispatch) =>
     .then((resp) => {
       dispatch({
         type: FORM_STATUS.FETCH_FORM_SUCCESS,
-        payload: { form: resp.data },
+        payload: { forms: resp.data.data },
       });
 
-      return Promise.resolve(resp.data);
+      return Promise.resolve(resp.data.data);
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 

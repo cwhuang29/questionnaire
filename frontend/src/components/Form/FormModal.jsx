@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Box, ListItemButton, ListItemText, ListSubheader, Modal as MuiModal, Typography } from '@mui/material';
+import { initialQuestionsState, roles } from '@pages/Form/createFormData';
 
-import { initialQuestionsState, roles } from './createFormData';
+import { Box, ListItemButton, ListItemText, ListSubheader, Modal as MuiModal, Typography } from '@mui/material';
 
 const fieldName = {
   researchName: '研究名稱',
@@ -30,8 +30,8 @@ const FormDataItem = ({ field, value }) => (
 //   <span style={{ fontWeight: 'bold' }}>{field}: </span>{value}
 // </Typography>
 
-export const FormModal = (props) => {
-  const { open, onClose, onSubmit, data } = props;
+const FormModal = (props) => {
+  const { open, onClose, submitButtonText, cancelButtonText, onSubmit, data } = props;
   const { researchName, formName, formCustId, minScore, optionsCount, formTitle, formIntro, ...questionData } = data || {};
   const cancelButtonClick = () => onClose();
 
@@ -65,9 +65,11 @@ export const FormModal = (props) => {
           <FormDataItem field={fieldName.formCustId} value={formCustId} />
           <FormDataItem field={fieldName.minScore} value={minScore} />
           <FormDataItem field={fieldName.optionsCount} value={optionsCount} />
+          {/*
           <FormDataItem field='學生題目總數' value={questionData.counter.student} />
           <FormDataItem field='家長題目總數' value={questionData.counter.parent} />
           <FormDataItem field='老師題目總數' value={questionData.counter.teacher} />
+          */}
 
           {roles.map((role) => (
             <React.Fragment key={role.id}>
@@ -93,11 +95,11 @@ export const FormModal = (props) => {
 
           <Box style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '30px' }}>
             <ListItemButton style={{ width: '47%', backgroundColor: '#F95C5C' }} onClick={cancelButtonClick}>
-              <ListItemText primary='取消' style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
+              <ListItemText primary={cancelButtonText} style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
             </ListItemButton>
             <div style={{ width: '6%' }} />
             <ListItemButton style={{ width: '47%', backgroundColor: '#4780DD' }} onClick={onSubmit}>
-              <ListItemText primary='確認送出' style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
+              <ListItemText primary={submitButtonText} style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
             </ListItemButton>
           </Box>
         </Box>
@@ -110,10 +112,13 @@ FormModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  submitButtonText: PropTypes.string.isRequired,
+  cancelButtonText: PropTypes.string,
   data: PropTypes.object,
 };
 
 FormModal.defaultProps = {
+  cancelButtonText: '關閉',
   data: initialQuestionsState,
 };
 
@@ -121,3 +126,5 @@ FormDataItem.propTypes = {
   field: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
+
+export default FormModal;

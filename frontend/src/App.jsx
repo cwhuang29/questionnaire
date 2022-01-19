@@ -39,7 +39,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='/form/:formId' element={<Form />} />
-        <Route path='/create-form' element={<CreateForm />} />
+        <Route path='/create/form' element={<CreateForm />} />
         <Route path='/ecosystem'>
           <Route path='' element={<Ecosystem />} />
           <Route path=':ecosystem' element={<Ecosystem />} />

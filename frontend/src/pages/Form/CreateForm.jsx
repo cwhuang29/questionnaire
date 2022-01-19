@@ -5,6 +5,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { createForm } from '@actions/form';
+import FormModal from '@components/Form/FormModal';
+import { Question } from '@components/Form/Question';
+import { RoleDivider } from '@components/Form/RoleDivider';
 import { validateMsg } from '@constants/messages';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
@@ -15,9 +18,6 @@ import { Autocomplete, Box, Button, createFilterOptions, MenuItem, Stack, TextFi
 import styles from './index.module.css';
 
 import { createFormActionType, formInitialValues, getDefaultQuestionState, initialQuestionsState, optionsCountList, roles } from './createFormData';
-import { FormModal } from './FormModal';
-import { Question } from './Question';
-import { RoleDivider } from './RoleDivider';
 
 const filter = createFilterOptions();
 
@@ -77,7 +77,7 @@ export const CreateForm = () => {
   const { addGlobalMessage, clearAllGlobalMessages } = useGlobalMessageContext();
   const [questionState, questionDispatch] = useReducer(questionsReducer, initialQuestionsState);
   const [loading, setLoading] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState();
 
   const formik = useFormik({
@@ -158,24 +158,21 @@ export const CreateForm = () => {
     formik.handleSubmit(); // Run valdidate() then onSubmit()
   };
 
-  const modalOnClose = () => setModalOpen(false);
+  const modalOnClose = () => setOpenModal(false);
 
   const showPreview = () => {
     formik.validateForm().then((formErrors) => {
       if (Object.keys(formErrors).length === 0) {
         const finalValue = { ...formik.values, ...questionState };
         setModalData(finalValue);
-        setModalOpen(true);
+        setOpenModal(true);
         console.log(JSON.stringify(finalValue, null, 4));
       }
     });
     // if (Object.keys(formik.errors).length === 0 && Object.keys(formik.touched).length !== 0) { } // This is not always the freshest data
   };
 
-  const handleChildChange =
-    ({ role }) =>
-    (value) =>
-      questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
+  const handleChildChange = ({ role }) => (value) => questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
 
   return (
     <Box
@@ -187,7 +184,7 @@ export const CreateForm = () => {
         maxWidth: '1000px',
       }}
     >
-      <FormModal open={modalOpen} onClose={modalOnClose} data={modalData} onSubmit={submitForm} />
+      <FormModal open={openModal} onClose={modalOnClose} data={modalData} submitButtonText='確認送出' onSubmit={submitForm} />
       <Typography variant='h2' component='div' sx={{ fontWeight: '500', textAlign: 'center', marginBottom: '25px' }}>
         創建一份新問卷
       </Typography>

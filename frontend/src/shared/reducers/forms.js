@@ -1,6 +1,6 @@
 import { FORM_STATUS } from '@constants/actionTypes';
 
-const initialState = {};
+const initialState = { forms: [] };
 const { FETCH_FORMS_SUCCESS, FETCH_FORM_SUCCESS, FETCH_FORM_DATAIL_SUCCESS } = FORM_STATUS;
 
 const forms = (state = initialState, action) => {
@@ -8,12 +8,9 @@ const forms = (state = initialState, action) => {
 
   switch (type) {
     case FETCH_FORMS_SUCCESS:
-      return { ...state, forms: payload.forms };
+      return { ...state, ...payload };
     case FETCH_FORM_SUCCESS:
-      if (state.forms.find(({ id }) => id === payload.form.id)) {
-        return { ...state, forms: state.forms.map((form) => (form.id === payload.form.id ? payload.form : form)) };
-      }
-      return { ...state, forms: [...state.forms, payload.form] };
+      return { ...state, forms: state.forms.map((form) => (form.id === payload.form.id ? payload.form : form)) };
     case FETCH_FORM_DATAIL_SUCCESS:
       if (state.formDetails.find(({ id }) => id === payload.formDetail.id)) {
         return {

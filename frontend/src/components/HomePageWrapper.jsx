@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Box } from '@mui/material';
 
-const HomePageWrapper = ({ children }) => (
+const PageWrapper = ({ children }) => (
   <Box
     sx={{
       mt: '20px',
@@ -20,8 +20,8 @@ const HomePageWrapper = ({ children }) => (
   </Box>
 );
 
-HomePageWrapper.propTypes = {
+PageWrapper.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired,
 };
 
-export default HomePageWrapper;
+export default PageWrapper;

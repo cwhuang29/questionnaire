@@ -10,7 +10,7 @@ const httpConfig = {
   timeout: 1000, // If the request takes longer than `timeout`, the request will be aborted
   headers: { 'X-Questionnaire-Header': 'ntnu' }, // Custom headers to be sent
   validateStatus: (status) => status >= 200 && status <= 302, // Defines whether to resolve or reject the promise for a given response
-  transformResponse: [(data) => ({ ...JSON.parse(data), timeStamp: new Date() })], // Changes to the response to be made before it is passed to then/catch
+  transformResponse: [(data) => ({ ...JSON.parse(data) /* , timeStamp: new Date() */ })], // Changes to the response to be made before it is passed to then/catch
 };
 
 // const token = document.head.querySelector('meta[name="csrf-token"]')?.content;

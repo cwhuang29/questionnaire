@@ -37,7 +37,7 @@ const Menu = () => {
   const { jwt } = useAuth();
 
   const onClick = (url) => () => navigate(`${url}`);
-  const adminItems = isAdmin() ? [{ label: '創建問卷', url: '/create-form' }] : [];
+  const adminItems = isAdmin() ? [{ label: '創建問卷', url: '/create/form' }] : [];
   const menuBarItems = jwt
     ? [{ label: '登出', url: '/logout' }]
     : [

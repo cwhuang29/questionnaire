@@ -19,7 +19,7 @@ const ServiceFetcher = (props) => {
   useEffect(() => {
     setIsLoading(true);
     dispatch(fetchService())
-      .then((resp) => setData(resp.data))
+      .then((fetchData) => setData(fetchData))
       .catch((err) => {
         setError(err);
         addGlobalMessage({

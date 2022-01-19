@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_NAME } from '@constants/storage';
 
 const authToken = JSON.parse(localStorage.getItem(LOCAL_STORAGE_NAME.AUTH));
 
-const initialState = authToken ? { ...authToken } : {};
+const initialState = authToken ? { ...authToken } : {}; // {jwt: '...', user: {}}
 
 const auth = (state = initialState, action) => {
   const { type, payload } = action;
