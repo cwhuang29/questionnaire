@@ -23,7 +23,15 @@ export const optionsCountList = [
   { value: 10, label: '10' },
 ];
 
-export const getDefaultQuestionState = (id) => ({ id, label: '', options: [] });
+export const formInitialValues = {
+  researchName: [],
+  formName: '',
+  formCustId: '',
+  minScore: 0,
+  optionsCount: '',
+  formTitle: {},
+  formIntro: {},
+};
 
 export const initialQuestionsState = {
   counter: {
@@ -37,6 +45,8 @@ export const initialQuestionsState = {
     teacher: [],
   },
 };
+
+export const getDefaultQuestionState = (id) => ({ id, label: '', options: [] });
 
 export const createFormActionType = {
   ADD_QUESTION: 'ADD_QUESTION',

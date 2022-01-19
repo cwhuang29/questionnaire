@@ -14,7 +14,7 @@ import { Autocomplete, Box, Button, createFilterOptions, MenuItem, Stack, TextFi
 // eslint-disable-next-line no-unused-vars
 import styles from './index.module.css';
 
-import { createFormActionType, getDefaultQuestionState, initialQuestionsState, optionsCountList, roles } from './createFormData';
+import { createFormActionType, formInitialValues, getDefaultQuestionState, initialQuestionsState, optionsCountList, roles } from './createFormData';
 import { FormModal } from './FormModal';
 import { Question } from './Question';
 import { RoleDivider } from './RoleDivider';
@@ -22,13 +22,11 @@ import { RoleDivider } from './RoleDivider';
 const filter = createFilterOptions();
 
 const researchList = [
-  { label: 'The Shawshank Redemption', year: 1994 },
-  { label: 'The Godfather', year: 1972 },
-  { label: 'The Godfather: Part II', year: 1974 },
-  { label: 'The Dark Knight', year: 2008 },
-  { label: '12 Angry Men', year: 1957 },
-  { label: "Schindler's List", year: 1993 },
-  { label: 'Pulp Fiction', year: 1994 },
+  { label: 'The Shawshank Redemption' },
+  { label: 'The Godfather' },
+  { label: 'The Godfather: Part II' },
+  { label: 'The Dark Knight' },
+  { label: 'Pulp Fiction' },
 ];
 
 const questionsReducer = (state, action) => {
@@ -60,37 +58,30 @@ const questionsReducer = (state, action) => {
   }
 };
 
-const formikInitialValues = {
-  researchName: '',
-  formName: '',
-  formCustId: '',
-  minScore: '',
-  optionsCount: '',
-};
-
 const formikValidationSchema = Yup.object({
-  researchName: Yup.string().required(validateMsg.REQUIRED),
+  // researchName: Yup.array().required(validateMsg.REQUIRED),
+  researchName: Yup.array(),
   formName: Yup.string().required(validateMsg.REQUIRED),
   formCustId: Yup.string().required(validateMsg.REQUIRED),
   minScore: Yup.number(validateMsg.IS_NUMBER).min(0).required(validateMsg.REQUIRED),
   optionsCount: Yup.number().min(1).max(10).required(validateMsg.REQUIRED),
+  formTitle: Yup.object().shape({ student: '', parent: '', teacher: '' }),
+  formIntro: Yup.object(),
   // date: Yup.date().default(() => new Date()).max(new Date(), "Are you a time traveler?!"),
   // wouldRecommend: Yup.boolean().default(false),
 });
 
 export const CreateForm = () => {
   const dispatch = useDispatch();
-  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
   const { addGlobalMessage, clearAllGlobalMessages } = useGlobalMessageContext();
   const [questionState, questionDispatch] = useReducer(questionsReducer, initialQuestionsState);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState();
-  // const [canSubmit, setCanSubmit] = useState(false); // Only set to true by button in the preview modal
 
   const formik = useFormik({
-    initialValues: formikInitialValues,
+    initialValues: formInitialValues,
     validationSchema: formikValidationSchema,
     validateOnChange: true,
     validate: (values) => {
@@ -101,14 +92,6 @@ export const CreateForm = () => {
         clearAllGlobalMessages();
       }
 
-      if (values.optionsCount === '') {
-        hasError = true;
-        addGlobalMessage({
-          title: `The options count should not be empty`,
-          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
-          timestamp: Date.now(),
-        });
-      }
       roles.forEach((role) =>
         questionState.questions[role.label].forEach((question) => {
           if (question.label === '') {
@@ -123,7 +106,7 @@ export const CreateForm = () => {
           if (question.options.length !== values.optionsCount) {
             hasError = true;
             addGlobalMessage({
-              title: `Number of options is not correct (should have ${values.optionsCount} options)`,
+              title: `Number of options is not correct`,
               content: `Role: ${role.display}. Question ID: ${question.id + 1}. Number of options: ${question.options.length}`,
               severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
               timestamp: Date.now(),
@@ -206,22 +189,25 @@ export const CreateForm = () => {
     >
       <FormModal open={modalOpen} onClose={modalOnClose} data={modalData} onSubmit={submitForm} />
       <Typography variant='h2' component='div' sx={{ fontWeight: '500', textAlign: 'center', marginBottom: '25px' }}>
-        創建一份新問卷 {loading ? 'true' : 'false'}
+        創建一份新問卷
       </Typography>
       <Stack spacing={3} sx={{ textAlign: 'center' }}>
         <Autocomplete
+          multiple
           freeSolo
           selectOnFocus
+          filterSelectedOptions
           handleHomeEndKeys
           options={researchList}
           renderOption={(props, option) => <li {...props}>{option.label}</li>}
+          onChange={(e, value) => {
+            const revisedValue = value.map((v) => (v.constructor === Object ? v.label : v)); // The element in the option list are obejcts
+            formik.setFieldValue('researchName', revisedValue); // Use this to replace value={formik.values.researchName}
+          }}
           renderInput={(params) => (
             <TextField
               {...params}
               label='研究名稱'
-              name='researchName'
-              value={formik.values.researchName}
-              onChange={formik.handleChange}
               error={formik.touched.researchName && Boolean(formik.errors.researchName)}
               helperText={formik.touched.researchName && formik.errors.researchName}
             />
@@ -231,20 +217,17 @@ export const CreateForm = () => {
             const isExisting = options.some((option) => inputValue === option.label);
             const filtered = filter(options, params);
             if (inputValue !== '' && !isExisting) {
-              filtered.push({ inputValue, label: `Add "${inputValue}"` });
+              filtered.push({ inputValue, label: inputValue });
             }
             return filtered;
           }}
           getOptionLabel={(option) => {
             if (typeof option === 'string') {
-              formik.values.researchName = option;
               return option; // Value selected with enter, right from the input
             }
             if (option.inputValue) {
-              formik.values.researchName = option.inputValue;
               return option.inputValue; // Add "xxx" option created dynamically
             }
-            formik.values.researchName = option.label;
             return option.label; // Regular option
           }}
         />
@@ -305,6 +288,27 @@ export const CreateForm = () => {
       {roles.map((role) => (
         <React.Fragment key={role.id}>
           <RoleDivider {...role} />
+          <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <TextField
+              name={`formTitle.${role.label}`}
+              label={`給${role.display}看的量表名稱（沒有問題時此欄位會被忽略）`}
+              value={formik.values[`formTitle[${role.label}]`]}
+              onChange={formik.handleChange}
+              error={formik.touched[`formTitle[${role.label}]`] && Boolean(formik.errors[`formTitle[${role.label}]`])}
+              helperText={formik.touched[`formTitle[${role.label}]`] && formik.errors[`formTitle[${role.label}]`]}
+              sx={{ width: '48%' }}
+            />
+            <TextField
+              name={`formIntro.${role.label}`}
+              label={`給${role.display}看的量表說明（沒有問題時此欄位會被忽略）`}
+              value={formik.values[`formIntro[${role.label}]`]}
+              onChange={formik.handleChange}
+              error={formik.touched[`formIntro[${role.label}]`] && Boolean(formik.errors[`formIntro[${role.label}]`])}
+              helperText={formik.touched[`formIntro[${role.label}]`] && formik.errors[`formIntro[${role.label}]`]}
+              sx={{ width: '48%' }}
+            />
+          </Box>
+
           {questionState.questions[role.label].map((question, idx) => (
             <Question id={question.id || idx} role={role.label} key={question.id || idx} handleChange={handleChildChange({ role: role.label })} />
           ))}

@@ -43,21 +43,21 @@ export const Question = (props) => {
 
   // An onChange event on an input of type number will give you the string corresponding to the entered number. That is a browser behaviour
   const handleMaxPointChange = (evt) => {
-    const payload = parseInt(evt.target.value, 10);
-    dispatch({ type: actionType.SET_MAX_POINT, payload });
-    transferStateToParent({ maxPoint: payload });
+    const maxPoint = parseInt(evt.target.value, 10);
+    dispatch({ type: actionType.SET_MAX_POINT, payload: maxPoint });
+    transferStateToParent({ maxPoint });
   };
 
   const handleQuestionChange = (evt) => {
-    const payload = evt.target.value;
-    dispatch({ type: actionType.SET_QUESTION, payload });
-    transferStateToParent({ label: payload });
+    const label = evt.target.value;
+    dispatch({ type: actionType.SET_QUESTION, payload: label });
+    transferStateToParent({ label });
   };
 
   const handleOptionsChange = (evt, newValue) => {
-    const payload = newValue;
-    dispatch({ type: actionType.SET_OPTIONS, payload });
-    transferStateToParent({ options: payload });
+    const options = newValue; // Array type since multiple={true}
+    dispatch({ type: actionType.SET_OPTIONS, payload: options });
+    transferStateToParent({ options });
   };
 
   return (

@@ -10,30 +10,49 @@ import { getDisplayTime } from '@utils/time';
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import LinearProgress from '@mui/material/LinearProgress';
+import { LinearProgress } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import { DataGrid, GridOverlay, GridToolbar } from '@mui/x-data-grid';
 
 const columns = [
   {
-    field: 'id',
-    headerName: 'ID',
-    width: 150,
-    type: 'number', // 'string' (default) 'number' 'date' 'dateTime' 'boolean' 'singleSelect' 'actions'
-    // editable: true,
-    // valueOptions: ['optionA', 'optionB', 'optionC'] // If the column type is 'singleSelect', you need to set the valueOptions
-    // renderHeader: (params) => (<strong>{'Birthday '}<span role='img' aria-label='enjoy'>🎂</span></strong>), // Add additional decorators in the header
+    field: 'formName',
+    headerName: '量表名稱',
+    flex: 1,
+    minWidth: 90,
+    // align: 'center',
   },
-  { field: 'name', headerName: 'Form Name', width: 150 },
   {
-    field: 'role',
-    headerName: 'Role',
+    field: 'formCustId',
+    headerName: '量表編碼',
     valueFormatter: ({ value }) => ROLES[value],
+    flex: 1,
+    minWidth: 70,
   },
-  { field: 'author', headerName: 'Author', width: 150 },
   {
-    field: 'created_at',
+    field: 'researchName',
+    headerName: '所屬計畫',
+    flex: 1.5,
+    align: 'left',
+    renderCell: (params) => (
+      <div >
+        {params.value.map((p) => (
+          <div key={p} style={{ fontSize: '0.8rem !important' }}>{p}</div>
+        ))}
+      </div>
+    ),
+  },
+  {
+    field: 'author',
+    headerName: '作者',
+    flex: 1,
+    minWidth: 60,
+  },
+  {
+    field: 'createdAt',
     headerName: 'Created At',
-    width: 200,
+    flex: 1,
+    minWidth: 60,
     type: 'dateTime',
     valueFormatter: ({ value }) => getDisplayTime(new Date(value)),
   },
@@ -70,39 +89,86 @@ const CustomNoRowsOverlay = () => (
   </div>
 );
 
+const StyledDataGrid = withStyles({
+  root: {
+    '& .MuiDataGrid-renderingZone': {
+      maxHeight: 'none !important',
+    },
+    '& .MuiDataGrid-cell': {
+      lineHeight: 'unset !important',
+      maxHeight: 'none !important',
+      whiteSpace: 'normal',
+      flexDirection: 'column',
+      alignItems: 'flex-start', // Vertically aligned
+      justifyContent: 'center', // Horizontally aligned
+    },
+    '& .MuiDataGrid-row': {
+      maxHeight: 'none !important',
+      '&:nth-child(2n)': { backgroundColor: 'rgba(235, 235, 235, .7)' },
+    },
+    '& div[data-rowIndex][role="row"]': {
+      // fontSize: 18,
+      // height: 60,
+      '& div': {
+        // height: 60,
+        // minHeight: "60px !important",
+        // lineHeight: "59px !important"
+      },
+    },
+  },
+})(DataGrid);
+
 const FormListView = (props) => {
   const navigate = useNavigate();
   const { data, isLoading, error } = props;
 
-  const rows = data.constructor === Array ? data : [];
+  const rows = data?.constructor === Array ? data : [];
 
   const onCellDoubleClick = (params) => {
-    if (params.field === 'name') {
+    console.log(params);
+    if (params.field === 'formName') {
       navigate(`/form/${params.id}`);
     }
   };
 
+  console.log(rows[0]?.researchName);
+
   return (
     Object.keys(error).length === 0 && (
-      <DataGrid
-        autoHeight
-        loading={isLoading}
-        hideFooterSelectedRowCount
-        editMode='row'
-        density='standard'
-        disableDensitySelector
-        components={{
-          Toolbar: GridToolbar,
-          LoadingOverlay: CustomLoadingOverlay,
-          ColumnSortedDescendingIcon: SortedDescendingIcon,
-          ColumnSortedAscendingIcon: SortedAscendingIcon,
-          NoRowsOverlay: CustomNoRowsOverlay,
-        }}
-        onCellDoubleClick={onCellDoubleClick}
-        columns={columns}
-        rows={rows}
-        style={{ cursor: 'pointer' }}
-      />
+      <div style={{ height: '500px' }}>
+        <StyledDataGrid
+          // autoHeight
+          loading={isLoading}
+          hideFooterSelectedRowCount
+          density='standard'
+          disableDensitySelector
+          getRowId={(row) => `${row.formCustId}${row.createdAt}`}
+          components={{
+            Toolbar: GridToolbar,
+            LoadingOverlay: CustomLoadingOverlay,
+            ColumnSortedDescendingIcon: SortedDescendingIcon,
+            ColumnSortedAscendingIcon: SortedAscendingIcon,
+            NoRowsOverlay: CustomNoRowsOverlay,
+          }}
+          onCellDoubleClick={onCellDoubleClick}
+          columns={columns}
+          rows={rows}
+          // getCellClassName={(params) => (params.value >= 15 ? 'hot' : 'cold')}
+          sx={{
+            cursor: 'pointer',
+            boxShadow: 2,
+            border: 2,
+            borderColor: 'primary.light',
+            '& .MuiDataGrid-cell:hover': {
+              color: 'primary.main',
+            },
+            '& .cold': {
+              backgroundColor: '#b9d5ff91',
+              color: '#1a3e72',
+            },
+          }}
+        />
+      </div>
     )
   );
 };

@@ -13,7 +13,7 @@ const fieldName = {
   optionsCount: '每題的選項數量',
 };
 
-const FormParentData = ({ field, value }) => (
+const FormDataItem = ({ field, value }) => (
   <ListItemButton style={{ display: 'flex', paddingLeft: '8px' }}>
     <ListItemText
       primary={
@@ -32,7 +32,7 @@ const FormParentData = ({ field, value }) => (
 
 export const FormModal = (props) => {
   const { open, onClose, onSubmit, data } = props;
-  const { researchName, formName, formCustId, minScore, optionsCount, ...questionData } = data || {};
+  const { researchName, formName, formCustId, minScore, optionsCount, formTitle, formIntro, ...questionData } = data || {};
   const cancelButtonClick = () => onClose();
 
   return (
@@ -60,26 +60,28 @@ export const FormModal = (props) => {
           <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
             量表資料
           </ListSubheader>
-          <FormParentData field={fieldName.researchName} value={researchName} />
-          <FormParentData field={fieldName.formName} value={formName} />
-          <FormParentData field={fieldName.formCustId} value={formCustId} />
-          <FormParentData field={fieldName.minScore} value={minScore} />
-          <FormParentData field={fieldName.optionsCount} value={optionsCount} />
-          <FormParentData field='學生題目總數' value={questionData.counter.student} />
-          <FormParentData field='家長題目總數' value={questionData.counter.parent} />
-          <FormParentData field='老師題目總數' value={questionData.counter.teacher} />
+          <FormDataItem field={fieldName.researchName} value={researchName.join(', ')} />
+          <FormDataItem field={fieldName.formName} value={formName} />
+          <FormDataItem field={fieldName.formCustId} value={formCustId} />
+          <FormDataItem field={fieldName.minScore} value={minScore} />
+          <FormDataItem field={fieldName.optionsCount} value={optionsCount} />
+          <FormDataItem field='學生題目總數' value={questionData.counter.student} />
+          <FormDataItem field='家長題目總數' value={questionData.counter.parent} />
+          <FormDataItem field='老師題目總數' value={questionData.counter.teacher} />
 
           {roles.map((role) => (
             <React.Fragment key={role.id}>
               <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
                 給{role.display}的問題
               </ListSubheader>
+              {questionData.questions[role.label].length > 0 && <FormDataItem field={`給${role.display}看的量表名稱`} value={formTitle[role.label]} />}
+              {questionData.questions[role.label].length > 0 && <FormDataItem field={`給${role.display}看的量表名稱`} value={formIntro[role.label]} />}
               {questionData.questions[role.label].map((question, idx) => (
                 <React.Fragment key={question.label}>
-                  <FormParentData field={`題目${idx + 1}`} value={question.label} />
-                  <FormParentData field='選項' value={question.options.join(', ')} />
-                  <FormParentData field='是否為反向計分' value={question.isReverseGrading ? '是' : '否'} />
-                  {question.isReverseGrading && <FormParentData field='總分（若為反向計分）' value={question.maxPoint} />}
+                  <FormDataItem field={`題目${idx + 1}`} value={question.label} />
+                  <FormDataItem field='選項' value={question.options.join(', ')} />
+                  <FormDataItem field='是否為反向計分' value={question.isReverseGrading ? '是' : '否'} />
+                  {question.isReverseGrading && <FormDataItem field='總分（若為反向計分）' value={question.maxPoint} />}
                   <hr />
                 </React.Fragment>
               ))}
@@ -115,7 +117,7 @@ FormModal.defaultProps = {
   data: initialQuestionsState,
 };
 
-FormParentData.propTypes = {
+FormDataItem.propTypes = {
   field: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
