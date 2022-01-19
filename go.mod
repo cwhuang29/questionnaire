@@ -22,4 +22,5 @@ require (
 	gorm.io/driver/mysql v1.2.0
 	gorm.io/driver/sqlite v1.2.4
 	gorm.io/gorm v1.22.3
+	k8s.io/apimachinery v0.23.1
 )

@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         wget && \
     rm -rf /var/lib/apt/lists/*
 
-ENV GO_VERSION 1.15.6
+ENV GO_VERSION 1.16.3
 ENV GO_PATH /go
 RUN wget -nv -O - https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz \
     | tar -C /usr/local -xz

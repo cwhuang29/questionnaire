@@ -21,13 +21,14 @@ var (
 	acceptedFileType = map[string][]string{"image": {"image/png", "image/jpeg", "image/gif", "image/webp", "image/apng"}}
 )
 
-func writeFileLog(fileName, fileSize, fileType string) {
+func writeFromLog(form models.Form) {
 	fields := map[string]interface{}{
-		"fileName": fileName,
-		"fileType": fileType,
-		"fileSize": fileSize,
+		"ID":          form.ID,
+		"Author ID":   form.AuthorID,
+		"Form name":   form.FormName,
+		"Form CustID": form.FormCustId,
 	}
-	logrus.WithFields(fields).Info("File upload")
+	logrus.WithFields(fields).Info("Form upload")
 }
 
 func mapFilesName(content string, fileNamesMapping map[string]string) string {
@@ -99,7 +100,6 @@ func getImagesInContent(files []*multipart.FileHeader) (fileNames []string, file
 
 		fileNames[i] = fileName
 		fileNamesMapping[file.Filename] = fileName[len("public/"):] // Get rid of the prefix since we truncate it in router.Static()
-		writeFileLog(fileName, strconv.FormatInt(file.Size, 10), file.Header.Get("Content-Type"))
 	}
 	return
 }
@@ -109,7 +109,7 @@ func getCoverPhoto(file *multipart.FileHeader) (coverPhotoName string, err error
 		return
 	}
 
-	writeFileLog(coverPhotoName, strconv.FormatInt(file.Size, 10), file.Header.Get("Content-Type"))
+	// writeFileLog(coverPhotoName, strconv.FormatInt(file.Size, 10), file.Header.Get("Content-Type"))
 	return
 }
 
@@ -249,21 +249,28 @@ func parseJSONForm(c *gin.Context) (Form, error) {
 }
 
 func CreateForm(c *gin.Context) {
+	email := c.MustGet("email").(string)
+
 	form, err := parseJSONForm(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.FormCreateErr, "errBody": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"title": "Success", "form": form})
+	user := getUser(email)
+	fmt.Println(user.ID, user.FirstName, user.LastName, user.GetName())
+	if user.ID == 0 {
+		c.JSON(http.StatusForbidden, gin.H{"errHead": constants.PermissionDenied, "errBody": constants.JWTValidationErrorExpired})
+		return
+	}
 
-	// id, res := databases.SubmitArticle(form, "create")
-	// if !res {
-	//     c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.FormCreateErr, "errBody": constants.DatabaseErr})
-	//     return
-	// }
+	dbForm := parseUploadForm(form, user)
+	dbFormID, err := insertFormToDb(dbForm)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.FormCreateErr, "errBody": constants.DatabaseErr})
+		return
+	}
 
-	// logrus.Infof("Create form with id %v", id)
-	// c.Header("Location", "/articles/browse?articleId="+strconv.Itoa(id)) // With Location header and status code 3XX (not 2XX), response.redirected becomes true
-	// c.JSON(http.StatusCreated, gin.H{"articleId": id})
+	writeFromLog(dbForm)
+	c.JSON(http.StatusCreated, gin.H{"title": "Create a new form successfully", "formId": dbFormID})
 }

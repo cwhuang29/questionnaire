@@ -1,12 +1,44 @@
 package handlers
 
 import (
+	"encoding/json"
 	"strings"
 
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/databases/models"
 	"github.com/cwhuang29/questionnaire/utils"
 )
+
+func transformFormToWebFormat(form models.Form) (f Form) {
+	f.ResearchName = strings.Split(form.ResearchName, ",")
+	f.FormName = form.FormName
+	f.FormCustId = form.FormCustId
+	f.MinScore = form.MinScore
+	f.OptionsCount = form.OptionsCount
+	_ = json.Unmarshal([]byte(form.FormTitle), &f.FormTitle)
+	_ = json.Unmarshal([]byte(form.FormIntro), &f.FormIntro)
+	_ = json.Unmarshal([]byte(form.Questions), &f.Questions)
+
+	f.Author = form.Author
+	f.CreatedAt = form.CreatedAt
+	return
+}
+
+func transformFormToDBFormat(form Form) (f models.Form) {
+	formTitleBytes, _ := json.Marshal(form.FormTitle)
+	formIntroBytes, _ := json.Marshal(form.FormIntro)
+	questionsBytes, _ := json.Marshal(form.Questions)
+
+	f.ResearchName = strings.Join(form.ResearchName, ",")
+	f.FormName = form.FormName
+	f.FormCustId = form.FormCustId
+	f.MinScore = form.MinScore
+	f.OptionsCount = form.OptionsCount
+	f.FormTitle = string(formTitleBytes)
+	f.FormIntro = string(formIntroBytes)
+	f.Questions = string(questionsBytes)
+	return
+}
 
 func articleFormatDBToOverview(article models.Article) (a Article) {
 	a.ID = article.ID

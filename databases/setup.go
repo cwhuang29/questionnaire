@@ -72,8 +72,8 @@ func createConstraints() {
 
 func registerAdminEmail(emails []string) {
 	for _, email := range emails {
-		obj := models.Admin{Email: email}
-		db.Create(&obj)
+		adminUser := models.Admin{Email: email}
+		db.Create(&adminUser)
 	}
 }
 

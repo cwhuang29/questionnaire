@@ -1,5 +1,7 @@
 package handlers
 
+import "time"
+
 type UserStatus int
 
 const (
@@ -15,12 +17,23 @@ func (s UserStatus) String() string {
 }
 
 type Form struct {
-	ResearchName string       `json:"researchName,omitempty"`
-	FormName     string       `json:"formName,omitempty"`
-	FormCustId   string       `json:"formCustId,omitempty"`
-	MinScore     int          `json:"minScore,omitempty"`
-	OptionsCount int          `json:"optionsCount,omitempty"`
-	Questions    FormQuestion `json:"questions"`
+	Author       string         `json:"author,omitempty"`
+	ResearchName []string       `json:"researchName,omitempty"`
+	FormName     string         `json:"formName,omitempty"`
+	FormCustId   string         `json:"formCustId,omitempty"`
+	MinScore     int            `json:"minScore,omitempty"`
+	OptionsCount int            `json:"optionsCount,omitempty"`
+	FormTitle    FormInfoByRole `json:"formTitle,omitempty"`
+	FormIntro    FormInfoByRole `json:"formIntro,omitempty"`
+	Questions    FormQuestion   `json:"questions,omitempty"`
+
+	CreatedAt time.Time `json:"createdAt,omitempty"`
+}
+
+type FormInfoByRole struct {
+	Student string `json:"student"`
+	Parent  string `json:"parent"`
+	Teacher string `json:"teacher"`
 }
 
 type FormQuestion struct {
