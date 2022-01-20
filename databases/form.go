@@ -43,3 +43,29 @@ func InsertForm(form models.Form) (models.Form, error) {
 
 	return form, nil
 }
+
+func UpdateForm(form models.Form) (models.Form, error) {
+	// When update with struct, GORM will only update non-zero fields. Use map type variable to update or Select() to specify fields to update
+	f := map[string]interface{}{
+		"author_id":     form.AuthorID,
+		"author":        form.Author,
+		"status":        form.Status,
+		"admin_only":    form.AdminOnly,
+		"research_name": form.ResearchName,
+		"form_name":     form.FormName,
+		"form_cust_id":  form.FormCustId,
+		"min_score":     form.MinScore,
+		"options_count": form.OptionsCount,
+		"form_title":    form.FormTitle,
+		"form_intro":    form.FormIntro,
+		"questions":     form.Questions,
+	}
+
+	// Where clause can be omitted since form.ID is the primary key
+	if err := db.Model(&form).Where("id = ?", form.ID).Updates(f).Error; err != nil {
+		logrus.Error(err.Error())
+		return models.Form{}, err
+	}
+
+	return form, nil
+}

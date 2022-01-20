@@ -20,10 +20,12 @@ const (
 
 	PasswordIncorrect = "Password incorrect"
 
-	FormNotFound  = "Form Not Found"
-	FormCreateErr = "Create Form Failed"
-	FormUpdateErr = "Update Form Failed"
-	FormDeleteErr = "Delete Form Failed"
+	FormNotFound      = "Form Not Found"
+	FormCreateErr     = "Create Form Failed"
+	FormUpdateErr     = "Update Form Failed"
+	FormDeleteErr     = "Delete Form Failed"
+	FormCreateSucceed = "Create a new form successfully"
+	FormUpdateSucceed = "Update a new form successfully"
 
 	QueryErr           = "Invalid Parameter"
 	QueryEmptyErr      = "Parameter %s can not be empty"

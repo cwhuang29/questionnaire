@@ -13,7 +13,6 @@ import (
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/cwhuang29/questionnaire/utils/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,14 +20,14 @@ var (
 	acceptedFileType = map[string][]string{"image": {"image/png", "image/jpeg", "image/gif", "image/webp", "image/apng"}}
 )
 
-func writeFromLog(form models.Form) {
+func writeFromLog(form models.Form, message string) {
 	fields := map[string]interface{}{
 		"ID":          form.ID,
 		"Author ID":   form.AuthorID,
 		"Form name":   form.FormName,
 		"Form CustID": form.FormCustId,
 	}
-	logrus.WithFields(fields).Info("Form upload")
+	logrus.WithFields(fields).Info(message)
 }
 
 func mapFilesName(content string, fileNamesMapping map[string]string) string {
@@ -240,7 +239,7 @@ func Forms(c *gin.Context) {
 
 	id, err := getParamFormID(c)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"data": nil})
+		c.JSON(http.StatusBadRequest, gin.H{"data": nil})
 		return
 	}
 
@@ -248,27 +247,13 @@ func Forms(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": form})
 }
 
-func parseJSONForm(c *gin.Context) (Form, error) {
-	var form Form
-	var err error
-
-	// Note: the error "EOF" occurs when reading from the Request Body twice (e.g. c.GetRawData(), c.Request.Body)
-	err = c.ShouldBindBodyWith(&form, binding.JSON)
-	return form, err
-}
-
 func CreateForm(c *gin.Context) {
-	email := c.MustGet("email").(string)
+	form, user, err := editFormPreprocessing(c)
 
-	form, err := parseJSONForm(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.FormCreateErr, "errBody": err.Error()})
 		return
-	}
-
-	user := getUser(email)
-	fmt.Println(user.ID, user.FirstName, user.LastName, user.GetName())
-	if user.ID == 0 {
+	} else if user.ID == 0 {
 		c.JSON(http.StatusForbidden, gin.H{"errHead": constants.PermissionDenied, "errBody": constants.JWTValidationErrorExpired})
 		return
 	}
@@ -280,6 +265,38 @@ func CreateForm(c *gin.Context) {
 		return
 	}
 
-	writeFromLog(dbForm)
-	c.JSON(http.StatusCreated, gin.H{"title": "Create a new form successfully", "formId": dbFormID})
+	succeedMsg := constants.FormCreateSucceed
+	writeFromLog(dbForm, succeedMsg)
+	c.JSON(http.StatusCreated, gin.H{"title": succeedMsg, "formId": dbFormID})
+}
+
+func UpdateForm(c *gin.Context) {
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"data": nil})
+		return
+	}
+
+	form, user, err := editFormPreprocessing(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.FormUpdateErr, "errBody": err.Error()})
+		return
+	} else if user.ID == 0 {
+		c.JSON(http.StatusForbidden, gin.H{"errHead": constants.PermissionDenied, "errBody": constants.JWTValidationErrorExpired})
+		return
+	}
+
+	dbForm := parseUploadForm(form, user)
+	dbForm.ID = id
+
+	dbFormID, err := updateFormToDb(dbForm)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.FormUpdateErr, "errBody": constants.DatabaseErr})
+		return
+	}
+
+	succeedMsg := constants.FormUpdateSucceed
+	writeFromLog(dbForm, succeedMsg)
+	c.JSON(http.StatusCreated, gin.H{"title": succeedMsg, "formId": dbFormID})
 }

@@ -25,6 +25,7 @@ func transformFormToWebFormat(form models.Form) (f Form) {
 	f.ID = form.ID
 	f.Author = form.Author
 	f.CreatedAt = form.CreatedAt
+	f.UpdatedAt = form.UpdatedAt
 	return
 }
 

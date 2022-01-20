@@ -10,6 +10,7 @@ import (
 	"github.com/cwhuang29/questionnaire/databases/models"
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 func isUserAdmin(c *gin.Context) bool {
@@ -146,6 +147,11 @@ func insertFormToDb(form models.Form) (int, error) {
 	return form.ID, err
 }
 
+func updateFormToDb(form models.Form) (int, error) {
+	form, err := databases.UpdateForm(form)
+	return form.ID, err
+}
+
 func parseUploadForm(form Form, user models.User) models.Form {
 	dbForm := transformFormToDBFormat(form)
 
@@ -153,4 +159,21 @@ func parseUploadForm(form Form, user models.User) models.Form {
 	dbForm.AuthorID = user.ID
 	dbForm.AdminOnly = false
 	return dbForm
+}
+
+func parseJSONForm(c *gin.Context) (Form, error) {
+	var form Form
+	var err error
+
+	// Note: the error "EOF" occurs when reading from the Request Body twice (e.g. c.GetRawData(), c.Request.Body)
+	err = c.ShouldBindBodyWith(&form, binding.JSON)
+	return form, err
+}
+
+func editFormPreprocessing(c *gin.Context) (Form, models.User, error) {
+	email := c.MustGet("email").(string)
+	form, err := parseJSONForm(c)
+	user := getUser(email)
+
+	return form, user, err
 }

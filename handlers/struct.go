@@ -30,6 +30,7 @@ type Form struct {
 	Questions    FormQuestion   `json:"questions,omitempty"`
 
 	CreatedAt time.Time `json:"createdAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt,omitempty"`
 }
 
 type FormInfoByRole struct {
