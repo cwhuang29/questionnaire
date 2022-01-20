@@ -5,7 +5,7 @@ import Menu from '@components/Menu';
 import Home from '@home';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import Ecosystem from '@pages/Ecosystem';
-import Form, { CreateForm } from '@pages/Form';
+import Form, { FormCreate, FormUpdate } from '@pages/Form';
 import Login from '@pages/Login';
 import Logout from '@pages/Logout';
 import Register from '@pages/Register';
@@ -25,7 +25,7 @@ const App = () => {
   const { clearAllGlobalMessages } = useGlobalMessageContext();
 
   useEffect(() => {
-    // clearAllGlobalMessage]();
+    // clearAllGlobalMessage();
     window.scrollTo(0, 0);
   }, [clearAllGlobalMessages, pathname]);
 
@@ -39,7 +39,8 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='/form/:formId' element={<Form />} />
-        <Route path='/create/form' element={<CreateForm />} />
+        <Route path='/create/form' element={<FormCreate />} />
+        <Route path='/update/form/:formId' element={<FormUpdate />} />
         <Route path='/ecosystem'>
           <Route path='' element={<Ecosystem />} />
           <Route path=':ecosystem' element={<Ecosystem />} />

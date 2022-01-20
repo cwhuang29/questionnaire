@@ -28,7 +28,7 @@ const Home = () => {
           <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', marginTop: '0.8em' }}>
             量表清單
           </Typography>
-          <Typography variant='h5' component='div' sx={{ fontWeight: 'bold', marginTop: '0.3em', marginBottom: '1em' }}>
+          <Typography variant='h6' component='div' sx={{ fontWeight: 'bold', marginTop: '0.3em', marginBottom: '1em' }}>
             若要看量表的更多資訊，請在名稱上連擊
           </Typography>
           <FormList />

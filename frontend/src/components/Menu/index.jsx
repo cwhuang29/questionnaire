@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Proptypes from 'prop-types';
 
 import useAuth from '@hooks/useAuth';
@@ -32,12 +32,15 @@ const MenuBarItem = ({ label, onClick }) => (
   </MenuItem>
 );
 
+const isCreateOrUpdateForm = (pathname) => /\/create\/form|\/update\/form/.test(pathname);
+
 const Menu = () => {
+  const { pathname } = useLocation(); // URL http://127.0.0.1:3000/?a=123#ok returns {pathname: '/', search: '?a=123', hash: '#ok' ...}
   const navigate = useNavigate(); // To use useNavigate, this component should have a <BrowserRouter> higher up in the tree
   const { jwt } = useAuth();
 
   const onClick = (url) => () => navigate(`${url}`);
-  const adminItems = isAdmin() ? [{ label: '創建問卷', url: '/create/form' }] : [];
+  const adminItems = isAdmin() && !isCreateOrUpdateForm(pathname) ? [{ label: '創建問卷', url: '/create/form' }] : [];
   const menuBarItems = jwt
     ? [{ label: '登出', url: '/logout' }]
     : [

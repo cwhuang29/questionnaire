@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Autocomplete, Box, Checkbox, FormControlLabel, Stack, TextField, Typography } from '@mui/material';
 
-const initialState = { label: '', options: [], isReverseGrading: false, maxPoint: 0 };
+const emptyState = { label: '', options: [], isReverseGrading: false, maxPoint: 0 };
 
 const actionType = {
   SET_QUESTION: 'SET_QUESTION',
@@ -30,7 +30,9 @@ const reducer = (state, action) => {
 };
 
 export const Question = (props) => {
-  const { id, role, handleChange } = props;
+  const { role, value, handleChange } = props;
+  const { id } = value;
+  const initialState = value.label ? value : emptyState;
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const transferStateToParent = (changedInput) => handleChange({ id, ...state, ...changedInput });
@@ -55,13 +57,13 @@ export const Question = (props) => {
   };
 
   const handleOptionsChange = (evt, newValue) => {
-    const options = newValue; // Array type since multiple={true}
+    const options = newValue; // Array type since component's prop multiple={true}
     dispatch({ type: actionType.SET_OPTIONS, payload: options });
     transferStateToParent({ options });
   };
 
   return (
-    <Stack spacing={1} sx={{ textAlign: 'center', marginBottom: '10px' }}>
+    <Stack spacing={1} sx={{ textAlign: 'center', marginBottom: '15px' }}>
       <Typography variant='h6' component='div' sx={{ textAlign: 'left' }}>
         問題{id + 1}
       </Typography>
@@ -89,6 +91,7 @@ export const Question = (props) => {
         handleHomeEndKeys
         clearOnBlur
         options={[]}
+        defaultValue={state.options}
         renderOption={(_props, option) => <li {..._props}>{option}</li>}
         renderInput={(params) => <TextField {...params} label='Options' name={`${role}-${id}-option`} value={state.options} />}
         onChange={handleOptionsChange}
@@ -98,7 +101,11 @@ export const Question = (props) => {
 };
 
 Question.propTypes = {
-  id: PropTypes.number.isRequired,
   role: PropTypes.string.isRequired,
+  value: PropTypes.object,
   handleChange: PropTypes.func.isRequired,
+};
+
+Question.defaultProps = {
+  value: {},
 };

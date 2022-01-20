@@ -13,15 +13,15 @@ import { LoadingButton } from '@mui/lab';
 import { Alert, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 const validationSchema = Yup.object({
-  firstName: Yup.string().required(validateMsg.REGISTER.FIRST_NAME_REQUIRED).max(50, validateMsg.TOO_LONG),
-  lastName: Yup.string().required(validateMsg.REGISTER.LAST_NAME_REQUIRED).max(50, validateMsg.TOO_LONG),
-  email: Yup.string().email('Enter a valid email').required(validateMsg.REGISTER.EMAIL_REQUIRED),
-  password: Yup.string().min(8, 'Password should be of minimum 8 characters length').required(validateMsg.REGISTER.PASSWORD_REQUIRED),
+  firstName: Yup.string().required(validateMsg.AUTH.FIRST_NAME_REQUIRED).max(50, validateMsg.TOO_LONG),
+  lastName: Yup.string().required(validateMsg.AUTH.LAST_NAME_REQUIRED).max(50, validateMsg.TOO_LONG),
+  email: Yup.string().email(validateMsg.AUTH.EMAIL_REQUIRED).required(validateMsg.REQUIRED),
+  password: Yup.string().min(8, validateMsg.AUTH.PASSWORD_MIN).required(validateMsg.AUTH.PASSWORD_REQUIRED),
   changepassword: Yup.string().when('password', {
     is: (val) => !!(val && val.length > 0),
-    then: Yup.string().oneOf([Yup.ref('password')], 'Both password need to be the same'),
+    then: Yup.string().oneOf([Yup.ref('password')], validateMsg.AUTH.PASSWORD_INCONSISTENTCY),
   }),
-  role: Yup.string().required(validateMsg.REGISTER.ROLE_REQUIRED),
+  role: Yup.string().required(validateMsg.AUTH.ROLE_REQUIRED),
 });
 
 const Register = () => {
@@ -53,10 +53,8 @@ const Register = () => {
 
       await dispatch(register(values))
         .then(() => navigate('/login'))
-        .catch((err) => {
-          setLoading(false);
-          setErrorMessage(`${err.title}. ${err.content || ''}`);
-        });
+        .catch((err) => setErrorMessage(`${err.title}. ${err.content || ''}`))
+        .finally(() => setLoading(false));
     },
   });
 

@@ -17,7 +17,7 @@ import { Autocomplete, Box, Button, createFilterOptions, MenuItem, Stack, TextFi
 // eslint-disable-next-line no-unused-vars
 import styles from './index.module.css';
 
-import { createFormActionType, formInitialValues, getDefaultQuestionState, initialQuestionsState, optionsCountList, roles } from './createFormData';
+import { createFormActionType, formEmptyValues, getDefaultQuestionState, questionsEmptyState, optionsCountList, roles } from './createFormData';
 
 const filter = createFilterOptions();
 
@@ -71,17 +71,17 @@ const formikValidationSchema = Yup.object({
   // wouldRecommend: Yup.boolean().default(false),
 });
 
-export const CreateForm = () => {
+export const FormEdit = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { addGlobalMessage, clearAllGlobalMessages } = useGlobalMessageContext();
-  const [questionState, questionDispatch] = useReducer(questionsReducer, initialQuestionsState);
+  const [questionState, questionDispatch] = useReducer(questionsReducer, questionsEmptyState);
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState();
 
   const formik = useFormik({
-    initialValues: formInitialValues,
+    initialValues: formEmptyValues,
     validationSchema: formikValidationSchema,
     validateOnChange: true,
     validate: (values) => {
@@ -172,7 +172,10 @@ export const CreateForm = () => {
     // if (Object.keys(formik.errors).length === 0 && Object.keys(formik.touched).length !== 0) { } // This is not always the freshest data
   };
 
-  const handleChildChange = ({ role }) => (value) => questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
+  const handleChildChange =
+    ({ role }) =>
+    (value) =>
+      questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
 
   return (
     <Box

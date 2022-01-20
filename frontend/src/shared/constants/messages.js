@@ -9,23 +9,25 @@ export default {
   SERVER_CRASH: 'We will be back as soon as possible. Thank you for your patience and please try again later',
   SERVER_UNSTABLE: 'Some functions may not work properly due to server error',
   MISSING: 'Something is missing ...',
+  PERMISSION_DENIED: 'You are not allowed to perform this action',
+  REQUEST_IS_HANDLING: 'Your request is being processed. Hold on please',
 };
 
 export const validateMsg = {
   TOO_LONG: 'This value is too long',
   REQUIRED: 'This field is required',
   IS_NUMBER: 'The value of this field should be a number',
-  REGISTER: {
+  AUTH: {
     FIRST_NAME_REQUIRED: 'First name is required',
     LAST_NAME_REQUIRED: 'Last name is required',
-    EMAIL_REQUIRED: 'Email is required',
-    PASSWORD_REQUIRED: 'Password is required',
-    ROLE_REQUIRED: 'Role is required',
-    PASSWORD_INCONSISTENTCY: 'Password and confirm password does not match',
-  },
-  LOGIN: {
-    EMAIL_REQUIRED: 'Email is required',
     PASSWORD_REQUIRED: 'Password is required',
     PASSWORD_MIN: 'Password should be of minimum 8 characters length',
+    PASSWORD_INCONSISTENTCY: 'Password and confirm password does not match',
+    EMAIL_REQUIRED: 'Input must be a valid email',
+    ROLE_REQUIRED: 'Role is required',
   },
+};
+
+export const FORM_MESSAGE = {
+  ACCESS_VIA_LINK: 'You can only access this page via links',
 };

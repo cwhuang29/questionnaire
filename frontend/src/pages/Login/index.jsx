@@ -12,8 +12,8 @@ import { LoadingButton } from '@mui/lab';
 import { Alert, Box, TextField } from '@mui/material';
 
 const validationSchema = Yup.object({
-  email: Yup.string('Enter your email').email('Enter a valid email').required(validateMsg.LOGIN.EMAIL_REQUIRED),
-  password: Yup.string('Enter your password').min(8, validateMsg.LOGIN.PASSWORD_MIN).required(validateMsg.LOGIN.PASSWORD_REQUIRED),
+  email: Yup.string('Enter your email').email(validateMsg.AUTH.EMAIL_REQUIRED).required(validateMsg.AUTH.EMAIL_REQUIRED),
+  password: Yup.string('Enter your password').min(8, validateMsg.AUTH.PASSWORD_MIN).required(validateMsg.AUTH.PASSWORD_REQUIRED),
 });
 
 const Login = () => {
@@ -42,10 +42,8 @@ const Login = () => {
 
       await dispatch(login(values))
         .then(() => navigate('/'))
-        .catch((err) => {
-          setLoading(false);
-          setErrorMessage(`${err.title}. ${err.content || ''}`);
-        });
+        .catch((err) => setErrorMessage(`${err.title}. ${err.content || ''}`))
+        .finally(() => setLoading(false));
     },
   });
 

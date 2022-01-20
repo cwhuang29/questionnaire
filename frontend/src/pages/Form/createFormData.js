@@ -23,27 +23,27 @@ export const optionsCountList = [
   { value: 10, label: '10' },
 ];
 
-export const formInitialValues = {
+// Using an empty string to clear the component or `undefined` for uncontrolled components
+export const formEmptyValues = {
   researchName: [],
   formName: '',
   formCustId: '',
-  minScore: 0,
+  minScore: '', // If set to zero, the input box will be filled with zero
   optionsCount: '',
   formTitle: {},
   formIntro: {},
-};
-
-export const initialQuestionsState = {
-  counter: {
-    student: 0,
-    parent: 0,
-    teacher: 0,
-  },
+  // This will be assigned to questionState afterward
   questions: {
     student: [],
     parent: [],
     teacher: [],
   },
+};
+
+export const questionsEmptyState = {
+  student: [],
+  parent: [],
+  teacher: [],
 };
 
 export const getDefaultQuestionState = (id) => ({ id, label: '', options: [] });

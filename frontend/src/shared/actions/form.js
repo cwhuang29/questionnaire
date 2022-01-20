@@ -14,9 +14,9 @@ export const getAllForms = () => (dispatch) =>
     .then((resp) => {
       dispatch({
         type: FORM_STATUS.FETCH_FORMS_SUCCESS,
-        payload: { forms: resp.data.data }, // returns [{form01}, {form02}]
+        payload: { forms: resp.data.data }, // resp.data: { data: [{form01}, {form02}] }. resp.data.data:  [{form01}, {form02}]
       });
-      return Promise.resolve(resp.data.data); // returns { data: [{form01}, {form02}] }
+      return Promise.resolve(resp.data.data);
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
@@ -33,19 +33,6 @@ export const getFormById = (id) => (dispatch) =>
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
-export const getFormDetailById = (id) => (dispatch) =>
-  formService
-    .getFormDetailById(id)
-    .then((resp) => {
-      dispatch({
-        type: FORM_STATUS.FETCH_FORM_DATAIL_SUCCESS,
-        payload: { forms: resp.data },
-      });
-
-      return Promise.resolve(resp.data);
-    })
-    .catch((err) => Promise.reject(extractErrorMessage(err)));
-
 export const getFormByUser = () => (dispatch) =>
   formService
     .getFormByUser()
@@ -59,8 +46,16 @@ export const getFormByUser = () => (dispatch) =>
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
+// TODO Add dispatch logic
 export const createForm = (data) => () =>
   formService
     .createForm(data)
+    .then((resp) => Promise.resolve(resp.data))
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
+
+// TODO Add dispatch logic
+export const updateForm = (id, data) => () =>
+  formService
+    .updateForm(id, data)
     .then((resp) => Promise.resolve(resp.data))
     .catch((err) => Promise.reject(extractErrorMessage(err)));

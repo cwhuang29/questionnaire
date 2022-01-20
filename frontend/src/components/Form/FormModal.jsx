@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { initialQuestionsState, roles } from '@pages/Form/createFormData';
+import { questionsEmptyState, roles } from '@pages/Form/createFormData';
 
 import { Box, ListItemButton, ListItemText, ListSubheader, Modal as MuiModal, Typography } from '@mui/material';
 
@@ -31,8 +31,8 @@ const FormDataItem = ({ field, value }) => (
 // </Typography>
 
 const FormModal = (props) => {
-  const { open, onClose, submitButtonText, cancelButtonText, onSubmit, data } = props;
-  const { researchName, formName, formCustId, minScore, optionsCount, formTitle, formIntro, ...questionData } = data || {};
+  const { open, onClose, onSubmit, submitButtonText, cancelButtonText, data } = props;
+  const { researchName, formName, formCustId, minScore, optionsCount, formTitle, formIntro, questions } = data || {};
   const cancelButtonClick = () => onClose();
 
   return (
@@ -65,20 +65,15 @@ const FormModal = (props) => {
           <FormDataItem field={fieldName.formCustId} value={formCustId} />
           <FormDataItem field={fieldName.minScore} value={minScore} />
           <FormDataItem field={fieldName.optionsCount} value={optionsCount} />
-          {/*
-          <FormDataItem field='學生題目總數' value={questionData.counter.student} />
-          <FormDataItem field='家長題目總數' value={questionData.counter.parent} />
-          <FormDataItem field='老師題目總數' value={questionData.counter.teacher} />
-          */}
 
           {roles.map((role) => (
             <React.Fragment key={role.id}>
               <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
                 給{role.display}的問題
               </ListSubheader>
-              {questionData.questions[role.label].length > 0 && <FormDataItem field={`給${role.display}看的量表名稱`} value={formTitle[role.label]} />}
-              {questionData.questions[role.label].length > 0 && <FormDataItem field={`給${role.display}看的量表名稱`} value={formIntro[role.label]} />}
-              {questionData.questions[role.label].map((question, idx) => (
+              {questions[role.label].length > 0 && <FormDataItem field={`給${role.display}看的量表名稱`} value={formTitle[role.label]} />}
+              {questions[role.label].length > 0 && <FormDataItem field={`給${role.display}看的量表名稱`} value={formIntro[role.label]} />}
+              {questions[role.label].map((question, idx) => (
                 <React.Fragment key={question.label}>
                   <FormDataItem field={`題目${idx + 1}`} value={question.label} />
                   <FormDataItem field='選項' value={question.options.join(', ')} />
@@ -119,7 +114,7 @@ FormModal.propTypes = {
 
 FormModal.defaultProps = {
   cancelButtonText: '關閉',
-  data: initialQuestionsState,
+  data: questionsEmptyState,
 };
 
 FormDataItem.propTypes = {

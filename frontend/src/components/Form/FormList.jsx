@@ -12,19 +12,17 @@ const columns = [
     field: 'formName',
     headerName: '量表名稱',
     flex: 1,
-    minWidth: 90,
     // align: 'center',
   },
   {
     field: 'formCustId',
     headerName: '量表編碼',
     flex: 1,
-    minWidth: 70,
   },
   {
     field: 'researchName',
     headerName: '所屬計畫',
-    flex: 1.5,
+    flex: 1,
     align: 'left',
     renderCell: (params) => (
       <div>
@@ -39,14 +37,19 @@ const columns = [
   {
     field: 'author',
     headerName: '作者',
-    flex: 1,
-    minWidth: 60,
+    flex: 0.5,
+  },
+  {
+    field: 'updatedAt',
+    headerName: 'Updated At',
+    flex: 0.75,
+    type: 'dateTime',
+    valueFormatter: ({ value }) => getDisplayTime(new Date(value)),
   },
   {
     field: 'createdAt',
     headerName: 'Created At',
-    flex: 1,
-    minWidth: 60,
+    flex: 0.75,
     type: 'dateTime',
     valueFormatter: ({ value }) => getDisplayTime(new Date(value)),
   },

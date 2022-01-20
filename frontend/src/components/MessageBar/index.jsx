@@ -11,8 +11,8 @@ import { Stack } from '@mui/material';
 const MessageBarWrapper = styled.div`
   z-index: ${MAX_Z_INDEX};
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: 4.3rem;
+  right: 0.55rem;
   max-width: min(500px, 70%);
   cursor: default;
   > * {
