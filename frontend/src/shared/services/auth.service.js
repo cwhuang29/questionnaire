@@ -8,7 +8,7 @@ const register = ({ firstName, lastName, email, password, role }) =>
     last_name: lastName,
     email,
     password,
-    role: parseInt(role, 10),
+    role,
   });
 
 const login = ({ email, password }) =>

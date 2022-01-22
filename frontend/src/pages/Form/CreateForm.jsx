@@ -17,7 +17,7 @@ import { Autocomplete, Box, Button, createFilterOptions, MenuItem, Stack, TextFi
 // eslint-disable-next-line no-unused-vars
 import styles from './index.module.css';
 
-import { createFormActionType, formEmptyValues, getDefaultQuestionState, questionsEmptyState, optionsCountList, roles } from './createFormData';
+import { createFormActionType, formEmptyValues, getDefaultQuestionState, optionsCountList, questionsEmptyState, roles } from './createFormData';
 
 const filter = createFilterOptions();
 

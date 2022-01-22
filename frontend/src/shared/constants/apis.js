@@ -6,7 +6,7 @@ export default {
     REGISTER: '/v2/register',
 
     FORMS: '/v2/forms',
-    FORMS_DETAIL: '/v2/forms-detail',
+    FORM: '/v2/form',
     CREATE_FORM: '/v2/create/form',
     UPDATE_FORM: '/v2/update/form',
 

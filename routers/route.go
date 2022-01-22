@@ -31,7 +31,7 @@ func injectRoutesV2() {
 		v2.OPTIONS("/register", handlers.HandlePreflight)
 		v2.OPTIONS("/users/me", handlers.HandlePreflight)
 		v2.OPTIONS("/forms", handlers.HandlePreflight)
-		v2.OPTIONS("/forms/*formId", handlers.HandlePreflight)
+		v2.OPTIONS("/form/*formId", handlers.HandlePreflight)
 		v2.OPTIONS("/create/form", handlers.HandlePreflight)
 		v2.OPTIONS("/update/form/*formId", handlers.HandlePreflight)
 
@@ -45,7 +45,8 @@ func injectRoutesV2() {
 			v2.Use(AdminRequired())
 			{
 				v2.GET("/forms", handlers.Forms)
-				v2.GET("/forms/*formId", handlers.Forms)
+				v2.GET("/form/:formId", handlers.Forms)
+				v2.GET("/form/email/*formId", handlers.RemindWritingFormEmail)
 
 				v2.POST("/create/form", handlers.CreateForm)
 				v2.POST("/update/form/*formId", handlers.UpdateForm)

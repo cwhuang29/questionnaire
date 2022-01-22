@@ -23,8 +23,8 @@ import { createFormActionType, formEmptyValues, getDefaultQuestionState, options
 
 const filter = createFilterOptions();
 
+// TODO
 const researchList = [
-  // TODO
   { label: 'The Shawshank Redemption' },
   { label: 'The Godfather' },
   { label: 'The Godfather: Part II' },
@@ -119,7 +119,6 @@ const FormEdit = (props) => {
     },
     onSubmit: async (values) => {
       if (!loading) {
-        console.log(1234);
         return;
       }
 
@@ -170,6 +169,7 @@ const FormEdit = (props) => {
         const finalValue = { ...formik.values, questions: questionState };
         setModalData(finalValue);
         setOpenModal(true);
+        // eslint-disable-next-line no-console
         console.log(JSON.stringify(finalValue, null, 2));
       }
     });
@@ -184,7 +184,7 @@ const FormEdit = (props) => {
   return (
     <PageWrapper>
       <Box component='form' onSubmit={formik.handleSubmit}>
-        <FormModal open={openModal} onClose={modalOnClose} data={modalData} submitButtonText='確認送出' onSubmit={submitForm} />
+        <FormModal open={openModal} onClose={modalOnClose} formData={modalData} submitButtonText='確認送出' onSubmit={submitForm} />
         <Typography variant='h2' component='div' sx={{ fontWeight: '600', textAlign: 'center', marginBottom: '25px' }}>
           {title}
         </Typography>

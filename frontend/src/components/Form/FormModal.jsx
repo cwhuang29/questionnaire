@@ -31,8 +31,8 @@ const FormDataItem = ({ field, value }) => (
 // </Typography>
 
 const FormModal = (props) => {
-  const { open, onClose, onSubmit, submitButtonText, cancelButtonText, data } = props;
-  const { researchName, formName, formCustId, minScore, optionsCount, formTitle, formIntro, questions } = data || {};
+  const { open, onClose, onSubmit, submitButtonText, cancelButtonText, formData } = props;
+  const { researchName, formName, formCustId, minScore, optionsCount, formTitle, formIntro, questions } = formData || {};
   const cancelButtonClick = () => onClose();
 
   return (
@@ -109,12 +109,12 @@ FormModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   submitButtonText: PropTypes.string.isRequired,
   cancelButtonText: PropTypes.string,
-  data: PropTypes.object,
+  formData: PropTypes.object,
 };
 
 FormModal.defaultProps = {
   cancelButtonText: '關閉',
-  data: questionsEmptyState,
+  formData: questionsEmptyState,
 };
 
 FormDataItem.propTypes = {

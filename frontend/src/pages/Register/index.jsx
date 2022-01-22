@@ -140,7 +140,7 @@ const Register = () => {
           {Object.entries(ROLES).map(
             ([value, label]) =>
               value < 4 && (
-                <MenuItem key={value} value={value}>
+                <MenuItem key={value} value={parseInt(value, 10)}>
                   {label}
                 </MenuItem>
               )

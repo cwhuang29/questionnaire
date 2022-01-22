@@ -16,7 +16,6 @@ const FormUpdate = () => {
   const isAdminUser = isAdmin();
   const { addGlobalMessage } = useGlobalMessageContext();
   const { formId } = useParams();
-  // If user enter URL directly instead of redirecting to this page via <Form />, formToBeUpdated will be null
   const { state: formData } = useLocation();
 
   const title = '更新問卷';
@@ -31,6 +30,7 @@ const FormUpdate = () => {
       });
       navigate('/');
     } else if (!formData) {
+      // If user enter URL directly instead of redirecting to this page via <Form />, formToBeUpdated will be null
       addGlobalMessage({
         title: FORM_MESSAGE.ACCESS_VIA_LINK,
         severity: GLOBAL_MESSAGE_SERVERITY.ERROR,

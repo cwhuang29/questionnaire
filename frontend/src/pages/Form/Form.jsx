@@ -89,8 +89,7 @@ const NotificationModalIcon = ({ onClick }) => (
 
 const FormActionItem = ({ title, Icon }) => (
   <Typography variant='h5' component='div' sx={{ fontWeight: 'bold', marginBottom: '1em', textAlign: 'left' }}>
-    {title}&nbsp;
-    {Icon}
+    {title}&nbsp;{Icon}
   </Typography>
 );
 
@@ -103,28 +102,28 @@ const FormView = (props) => {
 
   const formId = getURLQueryFormId();
   const { formName } = data;
+  const rows = []; // TODO
+
   const formModalOnOpen = () => setOpenFormModal(true);
   const formModalOnClose = () => setOpenFormModal(false);
   const assignmentModalOnOpen = () => setOpenAssignmentModal(true);
   const assignmentModalOnClose = () => setOpenAssignmentModal(false);
   const notificationModalOnOpen = () => setOpenNotificationModal(true);
   const notificationModalOnClose = () => setOpenNotificationModal(false);
-  const formOnSubmit = () => {
-    navigate(`/update/form/${formId}`, { state: data }); // The key should be 'state'
-  };
-  const AssignmentOnSubmit = (assignmentData) => formService.assignForm(formId, assignmentData); // TODO
+
+  const formOnSubmit = () => navigate(`/update/form/${formId}`, { state: data }); // The key should be 'state'
+  const AssignmentOnSubmit = (assignmentData) => formService.assignForm(formId, assignmentData);
   const notificationOnSubmit = (notificationData) => notificationService.sendEmailNotificaionByFormId(formId, notificationData);
-  const rows = []; // TODO
 
   return (
     <PageWrapper>
-      {Object.keys(error).length === 0 && (
+      {Object.keys(error).length === 0 && !isLoading ? (
         <>
           <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', marginBottom: '1em' }}>
-            量表—{formName}&nbsp;
+            量表—{formName}
           </Typography>
 
-          <FormModal open={openFormModal} onClose={formModalOnClose} data={data} submitButtonText='修改' onSubmit={formOnSubmit} />
+          <FormModal open={openFormModal} onClose={formModalOnClose} formData={data} submitButtonText='修改' onSubmit={formOnSubmit} />
           <AssignmentModal open={openAssignmentModal} onClose={assignmentModalOnClose} submitButtonText='送出' onSubmit={AssignmentOnSubmit} />
           <EmailNotificationModal
             open={openNotificationModal}
@@ -139,7 +138,11 @@ const FormView = (props) => {
           <FormActionItem title='寄通知信' Icon={<NotificationModalIcon onClick={notificationModalOnOpen} />} />
 
           <DataGrid isLoading={isLoading} columns={columns} rows={rows} />
+          <br />
+          <br />
         </>
+      ) : (
+        <div />
       )}
     </PageWrapper>
   );

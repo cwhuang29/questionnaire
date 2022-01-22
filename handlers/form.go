@@ -10,7 +10,6 @@ import (
 
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/databases/models"
-	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/cwhuang29/questionnaire/utils/validator"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -28,41 +27,6 @@ func writeFromLog(form models.Form, message string) {
 		"Form CustID": form.FormCustId,
 	}
 	logrus.WithFields(fields).Info(message)
-}
-
-func mapFilesName(content string, fileNamesMapping map[string]string) string {
-	for key := range fileNamesMapping {
-		content = strings.Replace(content, key, fileNamesMapping[key], -1)
-	}
-
-	return content
-}
-
-func saveFile(c *gin.Context, file *multipart.FileHeader, fileName string) (err error) {
-	err = c.SaveUploadedFile(file, fileName)
-	if err != nil {
-		logrus.Errorf("Create article error when saving images:", err)
-	}
-	return
-}
-
-func checkFileSize(fileSize int64) bool {
-	return fileSize <= int64(constants.FileMaxSize)
-}
-
-func checkFileType(fileType, mainType string) bool {
-	for _, t := range acceptedFileType[mainType] {
-		if fileType == t {
-			return true
-		}
-	}
-	return false
-}
-
-func generateFileName(fileType string) string {
-	fileID := time.Now().UTC().Format("20060102150405") + utils.GetUUID()
-	fileExt := fileType[strings.LastIndex(fileType, "/")+1:]
-	return constants.UploadImageDir + fileID + "." + fileExt // Do not start with "./" otherwise the images URL in articles content will be incorrect
 }
 
 /*
@@ -227,10 +191,10 @@ func handleForm(c *gin.Context) (newArticle *models.Article, invalids map[string
 }
 
 func Forms(c *gin.Context) {
-	// id := c.Param("formId") // equals to "/3"
+	// id := c.Param("formId") // "/v2/form/*formId" -> equals to "/3"
+	// id := c.Param("formId") // "/v2/form/:formId" -> equals to "3"
 
-	// if err != nil {
-	isSpecific := c.FullPath() == "/v2/forms/*formId"
+	isSpecific := c.FullPath() == "/v2/form/:formId"
 	if isSpecific == false {
 		allForms := getAllForms()
 		c.JSON(http.StatusOK, gin.H{"data": allForms})
@@ -299,4 +263,8 @@ func UpdateForm(c *gin.Context) {
 	succeedMsg := constants.FormUpdateSucceed
 	writeFromLog(dbForm, succeedMsg)
 	c.JSON(http.StatusCreated, gin.H{"title": succeedMsg, "formId": dbFormID})
+}
+
+func RemindWritingFormEmail(c *gin.Context) {
+
 }

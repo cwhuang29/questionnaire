@@ -11,14 +11,14 @@ import { Autocomplete, Box, ListItemButton, ListItemText, ListSubheader, Modal a
 
 const initialValues = {
   email: [],
-  title: '',
+  subject: '',
   content: '',
   footer: '',
 };
 
 const validationSchema = Yup.object({
   email: Yup.array().of(Yup.string().email(validateMsg.AUTH.EMAIL_REQUIRED).max(50, validateMsg.TOO_LONG)).min(1, validateMsg.REQUIRED),
-  title: Yup.string().required(validateMsg.REQUIRED),
+  subject: Yup.string().required(validateMsg.REQUIRED),
   content: Yup.string().required(validateMsg.REQUIRED),
   footer: Yup.string(),
 });
@@ -32,7 +32,7 @@ const EmailNotificationModal = (props) => {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    validate: (values) => console.log(JSON.stringify(values, null, 2)),
+    // validate: (values) => console.log(JSON.stringify(values, null, 2)),
     onSubmit: async (values) => {
       setLoading(true);
       addGlobalMessage({
@@ -44,9 +44,11 @@ const EmailNotificationModal = (props) => {
         .then((resp) => {
           addGlobalMessage({
             title: resp.title,
+            content: resp.content,
             severity: GLOBAL_MESSAGE_SERVERITY.INFO,
             timestamp: Date.now(),
           });
+          onClose();
         })
         .catch((err) => {
           addGlobalMessage({
@@ -134,17 +136,17 @@ const EmailNotificationModal = (props) => {
           <Stack spacing={2}>
             <TextField
               fullWidth
-              name='title'
-              label='Email Title'
-              value={formik.values.title}
+              name='subject'
+              label='Email Subject'
+              value={formik.values.subject}
               onChange={formik.handleChange}
-              error={formik.touched.title && Boolean(formik.errors.title)}
-              helperText={formik.touched.title && formik.errors.title}
+              error={formik.touched.subject && Boolean(formik.errors.subject)}
+              helperText={formik.touched.subject && formik.errors.subject}
             />
             <TextField
               fullWidth
               multiline
-              rows={8}
+              rows={10}
               name='content'
               label='Email Content'
               value={formik.values.content}
@@ -155,7 +157,7 @@ const EmailNotificationModal = (props) => {
             <TextField
               fullWidth
               multiline
-              rows={3}
+              rows={4}
               name='footer'
               label='Email Footer'
               value={formik.values.footer}

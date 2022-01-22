@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"mime/multipart"
 	"strings"
 	"time"
 
@@ -11,59 +11,12 @@ import (
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/sirupsen/logrus"
 )
 
 func isUserAdmin(c *gin.Context) bool {
 	status, _ := GetUserStatus(c)
 	return status >= IsAdmin
-}
-
-func getURLPara(c *gin.Context, key string) string {
-	param := c.Param(key)
-	if strings.HasPrefix(param, "/") {
-		param = param[1:]
-	}
-	return param
-}
-
-func getQueryPara(c *gin.Context, key string) string {
-	return c.DefaultQuery(key, "")
-}
-
-func getParamFormID(c *gin.Context) (int, error) {
-	return utils.Str2PosInt(getURLPara(c, constants.ParamFormID))
-}
-
-func getParamArticleID(c *gin.Context) (int, error) {
-	return utils.Str2PosInt(getURLPara(c, constants.ParamFormID))
-}
-
-func getQueryArticleID(c *gin.Context) (int, error) {
-	return utils.Str2PosInt(getQueryPara(c, constants.QueryArticleID))
-}
-
-func getQueryOffset(c *gin.Context) (int, error) {
-	return utils.Str2Int(getQueryPara(c, constants.QueryOffset))
-}
-
-func getQueryLimit(c *gin.Context) (int, error) {
-	return utils.Str2PosInt(getQueryPara(c, constants.QueryLimit))
-}
-
-func getQueryLiked(c *gin.Context) (int, error) {
-	isLiked, err := utils.Str2Int(getQueryPara(c, constants.QueryLiked))
-	if err != nil || (isLiked != 0 && isLiked != 1) {
-		err = fmt.Errorf(constants.QueryLikedErr)
-	}
-	return isLiked, err
-}
-
-func getQueryBookmarked(c *gin.Context) (int, error) {
-	isBookmarked, err := utils.Str2Int(getQueryPara(c, constants.QueryBookmarked))
-	if err != nil || (isBookmarked != 0 && isBookmarked != 1) {
-		err = fmt.Errorf(constants.QueryBookmarkedErr)
-	}
-	return isBookmarked, err
 }
 
 func GetUserStatus(c *gin.Context) (status UserStatus, user models.User) {
@@ -118,6 +71,39 @@ func fetchData(types, query string, offset, limit int, isAdmin bool) (articleLis
 		articleList[i] = articleFormatDBToOverview(a)
 	}
 	return
+}
+
+func generateFileName(fileType string) string {
+	fileID := time.Now().UTC().Format("20060102150405") + utils.GetUUID()
+	fileExt := fileType[strings.LastIndex(fileType, "/")+1:]
+	return constants.UploadImageDir + fileID + "." + fileExt // Do not start with "./" otherwise the images URL in articles content will be incorrect
+}
+func mapFilesName(content string, fileNamesMapping map[string]string) string {
+	for key := range fileNamesMapping {
+		content = strings.Replace(content, key, fileNamesMapping[key], -1)
+	}
+
+	return content
+}
+func saveFile(c *gin.Context, file *multipart.FileHeader, fileName string) (err error) {
+	err = c.SaveUploadedFile(file, fileName)
+	if err != nil {
+		logrus.Errorf("Create article error when saving images:", err)
+	}
+	return
+}
+
+func checkFileSize(fileSize int64) bool {
+	return fileSize <= int64(constants.FileMaxSize)
+}
+
+func checkFileType(fileType, mainType string) bool {
+	for _, t := range acceptedFileType[mainType] {
+		if fileType == t {
+			return true
+		}
+	}
+	return false
 }
 
 func getUser(email string) models.User {

@@ -29,7 +29,7 @@ const filter = createFilterOptions();
 const initialValues = {
   email: [],
   role: '',
-  title: '',
+  subject: '',
   content: '',
   footer: '',
 };
@@ -37,7 +37,7 @@ const initialValues = {
 const validationSchema = Yup.object({
   email: Yup.array().of(Yup.string().email(validateMsg.AUTH.EMAIL_REQUIRED).max(50, validateMsg.TOO_LONG)).min(1, validateMsg.REQUIRED),
   role: Yup.string().required(validateMsg.AUTH.ROLE_REQUIRED),
-  title: Yup.string().required(validateMsg.REQUIRED),
+  subject: Yup.string().required(validateMsg.REQUIRED),
   content: Yup.string().required(validateMsg.REQUIRED),
   footer: Yup.string(),
 });
@@ -64,9 +64,11 @@ const AssignmentModal = (props) => {
         .then((resp) => {
           addGlobalMessage({
             title: resp.title,
+            content: resp.content,
             severity: GLOBAL_MESSAGE_SERVERITY.INFO,
             timestamp: Date.now(),
           });
+          onClose();
         })
         .catch((err) => {
           addGlobalMessage({
@@ -122,6 +124,7 @@ const AssignmentModal = (props) => {
               filterSelectedOptions
               handleHomeEndKeys
               options={[]}
+              // limitTags={5}
               renderOption={(_props, option) => <li {..._props}>{option.label}</li>}
               defaultValue={formik.values.email}
               value={formik.values.email}
@@ -172,7 +175,7 @@ const AssignmentModal = (props) => {
                 {Object.entries(ROLES).map(
                   ([value, label]) =>
                     value < 3 && (
-                      <MenuItem key={value} value={value}>
+                      <MenuItem key={value} value={parseInt(value, 10)}>
                         {label}
                       </MenuItem>
                     )
@@ -188,17 +191,17 @@ const AssignmentModal = (props) => {
           <Stack spacing={2}>
             <TextField
               fullWidth
-              name='title'
-              label='Email Title'
-              value={formik.values.title}
+              name='subject'
+              label='Email Subject'
+              value={formik.values.subject}
               onChange={formik.handleChange}
-              error={formik.touched.title && Boolean(formik.errors.title)}
-              helperText={formik.touched.title && formik.errors.title}
+              error={formik.touched.subject && Boolean(formik.errors.subject)}
+              helperText={formik.touched.subject && formik.errors.subject}
             />
             <TextField
               fullWidth
               multiline
-              rows={8}
+              rows={10}
               name='content'
               label='Email Content'
               value={formik.values.content}
@@ -209,7 +212,7 @@ const AssignmentModal = (props) => {
             <TextField
               fullWidth
               multiline
-              rows={3}
+              rows={4}
               name='footer'
               label='EmailFooter'
               value={formik.values.footer}

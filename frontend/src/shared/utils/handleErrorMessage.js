@@ -4,6 +4,8 @@ import msg from '@constants/messages';
 export const extractErrorMessage = (err) => {
   let errMsg;
 
+  console.log('err', err);
+
   if (err.response) {
     // The request was made and the server responded with a status code that falls out of the range
     // errHead and errBody are the most common keys I set in backend when an error occurs
