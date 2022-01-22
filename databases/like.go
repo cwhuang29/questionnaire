@@ -2,7 +2,6 @@ package databases
 
 import (
 	"github.com/cwhuang29/questionnaire/databases/models"
-	"github.com/cwhuang29/questionnaire/logger"
 	"github.com/sirupsen/logrus"
 )
 
@@ -10,10 +9,6 @@ import (
  * 0: User doesn't like this article
  * 1: User has liked this article
  */
-
-var (
-	log = logger.New("Database")
-)
 
 func CountUserLikes(userId int) int {
 	return int(db.Model(&models.User{ID: userId}).Association("LikedArticles").Count())

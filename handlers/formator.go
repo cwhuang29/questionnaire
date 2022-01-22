@@ -2,10 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
+	"time"
 
 	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/cwhuang29/questionnaire/databases/models"
 	"github.com/cwhuang29/questionnaire/utils"
 )
@@ -20,8 +21,6 @@ func transformFormToWebFormat(form models.Form) (f Form) {
 	_ = json.Unmarshal([]byte(form.FormIntro), &f.FormIntro)
 	_ = json.Unmarshal([]byte(form.Questions), &f.Questions)
 
-	fmt.Println(form.Questions)
-	fmt.Println(f.Questions)
 	f.ID = form.ID
 	f.Author = form.Author
 	f.CreatedAt = form.CreatedAt
@@ -29,7 +28,7 @@ func transformFormToWebFormat(form models.Form) (f Form) {
 	return
 }
 
-func transformFormToDBFormat(form Form) (f models.Form) {
+func transformFormToDBFormat(form Form, user models.User) (f models.Form) {
 	formTitleBytes, _ := json.Marshal(form.FormTitle)
 	formIntroBytes, _ := json.Marshal(form.FormIntro)
 	questionsBytes, _ := json.Marshal(form.Questions)
@@ -42,7 +41,52 @@ func transformFormToDBFormat(form Form) (f models.Form) {
 	f.FormTitle = string(formTitleBytes)
 	f.FormIntro = string(formIntroBytes)
 	f.Questions = string(questionsBytes)
+
+	f.Author = user.GetName()
+	f.AuthorID = user.ID
+	f.AdminOnly = false
 	return
+}
+
+func transformFormStatusToWebFormat(formStatus models.FormStatus, formId int) (f FormStatus) {
+	receiver := databases.GetUserByEmail(formStatus.WriterEmail)
+	notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverIdAndResult(int(utils.NotificationEmail), formId, receiver.ID, true)
+	sender := databases.GetUser(notificationHistory.SenderId)
+
+	f.Name = receiver.GetName()
+	f.Email = formStatus.WriterEmail
+	f.Role = utils.RoleType(formStatus.Role).String()
+	f.Status = utils.FormStatus(formStatus.Status).String()
+	f.EmailSender = sender.GetName()
+	f.EmailLastSentTime = notificationHistory.CreatedAt
+	return
+}
+
+func transformAssignFormToFormStatusDBFormat(id int, assignForm AssignForm) []models.FormStatus {
+	dbFormStatus := make([]models.FormStatus, len(assignForm.Recipient))
+	now := time.Now()
+
+	for idx, email := range assignForm.Recipient {
+		dbFormStatus[idx].FormId = id
+		dbFormStatus[idx].WriterEmail = email
+		dbFormStatus[idx].Role = assignForm.Role
+		dbFormStatus[idx].Status = int(utils.FormStatusAssign)
+		dbFormStatus[idx].AssignAt = now
+	}
+	return dbFormStatus
+}
+
+func transformEmailNotificationToNotificationHistory(emailNotification EmailNotification, formId int, senderEmail string, notificationType utils.NotificationType) []models.NotificationHistory {
+	sender := databases.GetUserByEmail(senderEmail)
+
+	dbNotificationHistory := make([]models.NotificationHistory, len(emailNotification.Recipient))
+	for idx, email := range emailNotification.Recipient {
+		dbNotificationHistory[idx].Receiver = email
+		dbNotificationHistory[idx].FormId = formId
+		dbNotificationHistory[idx].NotificationType = int(notificationType)
+		dbNotificationHistory[idx].SenderId = sender.ID
+	}
+	return dbNotificationHistory
 }
 
 func articleFormatDBToOverview(article models.Article) (a Article) {

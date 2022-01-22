@@ -2,7 +2,6 @@ package databases
 
 import (
 	"github.com/cwhuang29/questionnaire/databases/models"
-	"github.com/sirupsen/logrus"
 )
 
 func GetFormById(id int, isAdmin bool) (form models.Form) {
@@ -13,6 +12,11 @@ func GetFormById(id int, isAdmin bool) (form models.Form) {
 	//     form = models.Form{}
 	// }
 	// return
+}
+
+func GetFormStatusByFormId(id int, isAdmin bool) (formStatus []models.FormStatus) {
+	db.Where("form_id = ?", id).Find(&formStatus)
+	return
 }
 
 func GetAllForms(isAdmin bool) (forms []models.Form) {
@@ -37,7 +41,7 @@ func GetSameResearchForm(category string, offset, limit int, isAdmin bool) (arti
 
 func InsertForm(form models.Form) (models.Form, error) {
 	if err := db.Create(&form).Error; err != nil {
-		logrus.Error(err.Error())
+		log.ErrorMsg(err.Error())
 		return models.Form{}, err
 	}
 
@@ -63,7 +67,7 @@ func UpdateForm(form models.Form) (models.Form, error) {
 
 	// Where clause can be omitted since form.ID is the primary key
 	if err := db.Model(&form).Where("id = ?", form.ID).Updates(f).Error; err != nil {
-		logrus.Error(err.Error())
+		log.ErrorMsg(err.Error())
 		return models.Form{}, err
 	}
 

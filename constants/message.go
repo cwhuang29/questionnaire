@@ -28,11 +28,14 @@ const (
 	FormDeleteErr     = "Delete Form Failed"
 	FormCreateSucceed = "Create a new form successfully"
 	FormUpdateSucceed = "Update a new form successfully"
-	QueryFormIDErr    = "Parameter formId should be a positive integer"
 
-	QueryErr           = "Invalid Parameter"
-	QueryEmptyErr      = "Parameter %s can not be empty"
-	QueryMissingErr    = "Some values are missing"
+	FormStatusCreateErr = "Failed to assign form to users"
+
+	QueryErr        = "Invalid Parameter"
+	QueryEmptyErr   = "Parameter %s can not be empty"
+	QueryMissingErr = "Some values are missing"
+	QueryFormIDErr  = "Parameter formId should be a positive integer"
+
 	QueryArticleIDErr  = "Parameter articleId should be a positive integer"
 	QueryOffsetErr     = "Parameter offset should be a non-negative integer"
 	QueryLimitErr      = "Parameter limit should be a positive integer"
@@ -55,9 +58,9 @@ const (
 	JWTValidationErrorMalformed        = "Token is malformed"
 	JWTValidationErrorUnverifiable     = "Token could not be verified because of signing problems"
 	JWTValidationErrorSignatureInvalid = "Signature validation failed"
-	JWTValidationErrorExpired          = "You have to relogin" // Token is expired
+	JWTValidationErrorExpired          = "Login session expired. You have to relogin" // Token is expired
 	JWTValidationErrorNotValidYet      = "Token is not yet valid before sometime"
-	JWTPayloadMalformed                = "JWT token payload is improper"
+	JWTPayloadMalformed                = "You have to relogin"
 	JWTUnknown                         = "Can not handle this token"
 
 	EnumTypeErr = "Invalid type of %s"

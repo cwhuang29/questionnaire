@@ -265,7 +265,19 @@ func UpdateForm(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"title": succeedMsg, "formId": dbFormID})
 }
 
-func AssignFormToUsers(c *gin.Context) {
+func GetFormStatus(c *gin.Context) {
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
+		return
+	}
+
+	formStatus := getFormStatusByID(id)
+	fmt.Println("GetFormStatus", id, formStatus, "!!!!!!!!!!!")
+	c.JSON(http.StatusOK, gin.H{"data": formStatus})
+}
+
+func CreateFormStatus(c *gin.Context) {
 	id, err := getParamFormID(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
@@ -284,32 +296,30 @@ func AssignFormToUsers(c *gin.Context) {
 		return
 	}
 
-	email := c.MustGet("email").(string)
-	emailNotification := assignForm.EmailNotification
+	assignForm.EmailNotification = removeDuplicateEmail(assignForm.EmailNotification)
+	assignForm = removeDuplicateAssign(id, assignForm)
 
-	if failedEmails, ok := sendNotificaionToRemindWritingForm(emailNotification); !ok {
-		total := len(emailNotification.Recipient)
-		fail := len(failedEmails)
-		log.ErrorMsg("Sent notification emails failed. Total: ", total, ". Failed: ", fail, ". Operator: ", email, ". Form Id: ", id)
-
-		errBody := fmt.Sprintf("Failed emails: %s", failedEmails)
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.EmailSentErr, "errBody": errBody})
+	dbFormStatus := createNewFormAssignRecords(id, assignForm)
+	if len(dbFormStatus) == 0 {
+		title := "There is no new assignee. Please check your email list again"
+		c.JSON(http.StatusOK, gin.H{"title": title})
 		return
 	}
 
-	emailSize := len(emailNotification.Subject) + len(emailNotification.Content) + len(emailNotification.Footer)
-	fields := map[string]interface{}{
-		"function":    utils.GetFunctionName(),
-		"operator":    email,
-		"formId":      id,
-		"email count": len(emailNotification.Recipient),
-		"email title": emailNotification.Subject,
-		"email  size": emailSize,
+	if _, err := insertFormStatusToDb(dbFormStatus); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.FormStatusCreateErr, "errBody": constants.DatabaseErr})
+		return
 	}
-	log.Info(fields)
+
+	email := c.MustGet("email").(string)
+	emailNotification := assignForm.EmailNotification
+	if err = remindWritingFormByEmail(id, email, emailNotification); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.EmailSentErr, "errBody": err.Error()})
+		return
+	}
 
 	title := constants.EmailsHaveSent
-	content := "Note: If recipient has not been assigned to write this form, he/she will not receive this email"
+	content := "Note: all emails that have been assigned before were ignored"
 	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
 }
 
@@ -326,34 +336,14 @@ func RemindWritingForm(c *gin.Context) {
 		return
 	}
 
-	// TODO Filter emails that should not be sent
-	// TODO Filter emails that should not be sent
-	// TODO Filter emails that should not be sent
+	emailNotification = removeDuplicateEmail(emailNotification)
 
 	email := c.MustGet("email").(string)
-
-	if failedEmails, ok := sendNotificaionToRemindWritingForm(emailNotification); !ok {
-		total := len(emailNotification.Recipient)
-		fail := len(failedEmails)
-		log.ErrorMsg("Sent notification emails failed. Total: ", total, ". Failed: ", fail, ". Operator: ", email, ". Form Id: ", id)
-
-		errBody := fmt.Sprintf("Failed emails: %s", failedEmails)
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.EmailSentErr, "errBody": errBody})
+	if err = remindWritingFormByEmail(id, email, emailNotification); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.EmailSentErr, "errBody": err.Error()})
 		return
 	}
 
-	emailSize := len(emailNotification.Subject) + len(emailNotification.Content) + len(emailNotification.Footer)
-	fields := map[string]interface{}{
-		"function":    utils.GetFunctionName(),
-		"operator":    email,
-		"formId":      id,
-		"email count": len(emailNotification.Recipient),
-		"email title": emailNotification.Subject,
-		"email  size": emailSize,
-	}
-	log.Info(fields)
-
 	title := constants.EmailsHaveSent
-	content := "Note: If recipient has not been assigned to write this form, he/she will not receive this email"
-	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
+	c.JSON(http.StatusOK, gin.H{"title": title})
 }

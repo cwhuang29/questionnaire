@@ -70,6 +70,15 @@ type AssignForm struct {
 	Role int `json:"role"`
 }
 
+type FormStatus struct {
+	Name              string    `json:"name"`
+	Email             string    `json:"email"`
+	Role              string    `json:"role"`
+	Status            string    `json:"status"`
+	EmailSender       string    `json:"emailSender"`
+	EmailLastSentTime time.Time `json:"emailLastSentTime"`
+}
+
 type Article struct {
 	ID         int      `json:"id"`
 	Title      string   `json:"title"`

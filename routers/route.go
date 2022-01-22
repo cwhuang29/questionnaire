@@ -47,8 +47,9 @@ func injectRoutesV2() {
 			v2.Use(AdminRequired())
 			{
 				v2.GET("/forms", handlers.Forms)
-				v2.GET("/form/:formId", handlers.Forms)                     // ":" is mandatory oaram
-				v2.POST("/form/assign/*formId", handlers.AssignFormToUsers) // "*" is optional
+				v2.GET("/form/:formId", handlers.Forms)                // ":" is mandatory oaram
+				v2.GET("/form/assign/*formId", handlers.GetFormStatus) // "*" is optional
+				v2.POST("/form/assign/*formId", handlers.CreateFormStatus)
 				v2.POST("/form/email/*formId", handlers.RemindWritingForm)
 				// v2.GET("/form/:formId", func(c *gin.Context) {
 				//     if strings.HasPrefix(c.Request.RequestURI, "/v2/form/assign") {

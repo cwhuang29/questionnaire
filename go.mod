@@ -18,6 +18,7 @@ require (
 	github.com/spf13/viper v1.9.0
 	github.com/urfave/cli v1.22.5 // indirect
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871
+	google.golang.org/protobuf v1.27.1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	gorm.io/driver/mysql v1.2.0
 	gorm.io/driver/sqlite v1.2.4

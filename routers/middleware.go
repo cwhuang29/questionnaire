@@ -40,7 +40,7 @@ func AuthRequired() gin.HandlerFunc {
 
 		claims, err := handlers.GetJWTClaimsFromHeader(c)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"errHead": err.Error()})
 		}
 
 		c.Set("email", claims.Email)
@@ -58,17 +58,6 @@ func AuthRequired() gin.HandlerFunc {
 			"role":    utils.RoleType(claims.Role).String(),
 		}
 		log.Info(fields)
-	}
-}
-
-func CSRFProtection() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		csrfHeaders := c.Request.Header["X-Csrf-Token"]
-		csrfToken, _ := c.Cookie(constants.CookieCSRFToken)
-
-		if len(csrfHeaders) != 1 || csrfToken == "" || csrfHeaders[0] != csrfToken {
-			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"errHead": constants.GeneralErr, "errBody": constants.PermissionDenied})
-		}
 	}
 }
 
@@ -95,5 +84,16 @@ func AdminRequired() gin.HandlerFunc {
 			"email":   email,
 		}
 		log.Info(fields)
+	}
+}
+
+func CSRFProtection() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		csrfHeaders := c.Request.Header["X-Csrf-Token"]
+		csrfToken, _ := c.Cookie(constants.CookieCSRFToken)
+
+		if len(csrfHeaders) != 1 || csrfToken == "" || csrfHeaders[0] != csrfToken {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"errHead": constants.GeneralErr, "errBody": constants.PermissionDenied})
+		}
 	}
 }

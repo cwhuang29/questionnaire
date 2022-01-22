@@ -3,14 +3,10 @@ package utils
 import (
 	"fmt"
 	"reflect"
-	"regexp"
 	"runtime"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
-)
-
-var (
-	emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 )
 
 func GetFunctionName() string {
@@ -29,11 +25,8 @@ func CompareHashAndPassword(hashedPassword, password []byte) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func IsEmailValid(e string) bool {
-	if len(e) < 3 && len(e) > 254 {
-		return false
-	}
-	return emailRegex.MatchString(e)
+func GetUUID() string {
+	return uuid.NewString()
 }
 
 func RemoveDuplicateStrings(t []string) []string {

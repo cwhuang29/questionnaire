@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"mime/multipart"
 	"strings"
 	"time"
@@ -28,7 +30,7 @@ func GetUserStatus(c *gin.Context) (status UserStatus, user models.User) {
 		memberOrAdmin = IsAdmin
 	}
 
-	user = databases.GetUser(cookieEmail)
+	user = databases.GetUserByEmail(cookieEmail)
 	creds := databases.GetLoginCredentials(user.ID)
 	for _, cred := range creds {
 		isEpr := utils.IsExpired(cred.LastLogin, cred.MaxAge)
@@ -77,6 +79,7 @@ func generateFileName(fileType string) string {
 	fileExt := fileType[strings.LastIndex(fileType, "/")+1:]
 	return constants.UploadImageDir + fileID + "." + fileExt // Do not start with "./" otherwise the images URL in articles content will be incorrect
 }
+
 func mapFilesName(content string, fileNamesMapping map[string]string) string {
 	for key := range fileNamesMapping {
 		content = strings.Replace(content, key, fileNamesMapping[key], -1)
@@ -84,6 +87,7 @@ func mapFilesName(content string, fileNamesMapping map[string]string) string {
 
 	return content
 }
+
 func saveFile(c *gin.Context, file *multipart.FileHeader, fileName string) (err error) {
 	err = c.SaveUploadedFile(file, fileName)
 	if err != nil {
@@ -106,7 +110,7 @@ func checkFileType(fileType, mainType string) bool {
 }
 
 func getUser(email string) models.User {
-	return databases.GetUser(email)
+	return databases.GetUserByEmail(email)
 }
 
 func getAllForms() []Form {
@@ -127,6 +131,17 @@ func getFormByID(id int) Form {
 	return form
 }
 
+func getFormStatusByID(id int) []FormStatus {
+	dbFormStatus := databases.GetFormStatusByFormId(id, true)
+
+	formStatus := make([]FormStatus, len(dbFormStatus))
+	for i, f := range dbFormStatus {
+		formStatus[i] = transformFormStatusToWebFormat(f, id)
+	}
+
+	return formStatus
+}
+
 func insertFormToDb(form models.Form) (int, error) {
 	form, err := databases.InsertForm(form)
 	return form.ID, err
@@ -137,12 +152,18 @@ func updateFormToDb(form models.Form) (int, error) {
 	return form.ID, err
 }
 
-func parseUploadForm(form Form, user models.User) models.Form {
-	dbForm := transformFormToDBFormat(form)
+func insertFormStatusToDb(formStatus []models.FormStatus) ([]models.FormStatus, error) {
+	formStatus, err := databases.InsertFormStatus(formStatus)
+	return formStatus, err
+}
 
-	dbForm.Author = user.GetName()
-	dbForm.AuthorID = user.ID
-	dbForm.AdminOnly = false
+func createNewFormAssignRecords(id int, assignForm AssignForm) []models.FormStatus {
+	dbFormStatus := transformAssignFormToFormStatusDBFormat(id, assignForm)
+	return dbFormStatus
+}
+
+func parseUploadForm(form Form, user models.User) models.Form {
+	dbForm := transformFormToDBFormat(form, user)
 	return dbForm
 }
 
@@ -183,4 +204,72 @@ func editFormPreprocessing(c *gin.Context) (Form, models.User, error) {
 	user := getUser(email)
 
 	return form, user, err
+}
+
+func removeDuplicateEmail(emailNotification EmailNotification) EmailNotification {
+	emailNotification.Recipient = utils.RemoveDuplicateStrings(emailNotification.Recipient)
+	return emailNotification
+}
+
+func removeDuplicateAssign(id int, assignForm AssignForm) AssignForm {
+	dbFormStatus := databases.GetFormStatusByFormId(id, true)
+
+	hasAssignedEmail := make([]string, len(dbFormStatus))
+	for idx, f := range dbFormStatus {
+		hasAssignedEmail[idx] = f.WriterEmail
+	}
+
+	recipients := make([]string, 0)
+	for _, r := range assignForm.Recipient {
+		if !utils.Include(hasAssignedEmail, r) {
+			recipients = append(recipients, r)
+		}
+	}
+	assignForm.Recipient = recipients
+	return assignForm
+}
+
+func notificationPreprocessing(formId int, senderEmail string, emailNotification EmailNotification) []models.NotificationHistory {
+	dbNotificationHistory := transformEmailNotificationToNotificationHistory(emailNotification, formId, senderEmail, utils.NotificationEmail)
+	return dbNotificationHistory
+}
+
+func notificationPostprocessing(dbNotificationHistory []models.NotificationHistory, failedEmails []string) []models.NotificationHistory {
+	for idx := range dbNotificationHistory {
+		if !utils.Include(failedEmails, dbNotificationHistory[idx].Receiver) {
+			dbNotificationHistory[idx].Result = true
+		}
+	}
+	return dbNotificationHistory
+}
+
+func remindWritingFormByEmail(formId int, senderEmail string, emailNotification EmailNotification) error {
+	dbNotificationHistory := notificationPreprocessing(formId, senderEmail, emailNotification)
+	databases.InsertNotificationHistory(dbNotificationHistory)
+
+	failedEmails, ok := sendNotificaionToRemindWritingForm(emailNotification)
+	if !ok {
+		total := len(emailNotification.Recipient)
+		fail := len(failedEmails)
+		log.ErrorMsg("Sent notification emails failed. Total: ", total, ". Failed: ", fail, ". Operator: ", senderEmail, ". Form Id: ", formId)
+
+		errBody := fmt.Sprintf("Failed emails: %s", failedEmails)
+		return errors.New(errBody)
+	}
+
+	dbNotificationHistory = notificationPostprocessing(dbNotificationHistory, failedEmails)
+	databases.UpdateNotificationHistory(dbNotificationHistory)
+
+	emailSize := len(emailNotification.Subject) + len(emailNotification.Content) + len(emailNotification.Footer)
+	fields := map[string]interface{}{
+		"function":    utils.GetFunctionName(),
+		"operator":    senderEmail,
+		"formId":      formId,
+		"email count": len(emailNotification.Recipient),
+		"email title": emailNotification.Subject,
+		"email  size": emailSize,
+	}
+	log.Info(fields)
+
+	return nil
 }

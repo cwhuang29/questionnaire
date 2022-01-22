@@ -1,8 +1,11 @@
 package databases
 
 import (
+	"fmt"
+
 	"github.com/cwhuang29/questionnaire/config"
 	"github.com/cwhuang29/questionnaire/databases/models"
+	"github.com/cwhuang29/questionnaire/logger"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
@@ -10,7 +13,8 @@ import (
 )
 
 var (
-	db *gorm.DB
+	db  *gorm.DB
+	log = logger.New("Database")
 )
 
 func GetDB() *gorm.DB {
@@ -19,7 +23,7 @@ func GetDB() *gorm.DB {
 
 func getMysqlDSN(cfg config.Database) string {
 	// Example: "user:pwd@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
-	return cfg.Username + ":" + cfg.Password + "@tcp(" + cfg.Host + ":" + cfg.Port + ")/" + cfg.Database + "?charset=utf8mb4&parseTime=True"
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True", cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database)
 }
 
 func connect(cfg config.Database) (err error) {
@@ -59,8 +63,14 @@ func createTables() {
 	if !(db.Migrator().HasTable(&models.Form{})) {
 		db.Migrator().CreateTable(&models.Form{})
 	}
+	if !(db.Migrator().HasTable(&models.FormStatus{})) {
+		db.Migrator().CreateTable(&models.FormStatus{})
+	}
 	if !(db.Migrator().HasTable(&models.FormHistory{})) {
 		db.Migrator().CreateTable(&models.FormHistory{})
+	}
+	if !(db.Migrator().HasTable(&models.NotificationHistory{})) {
+		db.Migrator().CreateTable(&models.NotificationHistory{})
 	}
 }
 

@@ -14,7 +14,12 @@ func IsAdminUser(email string) bool {
 	return true
 }
 
-func GetUser(email string) (user models.User) {
+func GetUser(id int) (user models.User) {
+	db.First(&user, id)
+	return
+}
+
+func GetUserByEmail(email string) (user models.User) {
 	db.Table("users").Where("email = ?", email).Find(&user)
 	return
 }

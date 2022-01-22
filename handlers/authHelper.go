@@ -39,12 +39,14 @@ func GetJWTClaimsFromHeader(c *gin.Context) (*utils.JWTClaim, error) {
 		// if someErrorOccurs { return nil, customizedErr }
 		return utils.GetJWTSecretKeyFromConfig(), nil
 	})
+
 	if err != nil {
 		return &utils.JWTClaim{}, errors.New(utils.GetJWTErrMsg(err))
 	}
 
 	claims, ok := tokenClaims.Claims.(*utils.JWTClaim)
-	if !ok || claims.Email == "" || !utils.RoleType(claims.Role).IsValid() || !tokenClaims.Valid {
+	// if !ok || utils.IsEmailValid(claims.Email) || !utils.RoleType(claims.Role).IsValid() || !tokenClaims.Valid {
+	if !ok || !tokenClaims.Valid {
 		return &utils.JWTClaim{}, errors.New(constants.JWTPayloadMalformed)
 	}
 
