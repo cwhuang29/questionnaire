@@ -3,14 +3,15 @@ package constants
 const (
 	ResetPasswordMaxRetry = 5
 
-	Subject  = "Reset Password Notification"
-	CharSet  = "UTF-8"
-	TextBody = "Hello %s! " +
+	CharSet = "UTF-8"
+
+	ResetPasswordSubject  = "Reset Password Notification"
+	ResetPasswordTextBody = "Hello %s! " +
 		"You are receiving this email because we received a password reset request from your account. " +
 		"Copy and paste the following link into your browser to change your pawssword: %s. " +
 		"The password reset link will expire in %d minutes. If you didn't request a password reset, no further action is required. " +
 		"Please feel free to contact us if you have any further questions."
-	HtmlBody = `
+	ResetPasswordBody = `
 <div style="width: 68%%; margin-left: auto; margin-right: auto; color: #3D3D3D">
   <div style=" color: #FCD432; text-align: center; font-weight: 700; font-size: 2rem">
     i.news
@@ -27,6 +28,26 @@ const (
   <div style="text-align: center; color: #7E7E7E; font-size: 0.7rem">
   <p>If you're having trouble clicking the "Reset Password" button, copy and paste the following link into your browser: %s</p>
   <p>&copy;&nbsp;2021 i.news All rights reserved.</p>
+  </div>
+</div>
+`
+
+	NotificationTextBody = "%s. %s"
+
+	NotificationBody = `
+<div style="width: 65%%; margin: 0 auto; color: #2E2E2E">
+  <div style=" color: #FCD432; text-align: center; font-weight: 700; font-size: 1.7rem">
+	XXX 問卷平台
+  </div>
+  <p style="font-size: 1.1rem">%s</p>
+  <br>
+  <p style="font-size: 1.1rem">Best regards,<br>XXX研究團隊</p>
+  <br>
+  <div style="text-align: left; color: #6E6E6E; font-size: 0.96rem">
+  <p>%s</p>
+  <div>
+	<p style="text-align: center">&copy;&nbsp;2022 All rights reserved.</p>
+  </div>
   </div>
 </div>
 `

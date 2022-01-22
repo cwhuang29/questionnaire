@@ -58,6 +58,18 @@ type Login struct {
 	Password string `form:"password" json:"password" binding:"required"`
 }
 
+type EmailNotification struct {
+	Recipient []string `json:"email"`
+	Subject   string   `json:"subject"`
+	Content   string   `json:"content"`
+	Footer    string   `json:"footer,omitempty"`
+}
+
+type AssignForm struct {
+	EmailNotification
+	Role int `json:"role"`
+}
+
 type Article struct {
 	ID         int      `json:"id"`
 	Title      string   `json:"title"`

@@ -6,6 +6,8 @@ const (
 
 	PermissionDenied = "You are not allowed to perform this action"
 
+	PayloadIncorrect = "Your request data is not valid"
+
 	TryAgain       = "Please try again"
 	ReloadAndRetry = "Please reload the page and try again"
 	GobackAndRetry = "Go back to previous page and try again"
@@ -26,6 +28,7 @@ const (
 	FormDeleteErr     = "Delete Form Failed"
 	FormCreateSucceed = "Create a new form successfully"
 	FormUpdateSucceed = "Update a new form successfully"
+	QueryFormIDErr    = "Parameter formId should be a positive integer"
 
 	QueryErr           = "Invalid Parameter"
 	QueryEmptyErr      = "Parameter %s can not be empty"
@@ -45,6 +48,9 @@ const (
 	EmailRequestAgain     = "Please request a reset password email again"
 	EmailIsAddressCorrect = "Did you fill in the correct email address?"
 	EmailTryLater         = "Please try again in one hour"
+	EmailHasSent          = "Email has been sent"
+	EmailsHaveSent        = "Emails have been sent"
+	EmailSentErr          = "Some emails did not successfully send out"
 
 	JWTValidationErrorMalformed        = "Token is malformed"
 	JWTValidationErrorUnverifiable     = "Token could not be verified because of signing problems"

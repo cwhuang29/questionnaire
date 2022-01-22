@@ -31,7 +31,9 @@ func injectRoutesV2() {
 		v2.OPTIONS("/register", handlers.HandlePreflight)
 		v2.OPTIONS("/users/me", handlers.HandlePreflight)
 		v2.OPTIONS("/forms", handlers.HandlePreflight)
-		v2.OPTIONS("/form/*formId", handlers.HandlePreflight)
+		v2.OPTIONS("/form/:formId", handlers.HandlePreflight)
+		v2.OPTIONS("/form/email/*formId", handlers.HandlePreflight)
+		v2.OPTIONS("/form/assign/*formId", handlers.HandlePreflight)
 		v2.OPTIONS("/create/form", handlers.HandlePreflight)
 		v2.OPTIONS("/update/form/*formId", handlers.HandlePreflight)
 
@@ -45,8 +47,19 @@ func injectRoutesV2() {
 			v2.Use(AdminRequired())
 			{
 				v2.GET("/forms", handlers.Forms)
-				v2.GET("/form/:formId", handlers.Forms)
-				v2.GET("/form/email/*formId", handlers.RemindWritingFormEmail)
+				v2.GET("/form/:formId", handlers.Forms)                     // ":" is mandatory oaram
+				v2.POST("/form/assign/*formId", handlers.AssignFormToUsers) // "*" is optional
+				v2.POST("/form/email/*formId", handlers.RemindWritingForm)
+				// v2.GET("/form/:formId", func(c *gin.Context) {
+				//     if strings.HasPrefix(c.Request.RequestURI, "/v2/form/assign") {
+				//         handlers.AssignFormToUsers(c)
+				//         return
+				//     } else if strings.HasPrefix(c.Request.RequestURI, "/v2/form/email") {
+				//         handlers.RemindWritingForm(c)
+				//         return
+				//     }
+				//     handlers.Forms(c)
+				// })
 
 				v2.POST("/create/form", handlers.CreateForm)
 				v2.POST("/update/form/*formId", handlers.UpdateForm)

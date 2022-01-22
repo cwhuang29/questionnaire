@@ -26,14 +26,14 @@ func (l logger) Error(fields logrus.Fields) {
 	l.log.WithFields(fields).Error(l.name)
 }
 
-func (l logger) InfoMsg(msg string) {
-	l.log.Info(msg)
+func (l logger) InfoMsg(args ...interface{}) {
+	l.log.Info(args...)
 }
 
-func (l logger) WarnMsg(msg string) {
-	l.log.Warn(msg)
+func (l logger) WarnMsg(args ...interface{}) {
+	l.log.Warn(args...)
 }
 
-func (l logger) ErrorMsg(msg string) {
-	l.log.Error(msg)
+func (l logger) ErrorMsg(args ...interface{}) {
+	l.log.Error(args...)
 }

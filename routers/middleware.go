@@ -2,14 +2,13 @@ package routers
 
 import (
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/handlers"
 	"github.com/cwhuang29/questionnaire/logger"
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
 )
 
 var (
@@ -38,35 +37,16 @@ func AllowCORS() gin.HandlerFunc {
 func AuthRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
-		auth := c.GetHeader("Authorization")
-		tokens := strings.Split(auth, "Bearer ")
 
-		if len(tokens) < 2 {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": constants.JWTPayloadMalformed})
-			return
-		}
-
-		token := tokens[1]
-		tokenClaims, err := jwt.ParseWithClaims(token, &utils.JWTClaim{}, func(token *jwt.Token) (i interface{}, err error) {
-			// if someErrorOccurs { return nil, customizedErr }
-			return utils.GetJWTSecretKeyFromConfig(), nil
-		})
-
+		claims, err := handlers.GetJWTClaimsFromHeader(c)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": utils.GetJWTErrMsg(err)})
-			return
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		}
 
-		claims, ok := tokenClaims.Claims.(*utils.JWTClaim)
-		if ok && tokenClaims.Valid && claims.Email != "" {
-			c.Set("email", claims.Email)
-			c.Set("name", claims.Name)
-			c.Set("role", claims.Role)
-			c.Next()
-		} else {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": constants.JWTPayloadMalformed})
-			return
-		}
+		c.Set("email", claims.Email)
+		c.Set("name", claims.Name)
+		c.Set("role", claims.Role)
+		c.Next()
 
 		fields := map[string]interface{}{
 			"method":  c.Request.Method,
@@ -99,8 +79,8 @@ func AdminRequired() gin.HandlerFunc {
 		email := c.MustGet("email").(string)
 		role := c.MustGet("role").(int)
 
-		// if !utils.RoleType(role).IsAdmin() { // TODO For develop only
-		if !utils.RoleType(role).IsValid() {
+		// if !utils.RoleType(role).IsValid() { // TODO For develop only
+		if !utils.RoleType(role).IsAdmin() {
 			// If use JSON(), handler functions will be triggered subsequentlly
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"errHead": constants.GeneralErr, "errBody": constants.PermissionDenied})
 		}

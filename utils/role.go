@@ -23,11 +23,10 @@ func (r RoleType) IsValidAndNotAdmin() bool {
 }
 
 func (r RoleType) IsValid() bool {
-	switch r {
-	case Student, Parent, Teacher, Researcher, Admin:
-		return true
+	if r < Student || r > Admin {
+		return false
 	}
-	return false
+	return true
 }
 
 func (r RoleType) IsStudent() bool {

@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"fmt"
 	"reflect"
 	"regexp"
+	"runtime"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -10,6 +12,14 @@ import (
 var (
 	emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 )
+
+func GetFunctionName() string {
+	pc := make([]uintptr, 15)
+	n := runtime.Callers(2, pc)
+	frames := runtime.CallersFrames(pc[:n])
+	frame, _ := frames.Next()
+	return fmt.Sprintf("%s:%d %s\n", frame.File, frame.Line, frame.Function)
+}
 
 func HashPassword(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -26,7 +36,7 @@ func IsEmailValid(e string) bool {
 	return emailRegex.MatchString(e)
 }
 
-func RemoveDuplicateTags(t []string) []string {
+func RemoveDuplicateStrings(t []string) []string {
 	tmp := removeDuplicateValuesInSlice(t)
 	tags := make([]string, len(tmp))
 	for i, v := range tmp {

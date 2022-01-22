@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	log = logger.New("Middleware")
+	log = logger.New("Handler")
 )
 
 func HandlePreflight(c *gin.Context) {
@@ -113,7 +113,6 @@ func LoginV2(c *gin.Context) {
 	// c.Header("Location", constants.URLLandingPage)
 	// c.SetCookie(constants.CookieAuthToken, token, constants.AuthTokenAge, "/", "", false, true)
 	if utils.RoleType(user.Role).IsAdmin() {
-		log.InfoMsg("Setting admin cookie !!!")
 		c.SetCookie(constants.CookieIsAdmin, user.Email, constants.LoginMaxAge, "/", "", false, false)
 	}
 	c.JSON(http.StatusOK, gin.H{"token": token})

@@ -11,7 +11,6 @@ import (
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/sirupsen/logrus"
 )
 
 func isUserAdmin(c *gin.Context) bool {
@@ -88,7 +87,7 @@ func mapFilesName(content string, fileNamesMapping map[string]string) string {
 func saveFile(c *gin.Context, file *multipart.FileHeader, fileName string) (err error) {
 	err = c.SaveUploadedFile(file, fileName)
 	if err != nil {
-		logrus.Errorf("Create article error when saving images:", err)
+		log.ErrorMsg("Create article error when saving images: ", err)
 	}
 	return
 }
@@ -154,6 +153,28 @@ func parseJSONForm(c *gin.Context) (Form, error) {
 	// Note: the error "EOF" occurs when reading from the Request Body twice (e.g. c.GetRawData(), c.Request.Body)
 	err = c.ShouldBindBodyWith(&form, binding.JSON)
 	return form, err
+}
+
+func parseJSONAssignForm(c *gin.Context) (AssignForm, error) {
+	var assignForm AssignForm
+	var err error
+
+	if err = c.ShouldBindBodyWith(&assignForm, binding.JSON); err == nil {
+		assignForm.Recipient = utils.RemoveDuplicateStrings(assignForm.Recipient)
+	}
+
+	return assignForm, err
+}
+
+func parseJSONEmailNotification(c *gin.Context) (EmailNotification, error) {
+	var emailNotification EmailNotification
+	var err error
+
+	// Note: the error "EOF" occurs when reading from the Request Body twice (e.g. c.GetRawData(), c.Request.Body)
+	if err = c.ShouldBindBodyWith(&emailNotification, binding.JSON); err == nil {
+		emailNotification.Recipient = utils.RemoveDuplicateStrings(emailNotification.Recipient)
+	}
+	return emailNotification, err
 }
 
 func editFormPreprocessing(c *gin.Context) (Form, models.User, error) {

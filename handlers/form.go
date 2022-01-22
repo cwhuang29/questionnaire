@@ -10,9 +10,9 @@ import (
 
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/databases/models"
+	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/cwhuang29/questionnaire/utils/validator"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -26,7 +26,7 @@ func writeFromLog(form models.Form, message string) {
 		"Form name":   form.FormName,
 		"Form CustID": form.FormCustId,
 	}
-	logrus.WithFields(fields).Info(message)
+	log.Info(fields)
 }
 
 /*
@@ -79,7 +79,7 @@ func getCoverPhoto(file *multipart.FileHeader) (coverPhotoName string, err error
 func saveFilesFromForm(c *gin.Context, files map[string][]*multipart.FileHeader) (fileNamesMapping map[string]string, coverPhotoURL string, err error) {
 	defer func() {
 		if err := recover(); err != nil {
-			logrus.Errorf("Error occurred when retrieving files from the input form:", err)
+			log.ErrorMsg("Error occurred when retrieving files from the input form: ", err)
 		}
 	}()
 
@@ -119,7 +119,7 @@ func saveFilesFromForm(c *gin.Context, files map[string][]*multipart.FileHeader)
 func getValuesFromForm(c *gin.Context, formVal map[string][]string) (*models.Article, error) {
 	defer func() {
 		if err := recover(); err != nil {
-			logrus.Errorf("Create article error when retrieving values from form:", err)
+			log.ErrorMsg("Create article error when retrieving values from form: ", err)
 		}
 	}()
 
@@ -203,7 +203,7 @@ func Forms(c *gin.Context) {
 
 	id, err := getParamFormID(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"data": nil})
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
 		return
 	}
 
@@ -265,6 +265,95 @@ func UpdateForm(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"title": succeedMsg, "formId": dbFormID})
 }
 
-func RemindWritingFormEmail(c *gin.Context) {
+func AssignFormToUsers(c *gin.Context) {
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
+		return
+	}
 
+	assignForm, err := parseJSONAssignForm(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": err.Error()})
+		return
+	}
+
+	role := utils.RoleType(assignForm.Role)
+	if !role.IsValid() {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect})
+		return
+	}
+
+	email := c.MustGet("email").(string)
+	emailNotification := assignForm.EmailNotification
+
+	if failedEmails, ok := sendNotificaionToRemindWritingForm(emailNotification); !ok {
+		total := len(emailNotification.Recipient)
+		fail := len(failedEmails)
+		log.ErrorMsg("Sent notification emails failed. Total: ", total, ". Failed: ", fail, ". Operator: ", email, ". Form Id: ", id)
+
+		errBody := fmt.Sprintf("Failed emails: %s", failedEmails)
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.EmailSentErr, "errBody": errBody})
+		return
+	}
+
+	emailSize := len(emailNotification.Subject) + len(emailNotification.Content) + len(emailNotification.Footer)
+	fields := map[string]interface{}{
+		"function":    utils.GetFunctionName(),
+		"operator":    email,
+		"formId":      id,
+		"email count": len(emailNotification.Recipient),
+		"email title": emailNotification.Subject,
+		"email  size": emailSize,
+	}
+	log.Info(fields)
+
+	title := constants.EmailsHaveSent
+	content := "Note: If recipient has not been assigned to write this form, he/she will not receive this email"
+	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
+}
+
+func RemindWritingForm(c *gin.Context) {
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
+		return
+	}
+
+	emailNotification, err := parseJSONEmailNotification(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": err.Error()})
+		return
+	}
+
+	// TODO Filter emails that should not be sent
+	// TODO Filter emails that should not be sent
+	// TODO Filter emails that should not be sent
+
+	email := c.MustGet("email").(string)
+
+	if failedEmails, ok := sendNotificaionToRemindWritingForm(emailNotification); !ok {
+		total := len(emailNotification.Recipient)
+		fail := len(failedEmails)
+		log.ErrorMsg("Sent notification emails failed. Total: ", total, ". Failed: ", fail, ". Operator: ", email, ". Form Id: ", id)
+
+		errBody := fmt.Sprintf("Failed emails: %s", failedEmails)
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.EmailSentErr, "errBody": errBody})
+		return
+	}
+
+	emailSize := len(emailNotification.Subject) + len(emailNotification.Content) + len(emailNotification.Footer)
+	fields := map[string]interface{}{
+		"function":    utils.GetFunctionName(),
+		"operator":    email,
+		"formId":      id,
+		"email count": len(emailNotification.Recipient),
+		"email title": emailNotification.Subject,
+		"email  size": emailSize,
+	}
+	log.Info(fields)
+
+	title := constants.EmailsHaveSent
+	content := "Note: If recipient has not been assigned to write this form, he/she will not receive this email"
+	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
 }
