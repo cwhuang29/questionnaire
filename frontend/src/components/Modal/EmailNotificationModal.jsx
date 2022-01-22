@@ -17,7 +17,7 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object({
-  email: Yup.array().of(Yup.string().email(validateMsg.AUTH.EMAIL_REQUIRED).max(50, validateMsg.TOO_LONG)).min(1, validateMsg.REQUIRED),
+  email: Yup.array().of(Yup.string().email(validateMsg.AUTH.EMAIL_REQUIRED).max(100, validateMsg.TOO_LONG)).min(1, validateMsg.REQUIRED),
   subject: Yup.string().required(validateMsg.REQUIRED),
   content: Yup.string().required(validateMsg.REQUIRED),
   footer: Yup.string(),
@@ -102,7 +102,7 @@ const EmailNotificationModal = (props) => {
               selectOnFocus
               filterSelectedOptions
               handleHomeEndKeys
-              loading={isFetchingEmail}
+              loading={isFetchingEmail} // This shows the loadingText in place of suggestions (only if there are no suggestions to show, e.g. options are empty)
               loadingText='Retrieving email list ...'
               options={emailList}
               defaultValue={formik.values.email}

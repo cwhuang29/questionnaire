@@ -23,14 +23,7 @@ import { createFormActionType, formEmptyValues, getDefaultQuestionState, options
 
 const filter = createFilterOptions();
 
-// TODO
-const researchList = [
-  { label: 'The Shawshank Redemption' },
-  { label: 'The Godfather' },
-  { label: 'The Godfather: Part II' },
-  { label: 'The Dark Knight' },
-  { label: 'Pulp Fiction' },
-];
+const researchList = []; // TODO
 
 const questionsReducer = (state, action) => {
   const { type, payload } = action;
@@ -188,6 +181,7 @@ const FormEdit = (props) => {
         <Typography variant='h2' component='div' sx={{ fontWeight: '600', textAlign: 'center', marginBottom: '25px' }}>
           {title}
         </Typography>
+
         <Stack spacing={3} sx={{ textAlign: 'center' }}>
           <Autocomplete
             multiple

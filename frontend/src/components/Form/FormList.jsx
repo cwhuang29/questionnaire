@@ -67,7 +67,7 @@ const FormListView = (props) => {
     }
   };
 
-  return Object.keys(error).length === 0 && <DataGrid isLoading={isLoading} columns={columns} rows={rows} onCellDoubleClick={onCellDoubleClick} />;
+  return Object.keys(error).length === 0 && <DataGrid isLoading={isLoading} columns={columns} rows={rows} onCellDoubleClick={onCellDoubleClick} height={820} />;
 };
 
 const getAllFormsForComponent = () => () => getAllForms();

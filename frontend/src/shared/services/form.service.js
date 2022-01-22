@@ -17,7 +17,7 @@ const createFormStatus = (id, data, token = authHeader()) =>
   fetch
     .post(`${apis.V2.FORM_STATUS}/${id}`, data, { headers: token })
     .then((resp) => Promise.resolve(resp.data))
-    .catch((err) => Promise.reject(extractErrorMessage(err))); // http://127.0.0.1/v2/form/assign/6
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
 
 const getFormStatus = (id, token = authHeader()) =>
   fetch

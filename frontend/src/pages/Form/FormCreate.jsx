@@ -15,7 +15,7 @@ const FormCreate = () => {
   const isAdminUser = isAdmin();
   const { addGlobalMessage } = useGlobalMessageContext();
 
-  const title = '創建一份新問卷';
+  const title = '創建新量表';
   const submitAction = (data) => createForm(data);
 
   useEffect(() => {

@@ -103,8 +103,8 @@ DataGrid.propTypes = {
 
 DataGrid.defaultProps = {
   rows: [],
-  onCellDoubleClick: () => {},
-  getRowId: () => {},
+  onCellDoubleClick: null,
+  getRowId: null,
   height: 600,
 };
 

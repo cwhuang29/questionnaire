@@ -107,7 +107,7 @@ const AssignmentModal = (props) => {
           }}
           style={{
             width: 'min(800px, 85%)',
-            height: 'min(1000px, 86%)',
+            height: 'min(1000px, 90%)',
             overflowX: 'hidden',
             overflowY: 'auto',
           }}
@@ -129,8 +129,8 @@ const AssignmentModal = (props) => {
               defaultValue={formik.values.email}
               value={formik.values.email}
               onChange={(e, value) => {
-                // If user clicks enter right after typing, the new value appended in the array is of type string
-                // If user press keydown to the option list, the new value will have type object ({inputValue: 'abc', label: 'abc'}) (the key "label" is named by MUI)
+                // If user clicks enter right after typing, the "value" appended in the array is of type string
+                // If user press keydown to the option list and select the value he just typed, the "value" will have type object ({inputValue: 'abc', label: 'abc'}) (the key "label" is named by MUI)
                 const revisedValue = value.map((v) => (v.constructor === Object ? v.label : v));
                 formik.setFieldValue('email', revisedValue);
               }}

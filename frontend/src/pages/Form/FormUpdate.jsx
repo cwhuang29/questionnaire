@@ -18,7 +18,7 @@ const FormUpdate = () => {
   const { formId } = useParams();
   const { state: formData } = useLocation();
 
-  const title = '更新問卷';
+  const title = '更新量表';
   const submitAction = (data) => updateForm(formId, data);
 
   useEffect(() => {

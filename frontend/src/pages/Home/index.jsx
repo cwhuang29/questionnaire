@@ -32,6 +32,7 @@ const Home = () => {
             若要看量表的更多資訊，請在名稱上連擊
           </Typography>
           <FormList />
+          <br />
         </>
       ) : (
         <>
