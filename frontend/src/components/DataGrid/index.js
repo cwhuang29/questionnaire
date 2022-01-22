@@ -59,7 +59,7 @@ const StyledDataGrid = withStyles({
 })(MuiDataGrid);
 
 const DataGrid = (props) => {
-  const { rows, columns, isLoading, onCellDoubleClick, height } = props;
+  const { rows, columns, isLoading, onCellDoubleClick, height, getRowId } = props;
 
   return (
     <div style={{ height: `${height}px`, width: '100%' }}>
@@ -86,7 +86,7 @@ const DataGrid = (props) => {
           // '& .cold': { },
         }}
         // getCellClassName={(params) => (params.value >= 15 ? 'hot' : 'cold')}
-        // getRowId={(row) => `${row.createdAt}`}
+        getRowId={getRowId}
       />
     </div>
   );
@@ -97,12 +97,14 @@ DataGrid.propTypes = {
   columns: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   onCellDoubleClick: PropTypes.func,
+  getRowId: PropTypes.func,
   height: PropTypes.number,
 };
 
 DataGrid.defaultProps = {
   rows: [],
   onCellDoubleClick: () => {},
+  getRowId: () => {},
   height: 600,
 };
 

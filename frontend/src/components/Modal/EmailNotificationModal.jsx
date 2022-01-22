@@ -24,7 +24,7 @@ const validationSchema = Yup.object({
 });
 
 const EmailNotificationModal = (props) => {
-  const { open, onClose, onSubmit, submitButtonText, cancelButtonText, emailList } = props;
+  const { open, onClose, onSubmit, submitButtonText, cancelButtonText, isFetchingEmail, emailList } = props;
   const [loading, setLoading] = useState(false);
   const { addGlobalMessage } = useGlobalMessageContext();
   const cancelButtonClick = () => onClose();
@@ -93,7 +93,7 @@ const EmailNotificationModal = (props) => {
           }}
         >
           <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
-            指定填寫者（將一併寄出通知信件，重複者自動忽略）
+            選擇收信者
           </ListSubheader>
 
           <Stack spacing={2}>
@@ -102,8 +102,10 @@ const EmailNotificationModal = (props) => {
               selectOnFocus
               filterSelectedOptions
               handleHomeEndKeys
-              defaultValue={formik.values.email}
+              loading={isFetchingEmail}
+              loadingText='Retrieving email list ...'
               options={emailList}
+              defaultValue={formik.values.email}
               renderOption={(_props, option) => <li {..._props}>{`${option.email} (${option.role})`}</li>}
               onChange={(e, value) => {
                 // Since this Autocomplete only accesses inputs from options list, the element in the give array is the same as those in input data
@@ -188,11 +190,13 @@ EmailNotificationModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   submitButtonText: PropTypes.string.isRequired,
   cancelButtonText: PropTypes.string,
+  isFetchingEmail: PropTypes.bool,
   emailList: PropTypes.array.isRequired,
 };
 
 EmailNotificationModal.defaultProps = {
   cancelButtonText: '關閉',
+  isFetchingEmail: false,
 };
 
 export default EmailNotificationModal;

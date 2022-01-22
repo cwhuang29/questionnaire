@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -10,27 +10,28 @@ import PageWrapper from '@components/HomePageWrapper';
 import { AssignmentModal, EmailNotificationModal } from '@components/Modal';
 import StyledBadge from '@components/styledComponents/StyledBadge';
 import ROLES from '@constants/roles';
+import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
+import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import formService from '@services/form.service';
 import notificationService from '@services/notification.service';
 import withFetchService from '@shared/hooks/withFetchService';
+import { getDisplayTime } from '@shared/utils/time';
 
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MailIcon from '@mui/icons-material/Mail';
 import { IconButton, Typography } from '@mui/material';
 
-// TODO
-const testEmails = [
-  { email: 'a1@gmail.com', role: 'student' },
-  { email: 'a2@gmail.com', role: 'student' },
-  { email: 'a3@gmail.com', role: 'teacher' },
-  { email: 'a4@gmail.com', role: 'parent' },
-];
-
 const columns = [
   {
-    field: 'assignee',
-    headerName: '填寫者',
+    field: 'name',
+    headerName: '填寫者姓名',
+    flex: 2,
+    minWidth: 70,
+  },
+  {
+    field: 'email',
+    headerName: '填寫者Email',
     flex: 2,
     minWidth: 70,
   },
@@ -48,13 +49,13 @@ const columns = [
     minWidth: 70,
   },
   {
-    field: 'assigner',
+    field: 'emailSender',
     headerName: '寄信者',
     flex: 2,
     minWidth: 70,
   },
   {
-    field: 'lastSendTime',
+    field: 'emailLastSentTime',
     headerName: '最後一次寄信時間',
     type: 'dateTime',
     valueFormatter: ({ value }) => getDisplayTime(new Date(value)),
@@ -98,11 +99,13 @@ const FormView = (props) => {
   const [openFormModal, setOpenFormModal] = useState(false);
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
   const [openNotificationModal, setOpenNotificationModal] = useState(false);
+  const [isFetchingFormAssignStatusData, setIsFetchingFormAssignStatusData] = useState(true);
+  const [formAssignStatusData, setFormAssignStatusData] = useState([]);
   const navigate = useNavigate();
+  const { addGlobalMessage } = useGlobalMessageContext();
 
   const formId = getURLQueryFormId();
   const { formName } = data;
-  const rows = []; // TODO
 
   const formModalOnOpen = () => setOpenFormModal(true);
   const formModalOnClose = () => setOpenFormModal(false);
@@ -112,8 +115,31 @@ const FormView = (props) => {
   const notificationModalOnClose = () => setOpenNotificationModal(false);
 
   const formOnSubmit = () => navigate(`/update/form/${formId}`, { state: data }); // The key should be 'state'
-  const AssignmentOnSubmit = (assignmentData) => formService.assignForm(formId, assignmentData);
+  const AssignmentOnSubmit = async (assignmentData) => {
+    const resp = await formService.createFormStatus(formId, assignmentData);
+    setIsFetchingFormAssignStatusData(true);
+    return resp;
+  };
   const notificationOnSubmit = (notificationData) => notificationService.sendEmailNotificaionByFormId(formId, notificationData);
+
+  useEffect(() => {
+    if (!isFetchingFormAssignStatusData) {
+      return;
+    }
+    setIsFetchingFormAssignStatusData(true);
+    formService
+      .getFormStatus(formId)
+      .then((resp) => setFormAssignStatusData(resp.data))
+      .catch((err) => {
+        addGlobalMessage({
+          title: err.title,
+          content: err.content,
+          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          timestamp: Date.now(),
+        });
+      })
+      .finally(() => setIsFetchingFormAssignStatusData(false)); // This leads to another re-render
+  }, [isFetchingFormAssignStatusData]); // TODO refetch
 
   return (
     <PageWrapper>
@@ -130,14 +156,15 @@ const FormView = (props) => {
             onClose={notificationModalOnClose}
             submitButtonText='確認寄信'
             onSubmit={notificationOnSubmit}
-            emailList={testEmails}
+            isFetchingEmail={isFetchingFormAssignStatusData}
+            emailList={formAssignStatusData}
           />
 
           <FormActionItem title='查看量表' Icon={<FormModalIcon onClick={formModalOnOpen} />} />
           <FormActionItem title='分配量表' Icon={<AssignmentModalIcon onClick={assignmentModalOnOpen} />} />
           <FormActionItem title='寄通知信' Icon={<NotificationModalIcon onClick={notificationModalOnOpen} />} />
 
-          <DataGrid isLoading={isLoading} columns={columns} rows={rows} />
+          <DataGrid isLoading={isLoading} columns={columns} rows={formAssignStatusData} getRowId={(row) => `${row.email}`} />
           <br />
           <br />
         </>

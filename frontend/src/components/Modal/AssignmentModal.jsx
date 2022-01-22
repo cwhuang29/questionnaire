@@ -113,7 +113,7 @@ const AssignmentModal = (props) => {
           }}
         >
           <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
-            指定填寫者（將一併寄出通知信件，重複者自動忽略）
+            指定填寫者（將一併寄出通知信件）
           </ListSubheader>
 
           <Stack spacing={2}>

@@ -10,7 +10,7 @@ export default {
     CREATE_FORM: '/v2/create/form',
     UPDATE_FORM: '/v2/update/form',
 
-    ASSIGN_FORM: '/v2/form/assign',
+    FORM_STATUS: '/v2/form/assign',
     EMAIL_NOTIFICATION: '/v2/form/email',
 
     LOAN: '/loan/getAllRecord',

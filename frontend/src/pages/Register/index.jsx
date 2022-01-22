@@ -32,7 +32,7 @@ const Register = () => {
   const { jwt } = useAuth();
 
   // Without useEffect:
-  // 01. Warning: Cannot update a component (`BrowserRouter`) while rendering a different component (`Login`). To locate the bad setState() call inside `Login`
+  // 01. Warning: Cannot update a component (`BrowserRouter`) while rendering a different component (`Register`). To locate the bad setState() call inside `Register`
   // 02. You should call navigate() in a React.useEffect(), not when your component is first rendered.
   useEffect(() => {
     if (jwt) navigate('/');
