@@ -25,7 +25,7 @@ func Me(c *gin.Context) {
 	name := c.MustGet("name").(string)
 	role := c.MustGet("role").(int)
 
-	user := databases.GetUser(email)
+	user := databases.GetUserByEmail(email)
 	c.JSON(http.StatusOK, gin.H{
 		"email":     email,
 		"name":      name,
@@ -49,7 +49,7 @@ func RegisterV2(c *gin.Context) {
 		return
 	}
 
-	if tmp := databases.GetUser(newUser.Email); tmp.ID != 0 {
+	if tmp := databases.GetUserByEmail(newUser.Email); tmp.ID != 0 {
 		c.JSON(http.StatusConflict, gin.H{"errHead": constants.EmailOccupied, "errBody": ""})
 		return
 	}
@@ -92,7 +92,7 @@ func LoginV2(c *gin.Context) {
 	}
 
 	var user models.User
-	user = databases.GetUser(body.Email)
+	user = databases.GetUserByEmail(body.Email)
 	if user.ID == 0 {
 		c.JSON(http.StatusForbidden, gin.H{"inputFormatInvalid": false, "errHead": constants.UserNotFound, "errBody": constants.TryAgain})
 		return

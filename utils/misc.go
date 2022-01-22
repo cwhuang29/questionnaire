@@ -14,7 +14,8 @@ func GetFunctionName() string {
 	n := runtime.Callers(2, pc)
 	frames := runtime.CallersFrames(pc[:n])
 	frame, _ := frames.Next()
-	return fmt.Sprintf("%s:%d %s\n", frame.File, frame.Line, frame.Function)
+	// return fmt.Sprintf("%s:%d %s", frame.File, frame.Line, frame.Function)
+	return fmt.Sprintf("%s", frame.Function)
 }
 
 func HashPassword(password string) ([]byte, error) {

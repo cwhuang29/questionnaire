@@ -23,7 +23,7 @@ func PasswordResetEmail(c *gin.Context) {
 		return
 	}
 
-	user := databases.GetUser(json.Email)
+	user := databases.GetUserByEmail(json.Email)
 	if user.ID == 0 {
 		c.JSON(http.StatusUnauthorized, gin.H{"errHead": constants.EmailNotFound, "errBody": constants.EmailIsAddressCorrect})
 		return

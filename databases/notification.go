@@ -14,6 +14,11 @@ func GetNotificationByTypeAndFormIdAndReceiverIdAndResult(notificationType, form
 	return
 }
 
+func GetNotificationByTypeAndFormIdAndReceiverAndResult(notificationType, formId int, receiver string, result bool) (notificationHistory models.NotificationHistory) {
+	db.Where("notification_type = ? and form_id = ? and receiver = ? and result = ?", notificationType, formId, receiver, result).Last(&notificationHistory)
+	return
+}
+
 func InsertNotificationHistory(notificationHistory []models.NotificationHistory) ([]models.NotificationHistory, error) {
 	// db.CreateInBatches(formStatus, 1000)
 	if err := db.Create(&notificationHistory).Error; err != nil {

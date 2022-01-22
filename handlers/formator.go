@@ -50,7 +50,7 @@ func transformFormToDBFormat(form Form, user models.User) (f models.Form) {
 
 func transformFormStatusToWebFormat(formStatus models.FormStatus, formId int) (f FormStatus) {
 	receiver := databases.GetUserByEmail(formStatus.WriterEmail)
-	notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverIdAndResult(int(utils.NotificationEmail), formId, receiver.ID, true)
+	notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), formId, formStatus.WriterEmail, true)
 	sender := databases.GetUser(notificationHistory.SenderId)
 
 	f.Name = receiver.GetName()
