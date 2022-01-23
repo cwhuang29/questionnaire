@@ -133,10 +133,26 @@ func getFormByID(id int) Form {
 
 func getFormStatusByID(id int) []FormStatus {
 	dbFormStatus := databases.GetFormStatusByFormId(id, true)
+	form := databases.GetFormById(id, true)
 
 	formStatus := make([]FormStatus, len(dbFormStatus))
 	for i, f := range dbFormStatus {
-		formStatus[i] = transformFormStatusToWebFormat(f, id)
+		receiver := databases.GetUserByEmail(f.WriterEmail)
+		notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), id, f.WriterEmail, true)
+		sender := databases.GetUser(notificationHistory.SenderId)
+		formStatus[i] = transformFormStatusToWebFormat(f, form, &receiver, &sender, &notificationHistory)
+	}
+
+	return formStatus
+}
+
+func getFormStatusByUser(email string) []FormStatus {
+	dbFormStatus := databases.GetFormStatusByWriterEmail(email, true)
+
+	formStatus := make([]FormStatus, len(dbFormStatus))
+	for i, f := range dbFormStatus {
+		form := databases.GetFormById(f.FormID, true)
+		formStatus[i] = transformFormStatusToWebFormat(f, form, nil, nil, nil)
 	}
 
 	return formStatus

@@ -31,9 +31,11 @@ func injectRoutesV2() {
 		v2.OPTIONS("/register", handlers.HandlePreflight)
 		v2.OPTIONS("/users/me", handlers.HandlePreflight)
 		v2.OPTIONS("/forms", handlers.HandlePreflight)
-		v2.OPTIONS("/form/:formId", handlers.HandlePreflight)
-		v2.OPTIONS("/form/email/*formId", handlers.HandlePreflight)
-		v2.OPTIONS("/form/status/*formId", handlers.HandlePreflight)
+		v2.OPTIONS("/forms/todo", handlers.HandlePreflight)
+		v2.OPTIONS("/forms/:formId", handlers.HandlePreflight)
+		v2.OPTIONS("/forms/answer/:formId", handlers.HandlePreflight)
+		v2.OPTIONS("/forms/email/*formId", handlers.HandlePreflight)
+		v2.OPTIONS("/forms/status/*formId", handlers.HandlePreflight)
 		v2.OPTIONS("/create/form", handlers.HandlePreflight)
 		v2.OPTIONS("/update/form/*formId", handlers.HandlePreflight)
 
@@ -43,15 +45,17 @@ func injectRoutesV2() {
 		{
 			v2.GET("/users/me", handlers.Me)
 			v2.POST("/logout", handlers.LogoutV2)
+			v2.GET("/forms/todo", handlers.GetTODOForms)
+			// v2.GET("/forms/answer/:formId", handlers.Me)
 
 			v2.Use(AdminRequired())
 			{
 				v2.GET("/forms", handlers.Forms)
-				v2.GET("/form/:formId", handlers.Forms)                // ":" is mandatory oaram
-				v2.GET("/form/status/*formId", handlers.GetFormStatus) // "*" is optional
-				v2.POST("/form/status/*formId", handlers.CreateFormStatus)
-				v2.POST("/form/email/*formId", handlers.RemindWritingForm)
-				// v2.GET("/form/:formId", func(c *gin.Context) {
+				v2.GET("/forms/:formId", handlers.Forms)                // ":" is mandatory oaram
+				v2.GET("/forms/status/*formId", handlers.GetFormStatus) // "*" is optional
+				v2.POST("/forms/status/*formId", handlers.CreateFormStatus)
+				v2.POST("/forms/email/*formId", handlers.RemindWritingForm)
+				// v2.GET("/forms/:formId", func(c *gin.Context) {
 				//     if strings.HasPrefix(c.Request.RequestURI, "/v2/form/status") {
 				//         handlers.AssignFormToUsers(c)
 				//         return

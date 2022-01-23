@@ -9,6 +9,11 @@ func GetFormStatusByFormId(id int, isAdmin bool) (formStatus []models.FormStatus
 	return
 }
 
+func GetFormStatusByWriterEmail(writerEmail string, isAdmin bool) (formStatus []models.FormStatus) {
+	db.Where("writer_email = ?", writerEmail).Find(&formStatus)
+	return
+}
+
 func GetFormStatusByFormIdAndWriterEmail(id int, writerEmail string, isAdmin bool) (formStatus models.FormStatus) {
 	db.Where("form_id = ? and writer_email = ?", id, writerEmail).Last(&formStatus)
 	return

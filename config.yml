@@ -7,10 +7,10 @@ app:
   log: log
 
 database:
-  driver: sqlite # mysql, sqlite
+  driver: mysql # mysql, sqlite
   host: 127.0.0.1
   port: 3306
-  database: inews
+  database: questionnaire
   username: user01
   password: a1234567
 

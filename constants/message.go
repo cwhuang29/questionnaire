@@ -13,7 +13,7 @@ const (
 	GobackAndRetry = "Go back to previous page and try again"
 	TryTooOften    = "You are trying too often"
 
-	UserNotFound = "User Not Found"
+	UserNotFound = "User not found"
 
 	DatabaseErr = "An error occurred while writing to DB"
 
@@ -22,16 +22,16 @@ const (
 
 	PasswordIncorrect = "Password incorrect"
 
-	FormNotFound      = "Form Not Found"
-	FormCreateErr     = "Create Form Failed"
-	FormUpdateErr     = "Update Form Failed"
-	FormDeleteErr     = "Delete Form Failed"
+	FormNotFound      = "Form not found"
+	FormCreateErr     = "Create form failed"
+	FormUpdateErr     = "Update form failed"
+	FormDeleteErr     = "Delete form failed"
 	FormCreateSucceed = "Create a new form successfully"
 	FormUpdateSucceed = "Update a new form successfully"
 
 	FormStatusCreateErr = "Failed to assign form to users"
 
-	QueryErr        = "Invalid Parameter"
+	QueryErr        = "Invalid parameter"
 	QueryEmptyErr   = "Parameter %s can not be empty"
 	QueryMissingErr = "Some values are missing"
 	QueryFormIDErr  = "Parameter formId should be a positive integer"
@@ -42,7 +42,7 @@ const (
 	QueryBookmarkedErr = "Parameter bookmarked should be either 0 or 1"
 	QueryLikedErr      = "Parameter liked should be either 0 or 1"
 
-	EmailNotFound         = "Email Not Found"
+	EmailNotFound         = "Email not found"
 	EmailOccupied         = "This email is already registered"
 	EmailChangeAnother    = "Please use another email"
 	EmailOpenAgain        = "Please reopen the link from email"
@@ -54,6 +54,8 @@ const (
 	EmailHasSent          = "Email has been sent"
 	EmailsHaveSent        = "Emails have been sent"
 	EmailSentErr          = "Some emails did not successfully send out"
+
+	HeaderAuthRequired = "The authorization cannot be completed"
 
 	JWTValidationErrorMalformed        = "Token is malformed"
 	JWTValidationErrorUnverifiable     = "Token could not be verified because of signing problems"

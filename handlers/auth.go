@@ -22,13 +22,11 @@ func HandlePreflight(c *gin.Context) {
 
 func Me(c *gin.Context) {
 	email := c.MustGet("email").(string)
-	name := c.MustGet("name").(string)
 	role := c.MustGet("role").(int)
 
 	user := databases.GetUserByEmail(email)
 	c.JSON(http.StatusOK, gin.H{
 		"email":     email,
-		"name":      name,
 		"role":      role,
 		"firstName": user.FirstName,
 		"lastName":  user.LastName,

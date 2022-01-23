@@ -10,7 +10,7 @@ const (
 )
 
 func (s FormStatus) String() string {
-	return [...]string{"assigned", "in progress", "finish"}[s]
+	return [...]string{"Assigned", "In Progress", "Finish"}[s]
 }
 
 func (r FormStatus) IsValid() bool {

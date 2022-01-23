@@ -48,17 +48,32 @@ func transformFormToDBFormat(form Form, user models.User) (f models.Form) {
 	return
 }
 
-func transformFormStatusToWebFormat(formStatus models.FormStatus, formId int) (f FormStatus) {
-	receiver := databases.GetUserByEmail(formStatus.WriterEmail)
-	notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), formId, formStatus.WriterEmail, true)
-	sender := databases.GetUser(notificationHistory.SenderId)
-
-	f.Name = receiver.GetName()
-	f.Email = formStatus.WriterEmail
+func transformFormStatusToWebFormat(formStatus models.FormStatus, form models.Form, receiver, sender *models.User, notificationHistory *models.NotificationHistory) (f FormStatus) {
+	f.ID = formStatus.FormID
+	f.Name = form.FormName
+	f.WriterEmail = formStatus.WriterEmail
+	f.AssignedAt = formStatus.AssignedAt
 	f.Role = utils.RoleType(formStatus.Role).String()
 	f.Status = utils.FormStatus(formStatus.Status).String()
-	f.EmailSender = sender.GetName()
-	f.EmailLastSentTime = notificationHistory.CreatedAt
+
+	if receiver != nil {
+		f.WriterName = receiver.GetName()
+	}
+	if sender != nil {
+		f.EmailSender = sender.GetName()
+	}
+	if notificationHistory != nil {
+		f.EmailLastSentTime = notificationHistory.CreatedAt
+	}
+	// if receiver != nil && receiver.ID != 0 {
+	//     f.WriterName = receiver.GetName()
+	// }
+	// if sender != nil && sender.ID != 0 {
+	//     f.EmailSender = sender.GetName()
+	// }
+	// if notificationHistory != nil && notificationHistory.ID != 0 {
+	//     f.EmailLastSentTime = notificationHistory.CreatedAt
+	// }
 	return
 }
 
@@ -67,11 +82,11 @@ func transformAssignFormToFormStatusDBFormat(id int, assignForm AssignForm) []mo
 	now := time.Now()
 
 	for idx, email := range assignForm.Recipient {
-		dbFormStatus[idx].FormId = id
+		dbFormStatus[idx].FormID = id
 		dbFormStatus[idx].WriterEmail = email
 		dbFormStatus[idx].Role = assignForm.Role
 		dbFormStatus[idx].Status = int(utils.FormStatusAssign)
-		dbFormStatus[idx].AssignAt = now
+		dbFormStatus[idx].AssignedAt = now
 	}
 	return dbFormStatus
 }

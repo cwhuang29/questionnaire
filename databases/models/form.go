@@ -6,7 +6,7 @@ import (
 
 type Form struct {
 	ID        int    `gorm:"primaryKey"`
-	AuthorID  int    `gorm:"not null"`
+	AuthorID  int    `gorm:"not null;index:author_id_key"`
 	Author    string `gorm:"not null"`
 	Status    int    `gorm:"not null"`
 	AdminOnly bool   `gorm:"default:false"` // Database store 0/1
@@ -16,9 +16,9 @@ type Form struct {
 	FormCustId   string `gorm:"not null;size:512"`
 	MinScore     int    `gorm:"not null"`
 	OptionsCount int    `gorm:"not null"`
-	FormTitle    string `gorm:"size:65535"`
-	FormIntro    string `gorm:"size:65535"`
-	Questions    string `gorm:"not null;size:65535"`
+	FormTitle    string `gorm:"not null;type:text"`
+	FormIntro    string `gorm:"not null;type:text"`
+	Questions    string `gorm:"not null;type:text"`
 
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`

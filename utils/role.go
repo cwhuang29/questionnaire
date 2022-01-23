@@ -11,7 +11,7 @@ const (
 )
 
 func (r RoleType) String() string {
-	return [...]string{"student", "parent", "teacher", "researcher", "admin"}[r]
+	return [...]string{"Student", "Parent", "Teacher", "Researcher", "Admin"}[r]
 }
 
 func (r RoleType) IsValidAndNotAdmin() bool {

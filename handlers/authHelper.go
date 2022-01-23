@@ -31,7 +31,7 @@ func GetJWTClaimsFromHeader(c *gin.Context) (*utils.JWTClaim, error) {
 	tokens := strings.Split(auth, "Bearer ")
 
 	if len(tokens) < 2 {
-		return &utils.JWTClaim{}, errors.New(constants.JWTPayloadMalformed)
+		return &utils.JWTClaim{}, errors.New(constants.HeaderAuthRequired)
 	}
 
 	token := tokens[1]

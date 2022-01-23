@@ -5,14 +5,14 @@ import (
 )
 
 type FormStatus struct {
-	ID          int    `gorm:"primaryKey"`
-	FormId      int    `form:"not null"`
-	WriterEmail string `form:"not null"` // This user may not have created yet
-	Role        int    `gorm:"not null"`
-	Status      int    `form:"not null"`
-	AssignAt    time.Time
-	StartAt     time.Time
-	FinishAt    time.Time
+	ID          int        `gorm:"primaryKey"`
+	FormID      int        `gorm:"not null;index:form_id_key"`
+	WriterEmail string     `gorm:"not null"` // This user may not have created yet
+	Role        int        `gorm:"not null"`
+	Status      int        `gorm:"not null"`
+	AssignedAt  time.Time  `gorm:"not null"`
+	StartAt     *time.Time // Make it pointer type so it can be nil
+	FinishAt    *time.Time
 
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`

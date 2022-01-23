@@ -40,7 +40,7 @@ func AuthRequired() gin.HandlerFunc {
 
 		claims, err := handlers.GetJWTClaimsFromHeader(c)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"errHead": err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"errHead": constants.TryAgain, "errBody": err.Error()})
 		}
 
 		c.Set("email", claims.Email)

@@ -71,8 +71,11 @@ type AssignForm struct {
 }
 
 type FormStatus struct {
+	ID                int       `json:"id"`
 	Name              string    `json:"name"`
-	Email             string    `json:"email"`
+	WriterName        string    `json:"writerName"`
+	WriterEmail       string    `json:"writerEmail"`
+	AssignedAt        time.Time `json:"assignedAt"`
 	Role              string    `json:"role"`
 	Status            string    `json:"status"`
 	EmailSender       string    `json:"emailSender"`
