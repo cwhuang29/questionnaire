@@ -2,50 +2,29 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { getFormByUser } from '@actions/form';
-import withFetchService from '@shared/hooks/withFetchService';
-
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, createTheme, ThemeProvider, Typography } from '@mui/material';
 
 const theme = createTheme({
   breakpoints: {
-    values: {
-      xs: 0,
-      sm: 750,
-      md: 900,
-      lg: 1200,
-      xl: 1536,
-    },
+    values: { xs: 0, sm: 750, md: 900, lg: 1200, xl: 1536 },
   },
 });
 
 export const emptyForms = [
-  {
-    redirectTo: '',
-    title: '問卷01',
-    img: '/assets/persona/student.jpeg',
-    disable: true,
-  },
-  {
-    redirectTo: '',
-    title: '問卷02',
-    img: '/assets/persona/student.jpeg',
-    disable: true,
-  },
-  {
-    redirectTo: '',
-    title: '問卷03',
-    img: '/assets/persona/student.jpeg',
-  },
+  { title: '量表01', img: '/assets/persona/student.jpeg', disable: true },
+  { title: '量表02', img: '/assets/persona/student.jpeg', disable: true },
+  { title: '量表03', img: '/assets/persona/student.jpeg', disable: true },
 ];
 
-const CardWithImageView = (props) => {
+const CardWithImage = (props) => {
   const navigate = useNavigate();
-  const { data: forms, isLoading } = props;
+  const { data, isLoading } = props;
 
   const writeDisplay = '開始填寫';
   const onClick = (url) => () => navigate(url);
-  const displayForms = isLoading || Object.keys(forms).length === 0 ? emptyForms : forms;
+  const displayData = isLoading || Object.keys(data).length === 0 ? emptyForms : data;
+
+  console.log(JSON.stringify(data, null, 2));
 
   return (
     <ThemeProvider theme={theme}>
@@ -59,42 +38,35 @@ const CardWithImageView = (props) => {
           justifyContent: 'center',
         }}
       >
-        {displayForms.map((form) => (
+        {displayData.map((d) => (
           <Card
-            key={form.title}
-            // Optimal for five items
+            key={d.title}
             sx={{
+              // Optimal for five items
               maxWidth: '700px',
               minWidth: '285px',
               width: '18%',
               margin: '15px min(3%, 10px)',
               borderRadius: '9px',
-              pointerEvents: form.disable ? 'none' : '',
-              cursor: form.disable ? 'default' : 'pointer',
+              pointerEvents: d.disable ? 'none' : '',
+              cursor: d.disable ? 'default' : 'pointer',
             }}
-            // Optimal for seven items
-            // sx={{
-            //   maxWidth: '300px',
-            //   minWidth: '205px',
-            //   width: '12%',
-            //   margin: '10px min(2%, 5px)',
-            //   borderRadius: '9px',
-            //   pointerEvents: form.disable ? 'none' : '',
-            //   cursor: form.disable ? 'default' : 'pointer',
-            // }}
           >
             <CardActionArea>
-              <Box onClick={onClick(form.redirectTo)}>
-                <CardMedia component='img' height='180' image={form.img} alt='' />
+              <Box onClick={onClick(d.redirectTo)}>
+                <CardMedia component='img' height='180' image={d.img} alt='' />
                 <CardContent sx={{ padding: '16px 0 !important' }}>
-                  <Typography gutterBottom variant='h5' component='div' sx={{ marginTop: '2px' }}>
-                    {form.title}
+                  <Typography gutterBottom variant='h5'>
+                    {d.title}
+                  </Typography>
+                  <Typography gutterBottom variant='subtitle2'>
+                    於&nbsp;{d.assignedAt}&nbsp;分配給您
                   </Typography>
                 </CardContent>
               </Box>
             </CardActionArea>
             <CardActions>
-              <Button size='small' onClick={onClick(form.redirectTo)}>
+              <Button size='small' onClick={onClick(d.redirectTo)}>
                 {writeDisplay}
               </Button>
             </CardActions>
@@ -105,13 +77,27 @@ const CardWithImageView = (props) => {
   );
 };
 
-const getFormByUserForComponent = () => () => getFormByUser();
-
-const CardWithImage = withFetchService(CardWithImageView, getFormByUserForComponent());
-
-CardWithImageView.propTypes = {
-  data: PropTypes.object.isRequired,
+CardWithImage.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      redirectTo: PropTypes.string,
+      title: PropTypes.string.isRequired,
+      img: PropTypes.string,
+      disable: PropTypes.bool,
+    }).isRequired
+  ).isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
 
 export default CardWithImage;
+
+// Optimal for seven items
+// sx={{
+//   maxWidth: '300px',
+//   minWidth: '205px',
+//   width: '12%',
+//   margin: '10px min(2%, 5px)',
+//   borderRadius: '9px',
+//   pointerEvents: form.disable ? 'none' : '',
+//   cursor: form.disable ? 'default' : 'pointer',
+// }}

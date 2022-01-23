@@ -7,7 +7,7 @@ const getAllForms = (token = authHeader()) => fetch.get(apis.V2.FORMS, { headers
 
 const getFormById = (id, token = authHeader()) => fetch.get(`${apis.V2.FORM}/${id}`, { headers: token });
 
-const getFormByUser = (token = authHeader()) => fetch.get(`${apis.V2.FORMS}`, { headers: token });
+const getTodoForms = (token = authHeader()) => fetch.get(`${apis.V2.TODO_FORMS}`, { headers: token });
 
 const createForm = (data, token = authHeader()) => fetch.post(apis.V2.CREATE_FORM, data, { headers: token });
 
@@ -25,10 +25,14 @@ const getFormStatus = (id, token = authHeader()) =>
     .then((resp) => Promise.resolve(resp.data))
     .catch((err) => Promise.reject(extractErrorMessage(err))); // http://127.0.0.1/v2/form/assign/6
 
-// const assignForm = (id, data, token = authHeader()) => {
-//   const url = new URL(apis.V2.ASSIGN_FORM, window.location.href);
-//   url.searchParams.set('formId', id);
+// const getTodoForms = (data, token = authHeader()) => {
+//   const url = new URL(apis.V2.TODO_FORMS, window.location.href);
+//   Object.entries(data).forEach(([key, val]) => url.searchParams.set(key, val));
+
 //   const path = url.pathname + url.search;
+//   console.log(data);
+//   console.log(path);
+
 //   return fetch
 //     .post(path, data, { headers: token })
 //     .then((resp) => Promise.resolve(resp.data))
@@ -38,7 +42,7 @@ const getFormStatus = (id, token = authHeader()) =>
 export default {
   getAllForms,
   getFormById,
-  getFormByUser,
+  getTodoForms,
 
   createForm,
   updateForm,

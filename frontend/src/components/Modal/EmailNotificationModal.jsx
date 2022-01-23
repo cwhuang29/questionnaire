@@ -37,7 +37,7 @@ const EmailNotificationModal = (props) => {
       setLoading(true);
       addGlobalMessage({
         title: msg.REQUEST_IS_HANDLING,
-        severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+        severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
         timestamp: Date.now(),
       });
       await onSubmit(values)
@@ -45,7 +45,7 @@ const EmailNotificationModal = (props) => {
           addGlobalMessage({
             title: resp.title,
             content: resp.content,
-            severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+            severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
             timestamp: Date.now(),
           });
           onClose();
@@ -106,11 +106,11 @@ const EmailNotificationModal = (props) => {
               loadingText='Retrieving email list ...'
               options={emailList}
               defaultValue={formik.values.email}
-              renderOption={(_props, option) => <li {..._props}>{`${option.email} (${option.role})`}</li>}
+              renderOption={(_props, option) => <li {..._props}>{`${option.writerEmail} (${option.role})`}</li>}
               onChange={(e, value) => {
                 // Since this Autocomplete only accesses inputs from options list, the element in the give array is the same as those in input data
                 // However, after reopening modal, the old data provied by defaultValue will be array of string
-                const revisedValue = value.map((v) => (v.constructor === Object ? v.email : v));
+                const revisedValue = value.map((v) => (v.constructor === Object ? v.writerEmail : v));
                 formik.setFieldValue('email', revisedValue);
               }}
               renderInput={(params) => (
@@ -126,7 +126,7 @@ const EmailNotificationModal = (props) => {
                 if (typeof option === 'string') {
                   return option;
                 }
-                return option.email;
+                return option.writerEmail;
               }}
             />
           </Stack>

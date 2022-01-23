@@ -9,60 +9,18 @@ import FormModal from '@components/Form/FormModal';
 import PageWrapper from '@components/HomePageWrapper';
 import { AssignmentModal, EmailNotificationModal } from '@components/Modal';
 import StyledBadge from '@components/styledComponents/StyledBadge';
-import ROLES from '@constants/roles';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import formService from '@services/form.service';
 import notificationService from '@services/notification.service';
 import withFetchService from '@shared/hooks/withFetchService';
-import { getDisplayTime } from '@shared/utils/time';
 
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MailIcon from '@mui/icons-material/Mail';
 import { IconButton, Typography } from '@mui/material';
 
-const columns = [
-  {
-    field: 'name',
-    headerName: '填寫者姓名',
-    flex: 1.2,
-    minWidth: 70,
-  },
-  {
-    field: 'email',
-    headerName: '填寫者信箱',
-    flex: 2,
-    minWidth: 70,
-  },
-  {
-    field: 'role',
-    headerName: '填寫者角色',
-    valueFormatter: ({ value }) => ROLES[value],
-    flex: 0.7,
-    minWidth: 70,
-  },
-  {
-    field: 'status',
-    headerName: '填寫狀態',
-    flex: 0.7,
-    minWidth: 70,
-  },
-  {
-    field: 'emailSender',
-    headerName: '寄信者',
-    flex:  1.2,
-    minWidth: 70,
-  },
-  {
-    field: 'emailLastSentTime',
-    headerName: '最後一次寄信時間',
-    type: 'dateTime',
-    valueFormatter: ({ value }) => getDisplayTime(new Date(value)),
-    flex: 1.2,
-    minWidth: 70,
-  },
-];
+import { columns } from './formData';
 
 const getFormByIdForComponent = (formId) => () => getFormById(formId);
 
@@ -169,7 +127,7 @@ const FormView = (props) => {
           <FormActionItem title='分配量表' Icon={<AssignmentModalIcon onClick={assignmentModalOnOpen} />} />
           <FormActionItem title='寄通知信' Icon={<NotificationModalIcon onClick={notificationModalOnOpen} />} />
 
-          <DataGrid isLoading={isLoading} columns={columns} rows={formAssignStatusData} getRowId={(row) => `${row.email}`} />
+          <DataGrid isLoading={isLoading} columns={columns} rows={formAssignStatusData} getRowId={(row) => `${row.writerEmail}`} />
           <br />
           <br />
         </>

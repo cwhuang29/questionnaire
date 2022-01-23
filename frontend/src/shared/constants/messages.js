@@ -11,6 +11,7 @@ export default {
   MISSING: 'Something is missing ...',
   PERMISSION_DENIED: 'You are not allowed to perform this action',
   REQUEST_IS_HANDLING: 'Your request is being processed. Hold on please',
+  LOGIN_REQUIRED: 'You have to login first',
 };
 
 export const validateMsg = {

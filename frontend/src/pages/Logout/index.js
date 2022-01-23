@@ -13,7 +13,7 @@ const Logout = () => {
     <div>
       <h2>You have logout!</h2>
       <p>
-        <Link to='/'>Go to the home page</Link>
+        <Link to='/login'>Go to the login page</Link>
       </p>
     </div>
   );

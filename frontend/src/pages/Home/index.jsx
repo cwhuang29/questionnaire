@@ -1,28 +1,48 @@
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import CardWithImageView from '@components/CardWithImage';
+// import { useSearchParams } from 'react-router-dom';
 import FormList from '@components/Form/FormList';
 import PageWrapper from '@components/HomePageWrapper';
+import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
+import useAuth from '@hooks/useAuth';
+import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
+import msg from '@shared/constants/messages';
 // import FeatureShowcase from '@components/FeatureShowcase';
 // import HomePageImageList from '@components/HomePageImageList';
 // import SlideShow from '@components/SlideShow';
-import { CreditCardTransactionRecord } from '@components/Transaction';
 import { isAdmin } from '@utils/admin.js';
 
 // import { homePageScenarios } from '@pages/Home/homeData';
 import { Typography } from '@mui/material';
 
-const Home = () => {
-  const [searchParams] = useSearchParams();
-  const showModal = searchParams.get('showModal') != null; // "127.0.0.1/?admin" or "127.0.0.1/?admin=" or "127.0.0.1/?admin=123"
+import HomeUser from './HomeUser';
 
-  const name = '王小明';
-  const count = 3;
+const Home = () => {
+  // const [searchParams] = useSearchParams();
+  // const isAdminURL = searchParams.get('admin') != null; // "127.0.0.1/?admin" or "127.0.0.1/?admin=" or "127.0.0.1/?admin=123"
+  const navigate = useNavigate();
   const admin = isAdmin();
+  const { jwt } = useAuth();
+  const { addGlobalMessage } = useGlobalMessageContext();
+
+  // Without useEffect:
+  // 01. Warning: Cannot update a component (`BrowserRouter`) while rendering a different component (`Login`). To locate the bad setState() call inside `Login`
+  // 02. You should call navigate() in a React.useEffect(), not when your component is first rendered.
+  useEffect(() => {
+    if (!jwt) {
+      addGlobalMessage({
+        title: msg.LOGIN_REQUIRED,
+        severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+        timestamp: Date.now(),
+      });
+      navigate('/login');
+    }
+  }, []);
 
   return (
     <PageWrapper>
+      {/* eslint-disable-next-line no-nested-ternary */}
       {admin ? (
         <>
           <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', marginTop: '0.8em' }}>
@@ -32,25 +52,19 @@ const Home = () => {
             若要看量表的更多資訊，請在名稱上連擊
           </Typography>
           <FormList />
-          <br />
         </>
+      ) : jwt ? (
+        <HomeUser />
       ) : (
-        <>
-          <Typography variant='h2' component='div' sx={{ fontWeight: 'bold', marginTop: '0.8em' }}>
-            {name}您好，歡迎來到ＸＸＸ問卷系統
-          </Typography>
-          <Typography variant='h4' component='div' sx={{ margin: '0.35em 0 1.2em 0' }}>
-            您還有<span style={{ color: 'red' }}>&nbsp;{count}&nbsp;</span>個問卷待填寫
-          </Typography>
-          <CardWithImageView />
-          {showModal && <CreditCardTransactionRecord />}
-          {/* <FeatureShowcase features={homePageFeatures} /> */}
-          {/* <HomePageImageList /> */}
-          {/* <SlideShow /> */}
-        </>
+        <div />
       )}
+      <br />
     </PageWrapper>
   );
 };
 
 export default Home;
+
+/* <FeatureShowcase features={homePageFeatures} /> */
+/* <HomePageImageList /> */
+/* <SlideShow /> */

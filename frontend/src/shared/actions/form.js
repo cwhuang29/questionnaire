@@ -33,12 +33,12 @@ export const getFormById = (id) => (dispatch) =>
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
-export const getFormByUser = () => (dispatch) =>
+export const getFormsByUser = () => (dispatch) =>
   formService
-    .getFormByUser()
+    .getTodoForms()
     .then((resp) => {
       dispatch({
-        type: FORM_STATUS.FETCH_FORM_SUCCESS,
+        type: FORM_STATUS.FETCH_TODO_FORMS_SUCCESS,
         payload: { forms: resp.data.data },
       });
 

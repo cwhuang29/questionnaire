@@ -5,11 +5,13 @@ import { LOCAL_STORAGE_NAME } from '@constants/storage';
 
 const authHeader = () => {
   const auth = JSON.parse(localStorage.getItem(LOCAL_STORAGE_NAME.AUTH));
+  const header = {};
 
   if (auth?.jwt) {
-    return { Authorization: `Bearer ${auth.jwt}` };
+    Object.assign(header, { Authorization: `Bearer ${auth.jwt}` });
   }
-  return {};
+
+  return header;
 };
 
 export default authHeader;

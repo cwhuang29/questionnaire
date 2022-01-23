@@ -70,9 +70,9 @@ const FormListView = (props) => {
   return Object.keys(error).length === 0 && <DataGrid isLoading={isLoading} columns={columns} rows={rows} onCellDoubleClick={onCellDoubleClick} height={820} />;
 };
 
-const getAllFormsForComponent = () => () => getAllForms();
+const getAllFormsForComponent = () => getAllForms();
 
-const FormList = withFetchService(FormListView, getAllFormsForComponent());
+const FormList = withFetchService(FormListView, getAllFormsForComponent);
 
 FormListView.propTypes = {
   data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,

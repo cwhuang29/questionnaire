@@ -117,7 +117,7 @@ const FormEdit = (props) => {
 
       addGlobalMessage({
         title: msg.REQUEST_IS_HANDLING,
-        severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+        severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
         timestamp: Date.now(),
         canClose: false, // In case user keep clicking submit button
       });
@@ -128,7 +128,7 @@ const FormEdit = (props) => {
           clearAllGlobalMessages();
           addGlobalMessage({
             title: resp.title,
-            severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+            severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
             timestamp: Date.now(),
           });
           navigate('/');
@@ -148,15 +148,7 @@ const FormEdit = (props) => {
         });
     },
   });
-
-  const submitForm = () => {
-    setLoading(true);
-    formik.handleSubmit(); // Run valdidate() then onSubmit()
-  };
-
-  const modalOnClose = () => setOpenModal(false);
-
-  const showPreview = () => {
+  const submitButtonOnClick = () => {
     formik.validateForm().then((formErrors) => {
       if (Object.keys(formErrors).length === 0) {
         const finalValue = { ...formik.values, questions: questionState };
@@ -168,6 +160,15 @@ const FormEdit = (props) => {
     });
     // if (Object.keys(formik.errors).length === 0 && Object.keys(formik.touched).length !== 0) { } // This is not always the freshest data
   };
+
+  const submitForm = () => {
+    setLoading(true);
+    formik.handleSubmit(); // Run valdidate() then onSubmit()
+  };
+
+  const modalOnClose = () => setOpenModal(false);
+
+  const cancelButtonOnClick = () => navigate(-1);
 
   const handleChildChange =
     ({ role }) =>
@@ -331,16 +332,28 @@ const FormEdit = (props) => {
         ))}
 
         <Stack spacing={2} sx={{ textAlign: 'center', mt: '30px', mb: '50px' }}>
-          <LoadingButton
-            size='large'
-            loading={loading}
-            variant='contained'
-            type='submit' // Though I trigger formik.onSubmit() manually, this setting is fine since I can trigger the validate() before showing preview modal
-            style={{ marginLeft: 'auto', marginRight: 'auto', backgroundColor: '#3A7CEB' }}
-            onClick={showPreview}
-          >
-            預覽結果
-          </LoadingButton>
+          <Box style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <Box style={{ width: '30%' }} />
+            <Button
+              size='large'
+              variant='contained'
+              style={{ marginLeft: 'auto', marginRight: 'auto', backgroundColor: '#F95C5C' }}
+              onClick={cancelButtonOnClick}
+            >
+              &nbsp;&nbsp;取消&nbsp;&nbsp;
+            </Button>
+            <LoadingButton
+              size='large'
+              loading={loading}
+              variant='contained'
+              type='submit' // Though I trigger formik.onSubmit() manually, this setting is fine since I can trigger the validate() before showing preview modal
+              style={{ marginLeft: 'auto', marginRight: 'auto', backgroundColor: '#4780DD' }}
+              onClick={submitButtonOnClick}
+            >
+              預覽結果
+            </LoadingButton>
+            <Box style={{ width: '30%' }} />
+          </Box>
         </Stack>
       </Box>
     </PageWrapper>

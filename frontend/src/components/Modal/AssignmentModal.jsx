@@ -56,7 +56,7 @@ const AssignmentModal = (props) => {
       setLoading(true);
       addGlobalMessage({
         title: msg.REQUEST_IS_HANDLING,
-        severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+        severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
         timestamp: Date.now(),
       });
 
@@ -65,7 +65,7 @@ const AssignmentModal = (props) => {
           addGlobalMessage({
             title: resp.title,
             content: resp.content,
-            severity: GLOBAL_MESSAGE_SERVERITY.INFO,
+            severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
             timestamp: Date.now(),
           });
           onClose();
