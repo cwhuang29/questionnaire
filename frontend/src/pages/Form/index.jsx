@@ -1,6 +1,6 @@
 import Form from './Form';
-import FormAnswer from './FormAnswer';
+import FormAnswerLayout from './FormAnswerLayout';
 import FormCreate from './FormCreate';
 import FormUpdate from './FormUpdate';
 
-export { Form as default, FormAnswer, FormCreate, FormUpdate };
+export { Form as default, FormAnswerLayout, FormCreate, FormUpdate };

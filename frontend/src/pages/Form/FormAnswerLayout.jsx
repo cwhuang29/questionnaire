@@ -6,7 +6,7 @@ import PageWrapper from '@components/HomePageWrapper';
 import formService from '@services/form.service';
 import withFetchService from '@shared/hooks/withFetchService';
 
-const FormAnswerView = (props) => {
+const FormAnswerLayoutView = (props) => {
   const { data, error, isLoading } = props;
   const { data: formData = {} } = data;
 
@@ -27,16 +27,16 @@ const FormAnswerView = (props) => {
 
 const getAnswerFormForComponent = (formId) => () => formService.getAnswerForm(formId);
 
-const FormAnswer = React.memo(() => {
+const FormAnswerLayout = React.memo(() => {
   const { formId } = useParams();
-  const FormAnswerWithData = withFetchService(FormAnswerView, getAnswerFormForComponent(formId), false);
+  const FormAnswerWithData = withFetchService(FormAnswerLayoutView, getAnswerFormForComponent(formId), false);
   return <FormAnswerWithData />;
 });
 
-FormAnswerView.propTypes = {
+FormAnswerLayoutView.propTypes = {
   data: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
   error: PropTypes.object.isRequired,
 };
 
-export default FormAnswer;
+export default FormAnswerLayout;

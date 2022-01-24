@@ -5,7 +5,7 @@ import Menu from '@components/Menu';
 import Home from '@home';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import Ecosystem from '@pages/Ecosystem';
-import Form, { FormAnswer, FormCreate, FormUpdate } from '@pages/Form';
+import Form, { FormAnswerLayout, FormCreate, FormUpdate } from '@pages/Form';
 import Login from '@pages/Login';
 import Logout from '@pages/Logout';
 import Register from '@pages/Register';
@@ -22,12 +22,13 @@ const NoMatch = () => (
 
 const App = () => {
   const { pathname } = useLocation(); // URL http://127.0.0.1:3000/?a=123#ok returns {pathname: '/', search: '?a=123', hash: '#ok' ...}
+  // eslint-disable-next-line no-unused-vars
   const { clearAllGlobalMessages } = useGlobalMessageContext();
 
   useEffect(() => {
     // clearAllGlobalMessage();
     window.scrollTo(0, 0);
-  }, [clearAllGlobalMessages, pathname]);
+  }, [pathname]);
 
   return (
     <>
@@ -39,7 +40,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='/forms/:formId' element={<Form />} />
-        <Route path='/forms/answer/:formId' element={<FormAnswer />} />
+        <Route path='/forms/answer/:formId' element={<FormAnswerLayout />} />
         <Route path='/create/form' element={<FormCreate />} />
         <Route path='/update/form/:formId' element={<FormUpdate />} />
         <Route path='/ecosystem'>

@@ -29,7 +29,7 @@ const HomeUserView = (props) => {
           {`${user.lastName}${user.firstName}`}您好
         </Typography>
         <Typography variant='h5' component='div' sx={{ margin: '0.35em 0 1.2em 0' }}>
-          您還有<span style={{ color: 'red' }}>&nbsp;{data.length}&nbsp;</span>個問卷待填寫
+          您還有<span style={{ color: 'red', padding: '0 7px' }}>{formData.length}</span>個問卷待填寫
         </Typography>
         <CardWithImage data={transformTodoForms(formData)} isLoading={isLoading} />
       </>
