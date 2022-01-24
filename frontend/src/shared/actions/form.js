@@ -16,7 +16,9 @@ export const getAllForms = () => (dispatch) =>
         type: FORM_STATUS.FETCH_FORMS_SUCCESS,
         payload: { forms: resp.data.data }, // resp.data: { data: [{form01}, {form02}] }. resp.data.data:  [{form01}, {form02}]
       });
-      return Promise.resolve(resp.data.data);
+      // If return resp.data.data, then whenever server responses JSON with more data (e.g. {data: [...], expireAt: 3000})
+      // then we will have to modify not only component but also this underlying functions
+      return Promise.resolve(resp.data);
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
@@ -29,7 +31,7 @@ export const getFormById = (id) => (dispatch) =>
         payload: { form: resp.data.data }, // returns {form01}
       });
 
-      return Promise.resolve(resp.data.data);
+      return Promise.resolve(resp.data);
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
@@ -42,7 +44,7 @@ export const getFormsByUser = () => (dispatch) =>
         payload: { forms: resp.data.data },
       });
 
-      return Promise.resolve(resp.data.data);
+      return Promise.resolve(resp.data);
     })
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 

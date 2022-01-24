@@ -5,7 +5,7 @@ import { extractErrorMessage } from '@utils/handleErrorMessage';
 
 const getAllForms = (token = authHeader()) => fetch.get(apis.V2.FORMS, { headers: token });
 
-const getFormById = (id, token = authHeader()) => fetch.get(`${apis.V2.FORM}/${id}`, { headers: token });
+const getFormById = (id, token = authHeader()) => fetch.get(`${apis.V2.FORMS}/${id}`, { headers: token });
 
 const getTodoForms = (token = authHeader()) => fetch.get(`${apis.V2.TODO_FORMS}`, { headers: token });
 
@@ -23,7 +23,13 @@ const getFormStatus = (id, token = authHeader()) =>
   fetch
     .get(`${apis.V2.FORM_STATUS}/${id}`, { headers: token })
     .then((resp) => Promise.resolve(resp.data))
-    .catch((err) => Promise.reject(extractErrorMessage(err))); // http://127.0.0.1/v2/form/assign/6
+    .catch((err) => Promise.reject(extractErrorMessage(err))); // http://127.0.0.1/v2/form/status/6
+
+const getAnswerForm = (id, token = authHeader()) =>
+  fetch
+    .get(`${apis.V2.ANSWER_FORMS}/${id}`, { headers: token })
+    .then((resp) => Promise.resolve(resp.data))
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
 
 // const getTodoForms = (data, token = authHeader()) => {
 //   const url = new URL(apis.V2.TODO_FORMS, window.location.href);
@@ -43,6 +49,7 @@ export default {
   getAllForms,
   getFormById,
   getTodoForms,
+  getAnswerForm,
 
   createForm,
   updateForm,

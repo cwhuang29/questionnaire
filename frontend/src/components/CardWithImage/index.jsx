@@ -24,8 +24,6 @@ const CardWithImage = (props) => {
   const onClick = (url) => () => navigate(url);
   const displayData = isLoading || Object.keys(data).length === 0 ? emptyForms : data;
 
-  console.log(JSON.stringify(data, null, 2));
-
   return (
     <ThemeProvider theme={theme}>
       <Box

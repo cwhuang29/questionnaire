@@ -6,8 +6,9 @@ export default {
     REGISTER: '/v2/register',
 
     FORMS: '/v2/forms',
-    FORM: '/v2/forms',
+    // FORM: '/v2/forms',
     TODO_FORMS: '/v2/forms/todo',
+    ANSWER_FORMS: '/v2/forms/answer',
     CREATE_FORM: '/v2/create/form',
     UPDATE_FORM: '/v2/update/form',
 

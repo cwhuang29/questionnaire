@@ -58,16 +58,18 @@ const columns = [
 const FormListView = (props) => {
   const navigate = useNavigate();
   const { data, error, isLoading } = props;
-
-  const rows = data?.constructor === Array ? data : []; // withFetchService HOC returns {} when response is not ready yet
+  const { data: formData = [] } = data;
+  // const rows = data?.constructor === Array ? data : []; // withFetchService HOC returns {} when response is not ready yet
 
   const onCellDoubleClick = (params) => {
     if (params.field === 'formName') {
-      navigate(`/form/${params.id}`);
+      navigate(`/forms/${params.id}`);
     }
   };
 
-  return Object.keys(error).length === 0 && <DataGrid isLoading={isLoading} columns={columns} rows={rows} onCellDoubleClick={onCellDoubleClick} height={820} />;
+  return (
+    Object.keys(error).length === 0 && <DataGrid isLoading={isLoading} columns={columns} rows={formData} onCellDoubleClick={onCellDoubleClick} height={820} />
+  );
 };
 
 const getAllFormsForComponent = () => getAllForms();

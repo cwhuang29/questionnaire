@@ -12,13 +12,14 @@ import { Typography } from '@mui/material';
 const transformTodoForms = (data) =>
   data.map((d) => ({
     title: d.name,
-    redirectTo: `/TODO/${d.id}`,
+    redirectTo: `/forms/answer/${d.id}`,
     assignedAt: getDisplayTime(new Date(d.assignedAt)),
   }));
 
 const HomeUserView = (props) => {
   const { data, error, isLoading } = props;
   const { user } = useAuth();
+  const { data: formData = {} } = data;
 
   return (
     !isLoading &&
@@ -30,7 +31,7 @@ const HomeUserView = (props) => {
         <Typography variant='h5' component='div' sx={{ margin: '0.35em 0 1.2em 0' }}>
           您還有<span style={{ color: 'red' }}>&nbsp;{data.length}&nbsp;</span>個問卷待填寫
         </Typography>
-        <CardWithImage data={transformTodoForms(data)} isLoading={isLoading} />
+        <CardWithImage data={transformTodoForms(formData)} isLoading={isLoading} />
       </>
     )
   );

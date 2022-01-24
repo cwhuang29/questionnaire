@@ -7,8 +7,8 @@ import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 
 const ServiceFetcher = (props) => {
-  const { render, fetchService, ...notForHOCProps } = props; // Method 1 (render props)
-  // const { Component, fetchService, ...notForHOCProps } = props; // Method 2
+  const { render, fetchService, toDispatch, ...notForHOCProps } = props; // Method 1 (render props)
+  // const { Component, fetchService, toDispatch, ...notForHOCProps } = props; // Method 2
 
   const dispatch = useDispatch();
   const [data, setData] = useState({});
@@ -16,9 +16,12 @@ const ServiceFetcher = (props) => {
   const [error, setError] = useState({});
   const { addGlobalMessage } = useGlobalMessageContext();
 
+  const fetch = toDispatch ? () => dispatch(fetchService()) : () => fetchService();
+
   useEffect(() => {
     setIsLoading(true);
-    dispatch(fetchService())
+    // dispatch(fetchService())
+    fetch()
       .then((fetchData) => setData(fetchData))
       .catch((err) => {
         setError(err);
@@ -41,9 +44,9 @@ const render = (Component, props) => <Component {...props} />;
 
 // Method 1 (render props)
 const withFetchService =
-  (Component, fetchService) =>
+  (Component, fetchService, toDispatch = true) =>
   ({ ...props }) =>
-    <ServiceFetcher {...props} fetchService={fetchService} render={(_props) => render(Component, _props)} />;
+    <ServiceFetcher fetchService={fetchService} toDispatch={toDispatch} render={(_props) => render(Component, _props)} {...props} />;
 
 // Method 2
 // const withFetchService = (Component, fetchService) => {
@@ -53,6 +56,7 @@ const withFetchService =
 
 ServiceFetcher.propTypes = {
   fetchService: PropTypes.func.isRequired,
+  toDispatch: PropTypes.bool.isRequired,
 };
 
 export default withFetchService;

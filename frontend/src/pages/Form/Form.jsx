@@ -63,7 +63,7 @@ const FormView = (props) => {
   const { addGlobalMessage } = useGlobalMessageContext();
 
   const formId = getURLQueryFormId();
-  const { formName } = data;
+  const { data: formData = {} } = data;
 
   const formModalOnOpen = () => setOpenFormModal(true);
   const formModalOnClose = () => setOpenFormModal(false);
@@ -72,13 +72,12 @@ const FormView = (props) => {
   const notificationModalOnOpen = () => setOpenNotificationModal(true);
   const notificationModalOnClose = () => setOpenNotificationModal(false);
 
-  const formOnSubmit = () => navigate(`/update/form/${formId}`, { state: data }); // The key should be 'state'
+  const formOnSubmit = () => navigate(`/update/form/${formId}`, { state: formData }); // The key should be 'state'
   const AssignmentOnSubmit = async (assignmentData) => {
     const resp = await formService.createFormStatus(formId, assignmentData);
     setIsFetchingFormAssignStatusData(true); // Note: the form status and notification history won't update until emails are sent out
     return resp;
   };
-
   const notificationOnSubmit = async (notificationData) => {
     const resp = await notificationService.sendEmailNotificaionByFormId(formId, notificationData);
     setIsFetchingFormAssignStatusData(true);
@@ -109,10 +108,10 @@ const FormView = (props) => {
       {Object.keys(error).length === 0 && !isLoading ? (
         <>
           <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', marginBottom: '1em' }}>
-            量表—{formName}
+            量表—{formData.formName}
           </Typography>
 
-          <FormModal open={openFormModal} onClose={formModalOnClose} formData={data} submitButtonText='修改' onSubmit={formOnSubmit} />
+          <FormModal open={openFormModal} onClose={formModalOnClose} formData={formData} submitButtonText='修改' onSubmit={formOnSubmit} />
           <AssignmentModal open={openAssignmentModal} onClose={assignmentModalOnClose} submitButtonText='送出' onSubmit={AssignmentOnSubmit} />
           <EmailNotificationModal
             open={openNotificationModal}

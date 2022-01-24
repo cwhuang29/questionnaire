@@ -5,7 +5,7 @@ import Menu from '@components/Menu';
 import Home from '@home';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import Ecosystem from '@pages/Ecosystem';
-import Form, { FormCreate, FormUpdate } from '@pages/Form';
+import Form, { FormAnswer, FormCreate, FormUpdate } from '@pages/Form';
 import Login from '@pages/Login';
 import Logout from '@pages/Logout';
 import Register from '@pages/Register';
@@ -38,7 +38,8 @@ const App = () => {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
         <Route path='/logout' element={<Logout />} />
-        <Route path='/form/:formId' element={<Form />} />
+        <Route path='/forms/:formId' element={<Form />} />
+        <Route path='/forms/answer/:formId' element={<FormAnswer />} />
         <Route path='/create/form' element={<FormCreate />} />
         <Route path='/update/form/:formId' element={<FormUpdate />} />
         <Route path='/ecosystem'>
