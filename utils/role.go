@@ -33,6 +33,10 @@ func (r RoleType) IsStudent() bool {
 	return r == Student
 }
 
+func (r RoleType) IsParent() bool {
+	return r == Parent
+}
+
 func (r RoleType) IsTeacher() bool {
 	return r == Teacher
 }

@@ -158,6 +158,49 @@ func getFormStatusByUser(email string) []FormStatus {
 	return formStatus
 }
 
+func extractFormNecessaryInfoForAssignee(form Form, role utils.RoleType) Form {
+	var filteredForm Form
+	var formTitle FormInfoByRole
+	var formIntro FormInfoByRole
+	var questions FormQuestion
+
+	if role.IsStudent() {
+		formTitle = FormInfoByRole{Student: form.FormTitle.Student}
+		formIntro = FormInfoByRole{Student: form.FormIntro.Student}
+		questions = FormQuestion{Student: form.Questions.Student}
+	} else if role.IsParent() {
+		formTitle = FormInfoByRole{Parent: form.FormTitle.Parent}
+		formIntro = FormInfoByRole{Parent: form.FormIntro.Parent}
+		questions = FormQuestion{Parent: form.Questions.Student}
+	} else if role.IsTeacher() {
+		formTitle = FormInfoByRole{Teacher: form.FormTitle.Teacher}
+		formIntro = FormInfoByRole{Teacher: form.FormIntro.Teacher}
+		questions = FormQuestion{Teacher: form.Questions.Student}
+	}
+
+	filteredForm.ID = form.ID
+	filteredForm.Author = form.Author
+	filteredForm.ResearchName = form.ResearchName
+	filteredForm.FormName = form.FormName
+	filteredForm.FormCustId = form.FormCustId
+	filteredForm.MinScore = form.MinScore
+	filteredForm.OptionsCount = form.OptionsCount
+	filteredForm.FormTitle = formTitle
+	filteredForm.FormIntro = formIntro
+	filteredForm.Questions = questions
+
+	return filteredForm
+}
+
+func getAnswerForm(form Form, user models.User) Form {
+	formStatus := databases.GetFormStatusByFormIdAndWriterEmail(form.ID, user.Email, true)
+	role := utils.RoleType(formStatus.Role)
+	// role := user.Role // Do not trust user (this attribute is determined when users registered and may be removed in future)
+
+	form = extractFormNecessaryInfoForAssignee(form, role)
+	return form
+}
+
 func insertFormToDb(form models.Form) (int, error) {
 	form, err := databases.InsertForm(form)
 	return form.ID, err

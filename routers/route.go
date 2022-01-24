@@ -40,13 +40,14 @@ func injectRoutesV2() {
 		v2.OPTIONS("/update/form/*formId", handlers.HandlePreflight)
 
 		v2.POST("/login", handlers.LoginV2)
+
 		v2.POST("/register", handlers.RegisterV2)
 		v2.Use(AuthRequired())
 		{
 			v2.GET("/users/me", handlers.Me)
 			v2.POST("/logout", handlers.LogoutV2)
-			v2.GET("/forms/todo", handlers.GetTODOForms)
-			// v2.GET("/forms/answer/:formId", handlers.Me)
+			v2.GET("/forms/todo", handlers.GetTodoForms)
+			v2.GET("/forms/answer/:formId", handlers.GetAnswerForm)
 
 			v2.Use(AdminRequired())
 			{
