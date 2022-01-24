@@ -13,7 +13,7 @@ type Form struct {
 
 	ResearchName string `gorm:"not null;size:2048"`
 	FormName     string `gorm:"not null;size:512"`
-	FormCustId   string `gorm:"not null;size:512"`
+	FormCustID   string `gorm:"not null;size:512"`
 	MinScore     int    `gorm:"not null"`
 	OptionsCount int    `gorm:"not null"`
 	FormTitle    string `gorm:"not null;type:text"`

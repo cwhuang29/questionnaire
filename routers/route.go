@@ -48,6 +48,7 @@ func injectRoutesV2() {
 			v2.POST("/logout", handlers.LogoutV2)
 			v2.GET("/forms/todo", handlers.GetTodoForms)
 			v2.GET("/forms/answer/:formId", handlers.GetAnswerForm)
+			v2.POST("/forms/answer/:formId", handlers.MarkAnswerForm)
 
 			v2.Use(AdminRequired())
 			{

@@ -126,19 +126,19 @@ func getAllForms() []Form {
 }
 
 func getFormByID(id int) Form {
-	dbForm := databases.GetFormById(id, true)
+	dbForm := databases.GetFormByID(id, true)
 	form := transformFormToWebFormat(dbForm)
 	return form
 }
 
-func getFormStatusByID(id int) []FormStatus {
-	dbFormStatus := databases.GetFormStatusByFormId(id, true)
-	form := databases.GetFormById(id, true)
+func getFormStatusByFormID(formID int) []FormStatus {
+	dbFormStatus := databases.GetFormStatusByFormId(formID, true)
+	form := databases.GetFormByID(formID, true)
 
 	formStatus := make([]FormStatus, len(dbFormStatus))
 	for i, f := range dbFormStatus {
 		receiver := databases.GetUserByEmail(f.WriterEmail)
-		notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), id, f.WriterEmail, true)
+		notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), formID, f.WriterEmail, true)
 		sender := databases.GetUser(notificationHistory.SenderId)
 		formStatus[i] = transformFormStatusToWebFormat(f, form, &receiver, &sender, &notificationHistory)
 	}
@@ -151,7 +151,7 @@ func getFormStatusByUser(email string) []FormStatus {
 
 	formStatus := make([]FormStatus, len(dbFormStatus))
 	for i, f := range dbFormStatus {
-		form := databases.GetFormById(f.FormID, true)
+		form := databases.GetFormByID(f.FormID, true)
 		formStatus[i] = transformFormStatusToWebFormat(f, form, nil, nil, nil)
 	}
 
@@ -182,7 +182,7 @@ func extractFormNecessaryInfoForAssignee(form Form, role utils.RoleType) Form {
 	filteredForm.Author = form.Author
 	filteredForm.ResearchName = form.ResearchName
 	filteredForm.FormName = form.FormName
-	filteredForm.FormCustId = form.FormCustId
+	filteredForm.FormCustID = form.FormCustID
 	filteredForm.MinScore = form.MinScore
 	filteredForm.OptionsCount = form.OptionsCount
 	filteredForm.FormTitle = formTitle
@@ -192,8 +192,34 @@ func extractFormNecessaryInfoForAssignee(form Form, role utils.RoleType) Form {
 	return filteredForm
 }
 
+func setFormStatusToStart(formID int, user models.User) (models.FormStatus, bool) {
+	now := time.Now()
+
+	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
+	dbFormStatus.Status = int(utils.FormStatusInProgress)
+	dbFormStatus.StartAt = &now
+
+	ok := databases.UpdateFormStatus(dbFormStatus)
+	return dbFormStatus, ok
+}
+
+func setFormStatusToFinish(formID int, user models.User) (models.FormStatus, bool) {
+	now := time.Now()
+
+	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
+	dbFormStatus.Status = int(utils.FormStatusFinish)
+	dbFormStatus.FinishAt = &now
+
+	ok := databases.UpdateFormStatus(dbFormStatus)
+	return dbFormStatus, ok
+}
+
 func getAnswerForm(form Form, user models.User) Form {
 	formStatus := databases.GetFormStatusByFormIdAndWriterEmail(form.ID, user.Email, true)
+	if formStatus.ID == 0 {
+		return Form{}
+	}
+
 	role := utils.RoleType(formStatus.Role)
 	// role := user.Role // Do not trust user (this attribute is determined when users registered and may be removed in future)
 
@@ -265,6 +291,22 @@ func editFormPreprocessing(c *gin.Context) (Form, models.User, error) {
 	return form, user, err
 }
 
+func markFormPreprocessing(c *gin.Context) (Answer, error) {
+	var answer Answer
+
+	if err := c.ShouldBindJSON(&answer); err != nil {
+		return Answer{}, err
+	}
+	return answer, nil
+}
+
+func storeAnswerToDB(formID int, user models.User, answer Answer) (models.FormAnswer, error) {
+	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
+	dbFormAnswer := transformAnswrToDBFormat(answer, formID, user.ID, dbFormStatus.ID)
+	dbFormAnswer, err := databases.InsertFormAnswer(dbFormAnswer)
+	return dbFormAnswer, err
+}
+
 func removeDuplicateEmail(emailNotification EmailNotification) EmailNotification {
 	emailNotification.Recipient = utils.RemoveDuplicateStrings(emailNotification.Recipient)
 	return emailNotification
@@ -331,4 +373,29 @@ func remindWritingFormByEmail(formId int, senderEmail string, emailNotification 
 	log.Info(fields)
 
 	return nil
+}
+
+func getFormScore(form Form, formStatus models.FormStatus, answer Answer) int {
+	role := utils.RoleType(formStatus.Role)
+	// role := user.Role // Do not trust user (this attribute is determined when users registered and may be removed in future)
+
+	var questions []Question
+	if role.IsStudent() {
+		questions = form.Questions.Student
+	} else if role.IsParent() {
+		questions = form.Questions.Parent
+	} else if role.IsTeacher() {
+		questions = form.Questions.Teacher
+	}
+
+	score := 0
+	minScore := form.MinScore
+	for idx, ans := range answer {
+		if questions[idx].IsReverseGrading {
+			score += (questions[idx].MaxScore - (ans + minScore))
+		}
+		score += (ans + minScore)
+	}
+
+	return minScore
 }

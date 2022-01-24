@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/cwhuang29/questionnaire/databases/models"
 	"github.com/cwhuang29/questionnaire/utils/validator"
 	"github.com/gin-gonic/gin"
@@ -23,7 +24,7 @@ func writeFromLog(form models.Form, message string) {
 		"ID":          form.ID,
 		"Author ID":   form.AuthorID,
 		"Form name":   form.FormName,
-		"Form CustID": form.FormCustId,
+		"Form CustID": form.FormCustID,
 	}
 	log.Info(fields)
 }
@@ -262,6 +263,62 @@ func UpdateForm(c *gin.Context) {
 	succeedMsg := constants.FormUpdateSucceed
 	writeFromLog(dbForm, succeedMsg)
 	c.JSON(http.StatusCreated, gin.H{"title": succeedMsg, "formId": dbFormID})
+}
+
+func GetAnswerForm(c *gin.Context) {
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
+		return
+	}
+
+	email := c.MustGet("email").(string)
+	form := getFormByID(id)
+	user := databases.GetUserByEmail(email)
+	filteredForm := getAnswerForm(form, user)
+	if filteredForm.ID == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
+		return
+	}
+
+	_, ok := setFormStatusToStart(id, user)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": filteredForm})
+}
+
+func MarkAnswerForm(c *gin.Context) {
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
+		return
+	}
+
+	answer, err := markFormPreprocessing(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.TryAgain})
+		return
+	}
+
+	email := c.MustGet("email").(string)
+	user := databases.GetUserByEmail(email)
+
+	if _, err := storeAnswerToDB(id, user, answer); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.TryAgain})
+	}
+
+	dbFormStatus, ok := setFormStatusToFinish(id, user)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
+		return
+	}
+
+	form := getFormByID(id)
+	score := getFormScore(form, dbFormStatus, answer)
+	c.JSON(http.StatusOK, gin.H{"data": score})
 }
 
 func RemindWritingForm(c *gin.Context) {

@@ -4,7 +4,7 @@ import (
 	"github.com/cwhuang29/questionnaire/databases/models"
 )
 
-func GetFormById(id int, isAdmin bool) (form models.Form) {
+func GetFormByID(id int, isAdmin bool) (form models.Form) {
 	db.Where("id = ?", id).First(&form)
 	return
 	// db.Preload("Tags").Where("id = ?", id).First(&form)
@@ -34,6 +34,15 @@ func GetSameResearchForm(category string, offset, limit int, isAdmin bool) (arti
 	return
 }
 
+func InsertFormAnswer(formAnswer models.FormAnswer) (models.FormAnswer, error) {
+	if err := db.Create(&formAnswer).Error; err != nil {
+		log.ErrorMsg(err.Error())
+		return models.FormAnswer{}, err
+	}
+
+	return formAnswer, nil
+}
+
 func InsertForm(form models.Form) (models.Form, error) {
 	if err := db.Create(&form).Error; err != nil {
 		log.ErrorMsg(err.Error())
@@ -52,7 +61,7 @@ func UpdateForm(form models.Form) (models.Form, error) {
 		"admin_only":    form.AdminOnly,
 		"research_name": form.ResearchName,
 		"form_name":     form.FormName,
-		"form_cust_id":  form.FormCustId,
+		"form_cust_id":  form.FormCustID,
 		"min_score":     form.MinScore,
 		"options_count": form.OptionsCount,
 		"form_title":    form.FormTitle,

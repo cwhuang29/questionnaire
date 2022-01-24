@@ -22,7 +22,7 @@ type Form struct {
 
 	ResearchName []string       `json:"researchName,omitempty"`
 	FormName     string         `json:"formName,omitempty"`
-	FormCustId   string         `json:"formCustId,omitempty"`
+	FormCustID   string         `json:"formCustId,omitempty"`
 	MinScore     int            `json:"minScore,omitempty"`
 	OptionsCount int            `json:"optionsCount,omitempty"`
 	FormTitle    FormInfoByRole `json:"formTitle,omitempty"`
@@ -46,12 +46,14 @@ type FormQuestion struct {
 }
 
 type Question struct {
-	Id               int      `json:"id"`
+	ID               int      `json:"id"`
 	Label            string   `json:"label"`
 	Options          []string `json:"options"`
 	IsReverseGrading bool     `json:"isReverseGrading"`
-	MaxPoint         int      `json:"maxPoint"`
+	MaxScore         int      `json:"maxScore"`
 }
+
+type Answer []int
 
 type Login struct {
 	Email    string `form:"email" json:"email" binding:"required"`

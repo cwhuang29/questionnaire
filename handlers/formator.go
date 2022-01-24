@@ -14,7 +14,7 @@ import (
 func transformFormToWebFormat(form models.Form) (f Form) {
 	f.ResearchName = strings.Split(form.ResearchName, ",")
 	f.FormName = form.FormName
-	f.FormCustId = form.FormCustId
+	f.FormCustID = form.FormCustID
 	f.MinScore = form.MinScore
 	f.OptionsCount = form.OptionsCount
 	_ = json.Unmarshal([]byte(form.FormTitle), &f.FormTitle)
@@ -35,7 +35,7 @@ func transformFormToDBFormat(form Form, user models.User) (f models.Form) {
 
 	f.ResearchName = strings.Join(form.ResearchName, ",")
 	f.FormName = form.FormName
-	f.FormCustId = form.FormCustId
+	f.FormCustID = form.FormCustID
 	f.MinScore = form.MinScore
 	f.OptionsCount = form.OptionsCount
 	f.FormTitle = string(formTitleBytes)
@@ -75,6 +75,16 @@ func transformFormStatusToWebFormat(formStatus models.FormStatus, form models.Fo
 	//     f.EmailLastSentTime = notificationHistory.CreatedAt
 	// }
 	return
+}
+
+func transformAnswrToDBFormat(answer Answer, formID, userID, formStatusID int) (a models.FormAnswer) {
+	answerBytes, _ := json.Marshal(answer)
+
+	a.FormID = formID
+	a.UserID = userID
+	a.FormStatusID = formStatusID
+	a.Answers = string(answerBytes)
+	return a
 }
 
 func transformAssignFormToFormStatusDBFormat(id int, assignForm AssignForm) []models.FormStatus {

@@ -13,7 +13,4 @@ type FormStatus struct {
 	AssignedAt  time.Time  `gorm:"not null"`
 	StartAt     *time.Time // Make it pointer type so it can be nil
 	FinishAt    *time.Time
-
-	CreatedAt time.Time `gorm:"autoCreateTime"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }

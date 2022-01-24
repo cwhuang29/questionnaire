@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/cwhuang29/questionnaire/constants"
-	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -15,20 +14,6 @@ func GetTodoForms(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": formStatus})
 }
 
-func GetAnswerForm(c *gin.Context) {
-	id, err := getParamFormID(c)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
-		return
-	}
-
-	email := c.MustGet("email").(string)
-	form := getFormByID(id)
-	user := databases.GetUserByEmail(email)
-	filteredForm := getAnswerForm(form, user)
-	c.JSON(http.StatusOK, gin.H{"data": filteredForm})
-}
-
 func GetFormStatus(c *gin.Context) {
 	id, err := getParamFormID(c)
 	if err != nil {
@@ -36,7 +21,7 @@ func GetFormStatus(c *gin.Context) {
 		return
 	}
 
-	formStatus := getFormStatusByID(id)
+	formStatus := getFormStatusByFormID(id)
 	c.JSON(http.StatusOK, gin.H{"data": formStatus})
 }
 
