@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Autocomplete, Box, Checkbox, FormControlLabel, Stack, TextField, Typography } from '@mui/material';
 
-const emptyState = { label: '', options: [], isReverseGrading: false, maxPoint: 0 };
+const emptyState = { label: '', options: [], isReverseGrading: false, maxScore: 0 };
 
 const actionType = {
   SET_QUESTION: 'SET_QUESTION',
@@ -23,7 +23,7 @@ const reducer = (state, action) => {
     case actionType.SET_REVERSE_GRADING:
       return { ...state, isReverseGrading: payload };
     case actionType.SET_MAX_POINT:
-      return { ...state, maxPoint: payload };
+      return { ...state, maxScore: payload };
     default:
       return state;
   }
@@ -45,9 +45,9 @@ export const Question = (props) => {
 
   // An onChange event on an input of type number will give you the string corresponding to the entered number. That is a browser behaviour
   const handleMaxPointChange = (evt) => {
-    const maxPoint = parseInt(evt.target.value, 10);
-    dispatch({ type: actionType.SET_MAX_POINT, payload: maxPoint });
-    transferStateToParent({ maxPoint });
+    const maxScore = parseInt(evt.target.value, 10);
+    dispatch({ type: actionType.SET_MAX_POINT, payload: maxScore });
+    transferStateToParent({ maxScore });
   };
 
   const handleQuestionChange = (evt) => {
@@ -76,7 +76,7 @@ export const Question = (props) => {
           label='反向計分之總分'
           type='number'
           disabled={state.isReverseGrading === false}
-          value={state.maxPoint}
+          value={state.maxScore}
           onChange={handleMaxPointChange}
           size='small'
         />

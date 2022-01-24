@@ -83,6 +83,7 @@ export const homePageScenarios = [
     disable: true,
   },
 ];
+
 // export const homePageScenarios = [
 //   {
 //     redirectTo: '/ecosystem/workers',

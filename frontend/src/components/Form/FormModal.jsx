@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import SubmitAndCancelButtonGroup from '@components/button/SubmitAndCancelButtonGroup';
 import { questionsEmptyState, roles } from '@pages/Form/createFormData';
 
 import { Box, ListItemButton, ListItemText, ListSubheader, Modal as MuiModal, Typography } from '@mui/material';
@@ -33,7 +34,7 @@ const FormDataItem = ({ field, value }) => (
 const FormModal = (props) => {
   const { open, onClose, onSubmit, submitButtonText, cancelButtonText, formData } = props;
   const { researchName, formName, formCustId, minScore, optionsCount, formTitle, formIntro, questions } = formData || {};
-  const cancelButtonClick = () => onClose();
+  const onCancel = () => onClose();
 
   return (
     open && (
@@ -78,7 +79,7 @@ const FormModal = (props) => {
                   <FormDataItem field={`題目${idx + 1}`} value={question.label} />
                   <FormDataItem field='選項' value={question.options.join(', ')} />
                   <FormDataItem field='是否為反向計分' value={question.isReverseGrading ? '是' : '否'} />
-                  {question.isReverseGrading && <FormDataItem field='總分（若為反向計分）' value={question.maxPoint} />}
+                  {question.isReverseGrading && <FormDataItem field='總分（若為反向計分）' value={question.maxScore} />}
                   <hr />
                 </React.Fragment>
               ))}
@@ -87,16 +88,7 @@ const FormModal = (props) => {
 
           <br />
           <br />
-
-          <Box style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '30px' }}>
-            <ListItemButton style={{ width: '47%', backgroundColor: '#F95C5C' }} onClick={cancelButtonClick}>
-              <ListItemText primary={cancelButtonText} style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
-            </ListItemButton>
-            <div style={{ width: '6%' }} />
-            <ListItemButton style={{ width: '47%', backgroundColor: '#4780DD' }} onClick={onSubmit}>
-              <ListItemText primary={submitButtonText} style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
-            </ListItemButton>
-          </Box>
+          <SubmitAndCancelButtonGroup onSubmit={onSubmit} onCancel={onCancel} submitButtonText={submitButtonText} cancelButtonText={cancelButtonText} />
         </Box>
       </MuiModal>
     )

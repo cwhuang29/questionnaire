@@ -6,23 +6,13 @@ import PageWrapper from '@components/HomePageWrapper';
 import formService from '@services/form.service';
 import withFetchService from '@shared/hooks/withFetchService';
 
+import FormAnswer from './FormAnswer';
+
 const FormAnswerLayoutView = (props) => {
   const { data, error, isLoading } = props;
   const { data: formData = {} } = data;
 
-  console.log(formData, '!!!!!!!!!!!!!!!');
-
-  return (
-    <PageWrapper>
-      {Object.keys(error).length === 0 && !isLoading ? (
-        <>
-          <div />
-        </>
-      ) : (
-        <h3>Hold on a second ... </h3>
-      )}
-    </PageWrapper>
-  );
+  return <PageWrapper>{Object.keys(error).length === 0 && !isLoading ? <FormAnswer formData={formData} /> : <h3>Hold on a second ... </h3>}</PageWrapper>;
 };
 
 const getAnswerFormForComponent = (formId) => () => formService.getAnswerForm(formId);

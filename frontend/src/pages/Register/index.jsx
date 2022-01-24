@@ -61,7 +61,7 @@ const Register = () => {
   return (
     <Box
       component='form'
-      onSubmit={formik.handleSubmit}
+      onSubmit={formik.handleSubmit} // Alternative: execute formik.handleSubmit() manually in the onClick callback function
       sx={{
         mt: '80px',
         ml: 'auto',

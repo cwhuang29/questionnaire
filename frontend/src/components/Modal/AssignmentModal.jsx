@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+import SubmitAndCancelButtonGroup from '@components/button/SubmitAndCancelButtonGroup';
 import msg, { validateMsg } from '@constants/messages';
 import ROLES from '@constants/roles';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
@@ -14,8 +15,6 @@ import {
   createFilterOptions,
   FormControl,
   InputLabel,
-  ListItemButton,
-  ListItemText,
   ListSubheader,
   MenuItem,
   Modal as MuiModal,
@@ -46,7 +45,7 @@ const AssignmentModal = (props) => {
   const { open, onClose, onSubmit, submitButtonText, cancelButtonText } = props;
   const [loading, setLoading] = useState(false);
   const { addGlobalMessage } = useGlobalMessageContext();
-  const cancelButtonClick = () => onClose();
+  const cancelButtonOnClick = () => onClose();
 
   const formik = useFormik({
     initialValues,
@@ -222,15 +221,13 @@ const AssignmentModal = (props) => {
             />
           </Stack>
 
-          <Box style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '30px' }}>
-            <ListItemButton style={{ width: '47%', backgroundColor: '#F95C5C' }} onClick={cancelButtonClick}>
-              <ListItemText primary={cancelButtonText} style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
-            </ListItemButton>
-            <div style={{ width: '6%' }} />
-            <ListItemButton disabled={loading} onClick={submitButtonOnClick} style={{ width: '47%', backgroundColor: '#4780DD' }}>
-              <ListItemText type='submit' primary={submitButtonText} style={{ textAlign: 'center', fontWeight: '700', color: '#EDEDED' }} />
-            </ListItemButton>
-          </Box>
+          <SubmitAndCancelButtonGroup
+            disabledSubmit={loading}
+            onSubmit={submitButtonOnClick}
+            onCancel={cancelButtonOnClick}
+            submitButtonText={submitButtonText}
+            cancelButtonText={cancelButtonText}
+          />
         </Box>
       </MuiModal>
     )
