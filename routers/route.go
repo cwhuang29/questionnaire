@@ -56,6 +56,7 @@ func injectRoutesV2() {
 				v2.GET("/forms/:formId", handlers.Forms)                // ":" is mandatory oaram
 				v2.GET("/forms/status/*formId", handlers.GetFormStatus) // "*" is optional
 				v2.POST("/forms/status/*formId", handlers.CreateFormStatus)
+				v2.DELETE("/forms/status/*formId", handlers.DeleteFormStatus)
 				v2.POST("/forms/email/*formId", handlers.RemindWritingForm)
 				// v2.GET("/forms/:formId", func(c *gin.Context) {
 				//     if strings.HasPrefix(c.Request.RequestURI, "/v2/form/status") {

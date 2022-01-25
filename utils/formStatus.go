@@ -5,7 +5,7 @@ type FormStatus int
 const (
 	FormStatusAssign FormStatus = iota
 	FormStatusInProgress
-	FormStatusFinish = iota + 10
+	FormStatusFinish
 	FormStatusUnknown
 )
 
@@ -22,6 +22,10 @@ func (r FormStatus) IsValid() bool {
 
 func (s FormStatus) IsAssign() bool {
 	return s == FormStatusAssign
+}
+
+func (s FormStatus) IsInProgress() bool {
+	return s == FormStatusInProgress
 }
 
 func (s FormStatus) IsFinish() bool {

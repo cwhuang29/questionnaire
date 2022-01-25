@@ -4,13 +4,14 @@ import (
 	"net/http"
 
 	"github.com/cwhuang29/questionnaire/constants"
+	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func GetTodoForms(c *gin.Context) {
 	email := c.MustGet("email").(string)
-	formStatus := getFormStatusByUser(email)
+	formStatus := getNotFinishFormStatusByUser(email)
 	c.JSON(http.StatusOK, gin.H{"data": formStatus})
 }
 
@@ -23,6 +24,37 @@ func GetFormStatus(c *gin.Context) {
 
 	formStatus := getFormStatusByFormID(id)
 	c.JSON(http.StatusOK, gin.H{"data": formStatus})
+}
+
+func DeleteFormStatus(c *gin.Context) {
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
+		return
+	}
+
+	// bodyStr, _ := ioutil.ReadAll(c.Request.Body) // string(x): {"payload":{"email":"hcw1719@gmail.com"}}
+	var json = struct{ Payload struct{ Email string } }{} // Uppercase is required
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.TryAgain})
+		return
+	}
+
+	email := json.Payload.Email
+	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(id, email, true)
+	if dbFormStatus.ID == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
+		return
+	}
+
+	if err := databases.DeleteFormStatus(dbFormStatus); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
+		return
+	}
+
+	title := constants.FormStatusDeleteSucceed
+	content := "Note: you can now reassign this user to this form with same/different roles"
+	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
 }
 
 func CreateFormStatus(c *gin.Context) {

@@ -53,7 +53,9 @@ type Question struct {
 	MaxScore         int      `json:"maxScore"`
 }
 
-type Answer []int
+type Answer struct {
+	Answers []int `json:"answers"`
+}
 
 type Login struct {
 	Email    string `form:"email" json:"email" binding:"required"`

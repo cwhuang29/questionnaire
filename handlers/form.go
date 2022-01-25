@@ -11,6 +11,7 @@ import (
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/cwhuang29/questionnaire/databases/models"
+	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/cwhuang29/questionnaire/utils/validator"
 	"github.com/gin-gonic/gin"
 )
@@ -194,7 +195,7 @@ func Forms(c *gin.Context) {
 	// id := c.Param("formId") // "/v2/form/*formId" -> equals to "/3"
 	// id := c.Param("formId") // "/v2/form/:formId" -> equals to "3"
 
-	isSpecific := c.FullPath() == "/v2/form/:formId"
+	isSpecific := c.FullPath() == "/v2/forms/:formId"
 	if isSpecific == false {
 		allForms := getAllForms()
 		c.JSON(http.StatusOK, gin.H{"data": allForms})
@@ -275,9 +276,19 @@ func GetAnswerForm(c *gin.Context) {
 	email := c.MustGet("email").(string)
 	form := getFormByID(id)
 	user := databases.GetUserByEmail(email)
-	filteredForm := getAnswerForm(form, user)
-	if filteredForm.ID == 0 {
-		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
+
+	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(id, email, true)
+	if dbFormStatus.ID == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
+		return
+	} else if utils.FormStatus(dbFormStatus.Status).IsFinish() {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.GeneralErr, "errBody": constants.FormHasBeenWritten})
+		return
+	}
+
+	filteredForm, err := getAnswerForm(form, user, utils.RoleType(dbFormStatus.Role))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.GeneralErr, "errBody": err.Error()})
 		return
 	}
 
@@ -297,11 +308,14 @@ func MarkAnswerForm(c *gin.Context) {
 		return
 	}
 
+	fmt.Println(id)
 	answer, err := markFormPreprocessing(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.TryAgain})
 		return
 	}
+
+	fmt.Println(answer)
 
 	email := c.MustGet("email").(string)
 	user := databases.GetUserByEmail(email)

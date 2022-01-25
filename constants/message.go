@@ -29,7 +29,10 @@ const (
 	FormCreateSucceed = "Create a new form successfully"
 	FormUpdateSucceed = "Update a new form successfully"
 
+	FormStatusDeleteSucceed = "Delete successfully. This user cannot access to this form from now on"
+
 	FormStatusCreateErr = "Failed to assign form to users"
+	FormHasBeenWritten  = "You have written this form already"
 
 	QueryErr        = "Invalid parameter"
 	QueryEmptyErr   = "Parameter %s can not be empty"
