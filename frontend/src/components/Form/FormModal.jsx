@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SubmitAndCancelButtonGroup from '@components/button/SubmitAndCancelButtonGroup';
+import { SubmitAndCancelButtonGroup } from '@components/Button';
 import { questionsEmptyState, roles } from '@pages/Form/createFormData';
 
 import { Box, ListItemButton, ListItemText, ListSubheader, Modal as MuiModal, Typography } from '@mui/material';

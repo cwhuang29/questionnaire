@@ -14,7 +14,7 @@ const transformTodoForms = (data) =>
     title: d.name,
     redirectTo: `/forms/answer/${d.id}`,
     assignedAt: getDisplayTime(new Date(d.assignedAt)),
-    img: '/assets/persona/student.jpeg'
+    img: '/assets/persona/student.jpeg',
   }));
 
 const HomeUserView = (props) => {

@@ -6,7 +6,7 @@ import { Box, ListItemButton, ListItemText } from '@mui/material';
 const SubmitAndCancelButtonGroup = (props) => {
   const { disabledSubmit, disabledCancel, onSubmit, onCancel, submitButtonText, cancelButtonText } = props;
 
-  const wrapperStyle = { display: 'flex', justifyContent: 'space-evenly', marginTop: '30px', maxWidth: '700px', margin: '0 auto' };
+  const wrapperStyle = { display: 'flex', justifyContent: 'space-evenly', maxWidth: '700px', margin: '30px auto 0 auto' };
   const cancelCursorStyle = { cursor: disabledCancel ? 'wait' : 'default' };
   const submitCursorStyle = { cursor: disabledSubmit ? 'wait' : 'default' };
   const listItemButtonStyle = {

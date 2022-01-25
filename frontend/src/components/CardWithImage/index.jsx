@@ -10,11 +10,11 @@ const theme = createTheme({
   },
 });
 
-export const emptyForms = [
-  { title: '量表01', img: '/assets/persona/student.jpeg', disable: true },
-  { title: '量表02', img: '/assets/persona/student.jpeg', disable: true },
-  { title: '量表03', img: '/assets/persona/student.jpeg', disable: true },
-];
+// export const emptyForms = [
+//   { title: '量表01', img: '/assets/persona/student.jpeg', disable: true },
+//   { title: '量表02', img: '/assets/persona/student.jpeg', disable: true },
+//   { title: '量表03', img: '/assets/persona/student.jpeg', disable: true },
+// ];
 
 const CardWithImage = (props) => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const CardWithImage = (props) => {
 
   const writeDisplay = '開始填寫';
   const onClick = (url) => () => navigate(url);
-  const displayData = isLoading || Object.keys(data).length === 0 ? emptyForms : data;
+  const displayData = isLoading || Object.keys(data).length === 0 ? [] : data;
 
   return (
     <ThemeProvider theme={theme}>

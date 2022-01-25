@@ -16,9 +16,11 @@ import notificationService from '@services/notification.service';
 import withFetchService from '@shared/hooks/withFetchService';
 
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MailIcon from '@mui/icons-material/Mail';
 import { IconButton, Typography } from '@mui/material';
+import { GridActionsCellItem } from '@mui/x-data-grid';
 
 import { columns } from './formData';
 
@@ -64,6 +66,7 @@ const FormView = (props) => {
 
   const formId = getURLQueryFormId();
   const { data: formData = {} } = data;
+  const getRowId = (row) => `${row.writerEmail}`; // Note: the id in the data if formId, not index of elements in the array
 
   const formModalOnOpen = () => setOpenFormModal(true);
   const formModalOnClose = () => setOpenFormModal(false);
@@ -103,6 +106,45 @@ const FormView = (props) => {
       .finally(() => setIsFetchingFormAssignStatusData(false)); // This leads to another re-render
   }, [isFetchingFormAssignStatusData]);
 
+  const deleteFormStatus = (params) => () => {
+    // Note: the index of data has been set to writerEmail by getRowId(), so the following two lines are equivalent in this case
+    const { id } = params;
+    const email = params.row.writerEmail;
+
+    formService
+      .deleteFormStatus(formId, { email })
+      .then((resp) => {
+        addGlobalMessage({
+          title: resp.title,
+          content: resp.content,
+          severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
+          timestamp: Date.now(),
+        });
+
+        const remainRows = formAssignStatusData.filter((d) => d.writerEmail !== id);
+        setFormAssignStatusData(remainRows); // This is the only way to update rows in datagrid
+      })
+      .catch((err) => {
+        addGlobalMessage({
+          title: err.title,
+          content: err.content,
+          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          timestamp: Date.now(),
+        });
+      });
+  };
+
+  const actionColumn = {
+    field: 'actions',
+    headerName: 'Delete',
+    type: 'actions',
+    align: 'center',
+    width: 80,
+    getActions: (params) => [<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={deleteFormStatus(params)} /* showInMenu */ />],
+  };
+
+  const columnsWithActions = [...columns, actionColumn];
+
   return (
     <PageWrapper>
       {Object.keys(error).length === 0 && !isLoading ? (
@@ -126,7 +168,7 @@ const FormView = (props) => {
           <FormActionItem title='分配量表' Icon={<AssignmentModalIcon onClick={assignmentModalOnOpen} />} />
           <FormActionItem title='寄通知信' Icon={<NotificationModalIcon onClick={notificationModalOnOpen} />} />
 
-          <DataGrid isLoading={isLoading} columns={columns} rows={formAssignStatusData} getRowId={(row) => `${row.writerEmail}`} />
+          <DataGrid isLoading={isLoading} columns={columnsWithActions} rows={formAssignStatusData} getRowId={getRowId} />
           <br />
           <br />
         </>

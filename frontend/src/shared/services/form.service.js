@@ -31,14 +31,26 @@ const getAnswerForm = (id, token = authHeader()) =>
     .then((resp) => Promise.resolve(resp.data))
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
+const sendFormAnswer = (id, data, token = authHeader()) =>
+  fetch
+    .post(`${apis.V2.ANSWER_FORMS}/${id}`, data, { headers: token })
+    .then((resp) => Promise.resolve(resp.data))
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
+
+const deleteFormStatus = (id, payload, token = authHeader()) =>
+  fetch
+    // .delete(`${apis.V2.FORM_STATUS}/${id}`, { data: payload }, { headers: token }) // Error: header is not sent
+    // .delete(`${apis.V2.FORM_STATUS}/${id}`, { headers: token }, { data: payload }) // Error: request body is not sent
+    .delete(`${apis.V2.FORM_STATUS}/${id}`, { headers: token, data: { payload } }) // Request body: {payload: {email: 'a1@abc.com'}}
+    .then((resp) => Promise.resolve(resp.data))
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
+
 // const getTodoForms = (data, token = authHeader()) => {
 //   const url = new URL(apis.V2.TODO_FORMS, window.location.href);
 //   Object.entries(data).forEach(([key, val]) => url.searchParams.set(key, val));
-
 //   const path = url.pathname + url.search;
 //   console.log(data);
 //   console.log(path);
-
 //   return fetch
 //     .post(path, data, { headers: token })
 //     .then((resp) => Promise.resolve(resp.data))
@@ -50,9 +62,11 @@ export default {
   getFormById,
   getTodoForms,
   getAnswerForm,
+  sendFormAnswer,
 
   createForm,
   updateForm,
   getFormStatus,
   createFormStatus,
+  deleteFormStatus,
 };

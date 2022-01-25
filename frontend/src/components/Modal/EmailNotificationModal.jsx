@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import SubmitAndCancelButtonGroup from '@components/button/SubmitAndCancelButtonGroup';
+import { SubmitAndCancelButtonGroup } from '@components/Button';
 import msg, { validateMsg } from '@constants/messages';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';

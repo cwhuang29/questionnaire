@@ -12,7 +12,10 @@ const FormAnswerLayoutView = (props) => {
   const { data, error, isLoading } = props;
   const { data: formData = {} } = data;
 
-  return <PageWrapper>{Object.keys(error).length === 0 && !isLoading ? <FormAnswer formData={formData} /> : <h3>Hold on a second ... </h3>}</PageWrapper>;
+  return (
+    // eslint-disable-next-line no-nested-ternary
+    <PageWrapper>{isLoading ? <h3>Hold on a second ... </h3> : Object.keys(error).length !== 0 ? <div /> : <FormAnswer formData={formData} />}</PageWrapper>
+  );
 };
 
 const getAnswerFormForComponent = (formId) => () => formService.getAnswerForm(formId);
