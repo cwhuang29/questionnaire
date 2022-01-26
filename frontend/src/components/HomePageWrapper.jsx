@@ -11,7 +11,7 @@ const PageWrapper = ({ children }) => (
     }}
     style={{
       overflowX: 'hidden',
-      maxWidth: '1600px',
+      maxWidth: '1800px',
     }}
   >
     {children}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -22,7 +22,14 @@ import MailIcon from '@mui/icons-material/Mail';
 import { IconButton, Typography } from '@mui/material';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 
-import { columns } from './formData';
+import {
+  formResultBaseColumns,
+  formStatusBaseColumns,
+  getFormResultRowId,
+  getFormStatusRowId,
+  transformFormResultColumns,
+  transformFormResultData,
+} from './formOverviewData';
 
 const getFormByIdForComponent = (formId) => () => getFormById(formId);
 
@@ -54,19 +61,29 @@ const FormActionItem = ({ title, Icon }) => (
   </Typography>
 );
 
-const FormView = (props) => {
+const Title = ({ children }) => (
+  <Typography variant='h5' component='div' sx={{ fontWeight: 'bold', marginBottom: '1em', textAlign: 'left' }}>
+    {children}
+  </Typography>
+);
+
+const SpaceingComponent = () => <div style={{ marginBottom: '2.5em' }} />;
+
+const FormOverViewView = (props) => {
   const { data, error, isLoading } = props;
   const [openFormModal, setOpenFormModal] = useState(false);
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
   const [openNotificationModal, setOpenNotificationModal] = useState(false);
   const [isFetchingFormAssignStatusData, setIsFetchingFormAssignStatusData] = useState(true);
   const [formAssignStatusData, setFormAssignStatusData] = useState([]);
+  const [isFetchingFormResultData, setIsFetchingFormResultData] = useState(true);
+  const [formResultData, setFormResultData] = useState([]);
+  const [formResultColumns, setFormResultColumns] = useState([]);
   const navigate = useNavigate();
   const { addGlobalMessage } = useGlobalMessageContext();
 
   const formId = getURLQueryFormId();
   const { data: formData = {} } = data;
-  const getRowId = (row) => `${row.writerEmail}`; // Note: the id in the data if formId, not index of elements in the array
 
   const formModalOnOpen = () => setOpenFormModal(true);
   const formModalOnClose = () => setOpenFormModal(false);
@@ -75,7 +92,9 @@ const FormView = (props) => {
   const notificationModalOnOpen = () => setOpenNotificationModal(true);
   const notificationModalOnClose = () => setOpenNotificationModal(false);
 
-  const formOnSubmit = () => navigate(`/update/form/${formId}`, { state: formData }); // The key should be 'state'
+  const formOnSubmit = () => {
+    navigate(`/update/form/${formId}`, { state: formData }); // The key should be 'state'
+  };
   const AssignmentOnSubmit = async (assignmentData) => {
     const resp = await formService.createFormStatus(formId, assignmentData);
     setIsFetchingFormAssignStatusData(true); // Note: the form status and notification history won't update until emails are sent out
@@ -95,16 +114,41 @@ const FormView = (props) => {
     formService
       .getFormStatus(formId)
       .then((resp) => setFormAssignStatusData(resp.data))
-      .catch((err) => {
+      .catch((err) =>
         addGlobalMessage({
           title: err.title,
           content: err.content,
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           timestamp: Date.now(),
-        });
-      })
-      .finally(() => setIsFetchingFormAssignStatusData(false)); // This leads to another re-render
+        })
+      )
+      .finally(() => setIsFetchingFormAssignStatusData(false));
   }, [isFetchingFormAssignStatusData]);
+
+  useEffect(() => {
+    setIsFetchingFormResultData(true);
+    console.log('Start !!!!!!!!!!!!');
+    formService
+      .getFormResult(formId)
+      .then((resp) => {
+        const transformedData = transformFormResultData(resp.data);
+        console.log(resp.data);
+        const transformedColumns = transformFormResultColumns(formResultBaseColumns, resp.data);
+        console.log(transformedData);
+        console.log(transformedColumns);
+        setFormResultData(transformedData);
+        setFormResultColumns(transformedColumns);
+      })
+      .catch((err) =>
+        addGlobalMessage({
+          title: err.title,
+          content: err.content,
+          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          timestamp: Date.now(),
+        })
+      )
+      .finally(() => setIsFetchingFormResultData(false));
+  }, []);
 
   const deleteFormStatus = (params) => () => {
     // Note: the index of data has been set to writerEmail by getRowId(), so the following two lines are equivalent in this case
@@ -134,22 +178,25 @@ const FormView = (props) => {
       });
   };
 
-  const actionColumn = {
-    field: 'actions',
-    headerName: 'Delete',
-    type: 'actions',
-    align: 'center',
-    width: 80,
-    getActions: (params) => [<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={deleteFormStatus(params)} /* showInMenu */ />],
-  };
+  const formStatusActionColumn = useMemo(
+    () => ({
+      field: 'actions',
+      headerName: 'Delete',
+      type: 'actions',
+      align: 'center',
+      width: 80,
+      getActions: (params) => [<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={deleteFormStatus(params)} /* showInMenu */ />],
+    }),
+    [formAssignStatusData] // Otherwise formAssignStatusData in the deleteFormStatus() equals to its initial value, i.e. {}
+  );
 
-  const columnsWithActions = [...columns, actionColumn];
+  const formStatusColumns = [...formStatusBaseColumns, formStatusActionColumn];
 
   return (
     <PageWrapper>
       {Object.keys(error).length === 0 && !isLoading ? (
         <>
-          <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', marginBottom: '1em' }}>
+          <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', margin: ' 0.3em 0 0.8em' }}>
             量表—{formData.formName}
           </Typography>
 
@@ -168,9 +215,13 @@ const FormView = (props) => {
           <FormActionItem title='分配量表' Icon={<AssignmentModalIcon onClick={assignmentModalOnOpen} />} />
           <FormActionItem title='寄通知信' Icon={<NotificationModalIcon onClick={notificationModalOnOpen} />} />
 
-          <DataGrid isLoading={isLoading} columns={columnsWithActions} rows={formAssignStatusData} getRowId={getRowId} />
-          <br />
-          <br />
+          <Title>量表填寫狀況</Title>
+          <DataGrid isLoading={isFetchingFormAssignStatusData} columns={formStatusColumns} rows={formAssignStatusData} getRowId={getFormStatusRowId} />
+          <SpaceingComponent />
+
+          <Title>量表回答狀況</Title>
+          <DataGrid isLoading={isFetchingFormResultData} columns={formResultColumns} rows={formResultData} getRowId={getFormResultRowId} />
+          <SpaceingComponent />
         </>
       ) : (
         <div />
@@ -179,10 +230,10 @@ const FormView = (props) => {
   );
 };
 
-const Form = React.memo(() => {
+const FormOverview = React.memo(() => {
   const { formId } = useParams();
-  const FormWithData = withFetchService(FormView, getFormByIdForComponent(formId));
-  return <FormWithData />;
+  const FormOverviewWithData = withFetchService(FormOverViewView, getFormByIdForComponent(formId));
+  return <FormOverviewWithData />;
 });
 
 FormModalIcon.propTypes = {
@@ -202,10 +253,14 @@ FormActionItem.propTypes = {
   Icon: PropTypes.element.isRequired,
 };
 
-FormView.propTypes = {
+Title.propTypes = {
+  children: PropTypes.string.isRequired,
+};
+
+FormOverViewView.propTypes = {
   data: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
   error: PropTypes.object.isRequired,
 };
 
-export default Form;
+export default FormOverview;

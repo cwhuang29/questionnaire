@@ -9,10 +9,11 @@ export default {
     // FORM: '/v2/forms',
     TODO_FORMS: '/v2/forms/todo',
     ANSWER_FORMS: '/v2/forms/answer',
-    CREATE_FORM: '/v2/create/form',
-    UPDATE_FORM: '/v2/update/form',
-
     FORM_STATUS: '/v2/forms/status',
+    FORM_RESULT: '/v2/forms/result',
+    CREATE_FORM: '/v2/form/create',
+    UPDATE_FORM: '/v2/form/update',
+
     EMAIL_NOTIFICATION: '/v2/forms/email',
 
     LOAN: '/loan/getAllRecord',

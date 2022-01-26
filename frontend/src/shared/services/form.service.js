@@ -25,6 +25,12 @@ const getFormStatus = (id, token = authHeader()) =>
     .then((resp) => Promise.resolve(resp.data))
     .catch((err) => Promise.reject(extractErrorMessage(err))); // http://127.0.0.1/v2/form/status/6
 
+const getFormResult = (id, token = authHeader()) =>
+  fetch
+    .get(`${apis.V2.FORM_RESULT}/${id}`, { headers: token })
+    .then((resp) => Promise.resolve(resp.data))
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
+
 const getAnswerForm = (id, token = authHeader()) =>
   fetch
     .get(`${apis.V2.ANSWER_FORMS}/${id}`, { headers: token })
@@ -62,6 +68,7 @@ export default {
   getFormById,
   getTodoForms,
   getAnswerForm,
+  getFormResult,
   sendFormAnswer,
 
   createForm,
