@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"mime/multipart"
@@ -205,26 +206,26 @@ func extractFormNecessaryInfoForAssignee(form Form, role utils.RoleType) Form {
 	return filteredForm
 }
 
-func setFormStatusToStart(formID int, user models.User) (models.FormStatus, bool) {
+func setFormStatusToStart(formID int, user models.User) (models.FormStatus, error) {
 	now := time.Now()
 
 	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
 	dbFormStatus.Status = int(utils.FormStatusInProgress)
 	dbFormStatus.StartAt = &now
 
-	ok := databases.UpdateFormStatus(dbFormStatus)
-	return dbFormStatus, ok
+	err := databases.UpdateFormStatus(dbFormStatus)
+	return dbFormStatus, err
 }
 
-func setFormStatusToFinish(formID int, user models.User) (models.FormStatus, bool) {
+func setFormStatusToFinish(formID int, user models.User) (models.FormStatus, error) {
 	now := time.Now()
 
 	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
 	dbFormStatus.Status = int(utils.FormStatusFinish)
 	dbFormStatus.FinishAt = &now
 
-	ok := databases.UpdateFormStatus(dbFormStatus)
-	return dbFormStatus, ok
+	err := databases.UpdateFormStatus(dbFormStatus)
+	return dbFormStatus, err
 }
 
 func getFormStatusByFormIDAndWriterEmail(formID int, email string) FormStatus {
@@ -317,11 +318,57 @@ func markFormPreprocessing(c *gin.Context) (Answer, error) {
 	return answer, nil
 }
 
+func getFormAnswerByFormID(formID int) []Answer {
+	dbFormAnswer := databases.GetFormAnswerByFormID(formID, true)
+
+	formAnswer := make([]Answer, len(dbFormAnswer))
+	for idx, f := range dbFormAnswer {
+		formAnswer[idx] = transformFormAnswerToWebFormat(f)
+	}
+	return formAnswer
+}
+
 func storeAnswerToDB(formID int, user models.User, answer Answer) (models.FormAnswer, error) {
 	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
-	dbFormAnswer := transformAnswrToDBFormat(answer, formID, user.ID, dbFormStatus.ID)
+	dbFormAnswer := transformFormAnswerToDBFormat(answer, formID, user.ID, dbFormStatus.ID)
 	dbFormAnswer, err := databases.InsertFormAnswer(dbFormAnswer)
 	return dbFormAnswer, err
+}
+
+func composeFormResult(formID int) FormResult {
+	form := getFormByID(formID)
+	dbFormAnswer := databases.GetFormAnswerByFormID(formID, true)
+
+	formResultItems := make([]FormResultItem, len(dbFormAnswer))
+	for idx, f := range dbFormAnswer {
+		var answers []int
+		_ = json.Unmarshal([]byte(f.Answers), &answers)
+		user := databases.GetUser(f.UserID)
+
+		formResultItems[idx].Name = user.GetName()
+		formResultItems[idx].Email = user.Email
+		formResultItems[idx].Role = utils.RoleType(user.Role).String()
+		formResultItems[idx].AnswerTime = f.CreatedAt
+		formResultItems[idx].Score = getFormScore(form, utils.RoleType(user.Role), Answer{Answers: answers})
+		formResultItems[idx].Answers = answers
+	}
+
+	maxQuestionsCount := 0
+	if len(form.Questions.Student) > maxQuestionsCount {
+		maxQuestionsCount = len(form.Questions.Student)
+	} else if len(form.Questions.Parent) > maxQuestionsCount {
+		maxQuestionsCount = len(form.Questions.Parent)
+	} else if len(form.Questions.Teacher) > maxQuestionsCount {
+		maxQuestionsCount = len(form.Questions.Teacher)
+	}
+
+	formResult := FormResult{
+		FormCustID:        form.FormCustID,
+		MaxQuestionsCount: form.OptionsCount,
+		FormLastUpdatedAt: form.UpdatedAt,
+		Results:           formResultItems,
+	}
+	return formResult
 }
 
 func removeDuplicateEmail(emailNotification EmailNotification) EmailNotification {
@@ -392,10 +439,7 @@ func remindWritingFormByEmail(formId int, senderEmail string, emailNotification 
 	return nil
 }
 
-func getFormScore(form Form, formStatus models.FormStatus, answer Answer) int {
-	role := utils.RoleType(formStatus.Role)
-	// role := user.Role // Do not trust user (this attribute is determined when users registered and may be removed in future)
-
+func getFormScore(form Form, role utils.RoleType, answer Answer) int {
 	var questions []Question
 	if role.IsStudent() {
 		questions = form.Questions.Student

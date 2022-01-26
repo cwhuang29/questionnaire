@@ -45,10 +45,10 @@ func InsertFormStatus(formStatus []models.FormStatus) ([]models.FormStatus, erro
 	return formStatus, nil
 }
 
-func UpdateFormStatus(formStatus models.FormStatus) bool {
+func UpdateFormStatus(formStatus models.FormStatus) error {
 	if err := db.Save(formStatus).Error; err != nil {
 		log.ErrorMsg(err.Error())
-		return false
+		return err
 	}
-	return true
+	return nil
 }

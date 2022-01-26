@@ -77,8 +77,13 @@ func transformFormStatusToWebFormat(formStatus models.FormStatus, form models.Fo
 	return
 }
 
-func transformAnswrToDBFormat(answer Answer, formID, userID, formStatusID int) (a models.FormAnswer) {
-	answerBytes, _ := json.Marshal(answer)
+func transformFormAnswerToWebFormat(answer models.FormAnswer) (a Answer) {
+	_ = json.Unmarshal([]byte(answer.Answers), &a.Answers)
+	return
+}
+
+func transformFormAnswerToDBFormat(answer Answer, formID, userID, formStatusID int) (a models.FormAnswer) {
+	answerBytes, _ := json.Marshal(answer.Answers)
 
 	a.FormID = formID
 	a.UserID = userID

@@ -86,6 +86,22 @@ type FormStatus struct {
 	EmailLastSentTime time.Time `json:"emailLastSentTime"`
 }
 
+type FormResult struct {
+	FormCustID        string           `json:"formCustId"`
+	MaxQuestionsCount int              `json:"maxQuestionsCount"`
+	FormLastUpdatedAt time.Time        `json:"formLastUpdatedAt"`
+	Results           []FormResultItem `json:"results"`
+}
+
+type FormResultItem struct {
+	Name       string    `json:"name"`
+	Email      string    `json:"email"`
+	Role       string    `json:"role"`
+	AnswerTime time.Time `json:"answerTime"`
+	Score      int       `json:"score"`
+	Answers    []int     `json:"answers"`
+}
+
 type Article struct {
 	ID         int      `json:"id"`
 	Title      string   `json:"title"`

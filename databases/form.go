@@ -34,15 +34,6 @@ func GetSameResearchForm(category string, offset, limit int, isAdmin bool) (arti
 	return
 }
 
-func InsertFormAnswer(formAnswer models.FormAnswer) (models.FormAnswer, error) {
-	if err := db.Create(&formAnswer).Error; err != nil {
-		log.ErrorMsg(err.Error())
-		return models.FormAnswer{}, err
-	}
-
-	return formAnswer, nil
-}
-
 func InsertForm(form models.Form) (models.Form, error) {
 	if err := db.Create(&form).Error; err != nil {
 		log.ErrorMsg(err.Error())

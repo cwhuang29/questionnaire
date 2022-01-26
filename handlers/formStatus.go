@@ -34,13 +34,19 @@ func DeleteFormStatus(c *gin.Context) {
 	}
 
 	// bodyStr, _ := ioutil.ReadAll(c.Request.Body) // string(x): {"payload":{"email":"hcw1719@gmail.com"}}
-	var json = struct{ Payload struct{ Email string } }{} // Uppercase is required
+	var json = struct{ Payload struct{ Email string } }{}
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.TryAgain})
 		return
 	}
 
 	email := json.Payload.Email
+	user := databases.GetUserByEmail(email)
+	if user.ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.UserNotFound})
+		return
+	}
+
 	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(id, email, true)
 	if dbFormStatus.ID == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
@@ -48,6 +54,11 @@ func DeleteFormStatus(c *gin.Context) {
 	}
 
 	if err := databases.DeleteFormStatus(dbFormStatus); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
+		return
+	}
+
+	if err := databases.DeleteFormAnswerByFormIDAndUserID(id, user.ID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
 		return
 	}

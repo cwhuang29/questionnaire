@@ -292,9 +292,9 @@ func GetAnswerForm(c *gin.Context) {
 		return
 	}
 
-	_, ok := setFormStatusToStart(id, user)
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
+	_, err = setFormStatusToStart(id, user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
 		return
 	}
 
@@ -308,14 +308,11 @@ func MarkAnswerForm(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(id)
 	answer, err := markFormPreprocessing(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.TryAgain})
 		return
 	}
-
-	fmt.Println(answer)
 
 	email := c.MustGet("email").(string)
 	user := databases.GetUserByEmail(email)
@@ -324,14 +321,14 @@ func MarkAnswerForm(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.TryAgain})
 	}
 
-	dbFormStatus, ok := setFormStatusToFinish(id, user)
-	if !ok {
+	dbFormStatus, err := setFormStatusToFinish(id, user)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
 		return
 	}
 
 	form := getFormByID(id)
-	score := getFormScore(form, dbFormStatus, answer)
+	score := getFormScore(form, utils.RoleType(dbFormStatus.Role), answer)
 	c.JSON(http.StatusOK, gin.H{"data": score})
 }
 
