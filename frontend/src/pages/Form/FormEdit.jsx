@@ -111,9 +111,9 @@ const FormEdit = (props) => {
       return hasError ? { questionError: '' } : {};
     },
     onSubmit: async (values) => {
-      // if (!loading) {
-      //   return;
-      // }
+      if (!loading) {
+        return;
+      }
 
       addGlobalMessage({
         title: msg.REQUEST_IS_HANDLING,
@@ -177,7 +177,6 @@ const FormEdit = (props) => {
 
   return (
     <PageWrapper>
-      {/* <Box component='form' onSubmit={formik.handleSubmit}> */}
       <Box component='form' onSubmit={formik.handleSubmit}>
         <FormModal open={openModal} onClose={modalOnClose} formData={modalData} submitButtonText='確認送出' onSubmit={submitForm} />
         <Typography variant='h3' component='div' sx={{ fontWeight: '600', marginBottom: '25px' }}>
