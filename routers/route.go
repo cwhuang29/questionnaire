@@ -25,7 +25,7 @@ func loadAssets() {
 func injectRoutesV2() {
 	v2 := router.Group("/v2")
 
-	v2.Use(AllowCORS())
+	v2.Use(CORSRequired())
 	{
 		v2.OPTIONS("/login", handlers.HandlePreflight)
 		v2.OPTIONS("/register", handlers.HandlePreflight)
@@ -89,7 +89,7 @@ func injectRoutesV1() {
 		admin.GET("/create/article", handlers.CreateArticleView)
 		admin.GET("/update/article", handlers.UpdateArticleView)
 
-		admin.Use(CSRFProtection())
+		admin.Use(CSRFRequired())
 		{
 			admin.POST("/create/article", handlers.CreateArticle)
 			admin.PUT("/update/article", handlers.UpdateArticle)
@@ -120,7 +120,7 @@ func injectRoutesV1() {
 		password.GET("/reset", handlers.PasswordResetRequest)
 		password.GET("/reset/:token", handlers.PasswordResetForm)
 		password.POST("/email", handlers.PasswordResetEmail)
-		password.Use(CSRFProtection())
+		password.Use(CSRFRequired())
 		{
 			password.PUT("/reset", handlers.PasswordUpdate)
 		}

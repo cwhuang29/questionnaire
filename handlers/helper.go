@@ -344,12 +344,13 @@ func composeFormResult(formID int) FormResult {
 		var answers []int
 		_ = json.Unmarshal([]byte(f.Answers), &answers)
 		user := databases.GetUser(f.UserID)
+		formStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
 
 		formResultItems[idx].Name = user.GetName()
 		formResultItems[idx].Email = user.Email
-		formResultItems[idx].Role = utils.RoleType(user.Role).String()
+		formResultItems[idx].Role = utils.RoleType(formStatus.Role).String()
 		formResultItems[idx].AnswerTime = f.CreatedAt
-		formResultItems[idx].Score = getFormScore(form, utils.RoleType(user.Role), Answer{Answers: answers})
+		formResultItems[idx].Score = getFormScore(form, utils.RoleType(formStatus.Role), Answer{Answers: answers})
 		formResultItems[idx].Answers = answers
 	}
 
@@ -440,7 +441,7 @@ func remindWritingFormByEmail(formId int, senderEmail string, emailNotification 
 }
 
 func getFormScore(form Form, role utils.RoleType, answer Answer) int {
-	var questions []Question
+	questions := make([]Question, 0)
 	if role.IsStudent() {
 		questions = form.Questions.Student
 	} else if role.IsParent() {

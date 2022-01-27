@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/cwhuang29/questionnaire/config"
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/handlers"
 	"github.com/cwhuang29/questionnaire/logger"
@@ -15,13 +16,24 @@ var (
 	log = logger.New("Middleware")
 )
 
-func AllowCORS() gin.HandlerFunc {
+func shouldAllowCORS(appUrl, origin string) bool {
+	if origin != "" && origin == appUrl {
+		return true
+	}
+	return false
+}
+
+func CORSRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:3000") // No slash in the end
-		c.Header("Access-Control-Allow-Credentials", "true")             // To set cookies, frontend send requests with withCredentials = true // No slash in the en
-		c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-		c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token,X-Questionnaire-Header")
-		c.Header("Access-Control-Max-Age", "600")
+		appUrl := config.GetCopy().App.Url
+		if shouldAllowCORS(appUrl, c.Request.Header.Get("Origin")) {
+			c.Header("Access-Control-Allow-Origin", appUrl)      // No slash in the end
+			c.Header("Access-Control-Allow-Credentials", "true") // To set cookies, frontend send requests with withCredentials = true // No slash in the en
+			c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+			c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token,X-Questionnaire-Header")
+			c.Header("Access-Control-Max-Age", "600")
+		}
+
 		// After calling c.JSON(), headers are all set
 		c.Next()
 	}
@@ -87,7 +99,7 @@ func AdminRequired() gin.HandlerFunc {
 	}
 }
 
-func CSRFProtection() gin.HandlerFunc {
+func CSRFRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		csrfHeaders := c.Request.Header["X-Csrf-Token"]
 		csrfToken, _ := c.Cookie(constants.CookieCSRFToken)
