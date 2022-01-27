@@ -2,5 +2,8 @@
 public/upload/*/*
 certs/*
 .DS_Store
-demo/*
+demo
 tmp.db
+frontend
+*/.git/
+.gitignore

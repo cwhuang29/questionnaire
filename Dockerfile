@@ -20,7 +20,6 @@ ENTRYPOINT ["/app/web"]
 FROM golang:1.15.6
 
 COPY --from=builder /app/web /app/web
-COPY --from=builder /app/public /app/public
 COPY --from=builder /app/config.yml /app/config.yml
 
 WORKDIR /app
