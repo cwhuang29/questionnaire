@@ -1,7 +1,8 @@
-.dockerignore
-.gitignore
-.DS_Store
-npm-debug.log
-yarn-error.log
 build
 node_modules
+.gitignore
+.dockerignore
+yarn-error.log
+yarn.lock
+npm-debug.log
+.DS_Store

@@ -1,6 +1,0 @@
-*/node_modules/
-*/build/
-*/.git/
-.gitignore
-yarn-error.log
-yarn.lock
