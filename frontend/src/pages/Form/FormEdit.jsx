@@ -282,8 +282,9 @@ const FormEdit = (props) => {
         {roles.map((role) => (
           <React.Fragment key={role.id}>
             <RoleDivider {...role} />
-            <Box style={{ display: 'flex', justifyContent: 'space-between', margin: '20px 0' }}>
+            <Stack spacing={3} sx={{ mb: '20px' }}>
               <TextField
+                fullWidth
                 name={`formTitle.${role.label}`}
                 label={`給${role.display}看的量表名稱（沒有問題時此欄位會被忽略）`}
                 value={formik.values[`formTitle[${role.label}]`]}
@@ -291,9 +292,11 @@ const FormEdit = (props) => {
                 onChange={formik.handleChange}
                 error={formik.touched[`formTitle[${role.label}]`] && Boolean(formik.errors[`formTitle[${role.label}]`])}
                 helperText={formik.touched[`formTitle[${role.label}]`] && formik.errors[`formTitle[${role.label}]`]}
-                sx={{ width: '48%' }}
               />
               <TextField
+                fullWidth
+                multiline
+                rows={4}
                 name={`formIntro.${role.label}`}
                 label={`給${role.display}看的量表說明（沒有問題時此欄位會被忽略）`}
                 value={formik.values[`formIntro[${role.label}]`]}
@@ -301,9 +304,8 @@ const FormEdit = (props) => {
                 onChange={formik.handleChange}
                 error={formik.touched[`formIntro[${role.label}]`] && Boolean(formik.errors[`formIntro[${role.label}]`])}
                 helperText={formik.touched[`formIntro[${role.label}]`] && formik.errors[`formIntro[${role.label}]`]}
-                sx={{ width: '48%' }}
               />
-            </Box>
+            </Stack>
 
             {questionState[role.label].map((question) => (
               <Question key={question.id} role={role.label} value={question} handleChange={handleChildChange({ role: role.label })} />

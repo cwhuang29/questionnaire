@@ -127,15 +127,11 @@ const FormOverViewView = (props) => {
 
   useEffect(() => {
     setIsFetchingFormResultData(true);
-    console.log('Start !!!!!!!!!!!!');
     formService
       .getFormResult(formId)
       .then((resp) => {
         const transformedData = transformFormResultData(resp.data);
-        console.log(resp.data);
         const transformedColumns = transformFormResultColumns(formResultBaseColumns, resp.data);
-        console.log(transformedData);
-        console.log(transformedColumns);
         setFormResultData(transformedData);
         setFormResultColumns(transformedColumns);
       })

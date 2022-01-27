@@ -59,15 +59,17 @@ const StyledDataGrid = withStyles({
 })(MuiDataGrid);
 
 const DataGrid = (props) => {
-  const { rows, columns, isLoading, onCellDoubleClick, height, getRowId } = props;
+  // eslint-disable-next-line no-unused-vars
+  const { rows, columns, isLoading, onCellDoubleClick, autoHeight, height, getRowId } = props;
 
+  // <div style={{ height: `${height}px`, width: '100%' }}>
   return (
-    <div style={{ height: `${height}px`, width: '100%' }}>
+    <div style={{ width: '100%' }}>
       <StyledDataGrid
+        autoHeight={autoHeight}
         rows={rows}
         columns={columns}
         loading={isLoading}
-        // autoHeight
         hideFooterSelectedRowCount
         disableDensitySelector
         components={{
@@ -97,6 +99,7 @@ DataGrid.propTypes = {
   columns: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   onCellDoubleClick: PropTypes.func,
+  autoHeight: PropTypes.bool,
   getRowId: PropTypes.func,
   height: PropTypes.number,
 };
@@ -104,6 +107,7 @@ DataGrid.propTypes = {
 DataGrid.defaultProps = {
   rows: [],
   onCellDoubleClick: null,
+  autoHeight: true,
   getRowId: null,
   height: 600,
 };

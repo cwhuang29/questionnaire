@@ -24,6 +24,7 @@ const columns = [
     headerName: '所屬計畫',
     flex: 1,
     align: 'left',
+    valueFormatter: ({ value }) => value.join(', '),
     renderCell: (params) => (
       <div>
         {params.value.map((p) => (
@@ -68,7 +69,7 @@ const FormListView = (props) => {
   };
 
   return (
-    Object.keys(error).length === 0 && <DataGrid isLoading={isLoading} columns={columns} rows={formData} onCellDoubleClick={onCellDoubleClick} height={820} />
+    Object.keys(error).length === 0 && <DataGrid isLoading={isLoading} columns={columns} rows={formData} onCellDoubleClick={onCellDoubleClick} height={800} />
   );
 };
 

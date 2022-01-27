@@ -45,7 +45,7 @@ const Home = () => {
       {/* eslint-disable-next-line no-nested-ternary */}
       {admin ? (
         <>
-          <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', marginTop: '0.8em' }}>
+          <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', marginTop: '0.2em' }}>
             量表清單
           </Typography>
           <Typography variant='h6' component='div' sx={{ fontWeight: 'bold', marginTop: '0.3em', marginBottom: '1em' }}>

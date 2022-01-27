@@ -7,6 +7,7 @@ const PageWrapper = ({ children }) => (
   <Box
     sx={{
       margin: '20px min(70px, 8%) 0 min(70px, 8%)',
+      padding: '0 5px',
       textAlign: 'center',
     }}
     style={{
