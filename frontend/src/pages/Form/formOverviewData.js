@@ -49,14 +49,12 @@ export const formResultBaseColumns = [
   {
     field: 'name',
     headerName: '填寫者姓名',
-    flex: 0.8,
-    // minWidth: 70,
+    flex: 0.7,
   },
   {
     field: 'email',
     headerName: '填寫者信箱',
     flex: 1,
-    // minWidth: 70,
   },
   {
     field: 'role',
@@ -67,7 +65,7 @@ export const formResultBaseColumns = [
   {
     field: 'answerTime',
     headerName: '回答時間',
-    flex: 1.2,
+    flex: 1,
     minWidth: 70,
     type: 'dateTime',
     valueFormatter: ({ value }) => getDisplayTime(new Date(value)),
@@ -75,7 +73,7 @@ export const formResultBaseColumns = [
   {
     field: 'score',
     headerName: '分數',
-    flex: 0.5,
+    flex: 0.4,
     // minWidth: 70,
   },
 ];

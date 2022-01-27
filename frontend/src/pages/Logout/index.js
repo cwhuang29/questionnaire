@@ -3,11 +3,16 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { logout } from '@actions/auth';
+import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 
 const Logout = () => {
   const dispatch = useDispatch();
+  const { clearAllGlobalMessages } = useGlobalMessageContext();
 
-  useEffect(() => dispatch(logout()), []);
+  useEffect(() => {
+    clearAllGlobalMessages();
+    dispatch(logout());
+  }, []);
 
   return (
     <div>
@@ -18,4 +23,5 @@ const Logout = () => {
     </div>
   );
 };
+
 export default Logout;

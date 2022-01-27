@@ -36,6 +36,7 @@
     "redux": "4.1.2",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.0",
+    "serve": "^13.0.2",
     "standard": "^16.0.4",
     "styled-components": "^5.3.3",
     "web-vitals": "^1.0.1",
@@ -47,27 +48,20 @@
     "test": "craco test",
     "eject": "craco eject",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc --ignore-unknown",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "serve": "serve -s build"
   },
   "resolutions": {
     "//": "Consider upgrade react-scripts to V5.0.0. See https://stackoverflow.com/questions/70368760/react-uncaught-referenceerror-process-is-not-defined & https://github.com/facebook/create-react-app/issues/11773",
     "react-error-overlay": "6.0.9"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "airbnb",
-      "plugin:import/errors",
-      "plugin:import/warnings"
-    ],
+    "extends": ["react-app", "airbnb", "plugin:import/errors", "plugin:import/warnings"],
     "rules": {
       "react/jsx-filename-extension": [
         1,
         {
-          "extensions": [
-            ".js",
-            ".jsx"
-          ]
+          "extensions": [".js", ".jsx"]
         }
       ],
       "react/function-component-definition": [
@@ -80,25 +74,14 @@
     "settings": {
       "import/resolver": {
         "node": {
-          "moduleDirectory": [
-            "node_modules",
-            "src/"
-          ]
+          "moduleDirectory": ["node_modules", "src/"]
         }
       }
     }
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   },
   "devDependencies": {
     "eslint": "^7.11.0",
