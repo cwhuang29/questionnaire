@@ -2,13 +2,14 @@ FROM node:14.18.3
 MAINTAINER cwhuang
 
 WORKDIR /app
+
 COPY . .
 
+ARG SERVER_URL="http://127.0.0.1:9000"
+
+ENV REACT_APP_SERVER_URL=${SERVER_URL}
+
 RUN yarn install
-RUN yarn build
-
-EXPOSE 3000
-
-# ENV WEB_SERVER_URL= # Backend URL
+RUN REACT_APP_SERVER_URL=${SERVER_URL} yarn build
 
 ENTRYPOINT ["yarn", "serve"]
