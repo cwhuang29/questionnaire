@@ -9,8 +9,7 @@ import (
 )
 
 var (
-	router = gin.Default() // Creates a gin router with default middleware: logger and recovery (crash-free) middleware
-	// htmlFiles = []string{"public/views/about.html", "public/views/home.html"}
+// htmlFiles = []string{"public/views/about.html", "public/views/home.html"}
 )
 
 func loadAssets() {
@@ -22,7 +21,7 @@ func loadAssets() {
 	// router.LoadHTMLFiles(htmlFiles...)                                // router.LoadHTMLGlob("public/*")
 }
 
-func injectRoutesV2() {
+func injectRoutesV2(router *gin.Engine) {
 	v2 := router.Group("/v2")
 
 	v2.Use(CORSRequired())
@@ -78,7 +77,7 @@ func injectRoutesV2() {
 	}
 }
 
-func injectRoutesV1() {
+func injectRoutesV1(router *gin.Engine) {
 	v1 := router.Group("/v1")
 
 	admin := v1.Group("/admin") // /overview/... -> /admin/overview/...
@@ -132,30 +131,34 @@ func injectRoutesV1() {
 	v1.GET("/", func(c *gin.Context) { c.Redirect(http.StatusFound, "/articles/weekly-update") })
 }
 
-func serve() {
+func serve(router *gin.Engine) {
 	cfg := config.GetCopy()
 
-	http := cfg.App.HttpPort
-	https := cfg.App.HttpsPort
+	httpPort := cfg.App.HttpPort
+	httpsPort := cfg.App.HttpsPort
 
-	if http != "" && https != "" {
-		go router.Run(":" + http)
-		router.RunTLS(":"+https, "./certs/server.crt", "./certs/server.key")
-	} else if http != "" {
-		router.Run(":" + http)
-	} else if https != "" {
-		router.RunTLS(":"+https, "./certs/server.crt", "./certs/server.key")
+	if httpPort != "" && httpsPort != "" {
+		go router.Run(":" + httpPort)
+		router.RunTLS(":"+httpsPort, "./certs/server.crt", "./certs/server.key")
+	} else if httpPort != "" {
+		router.Run(":" + httpPort)
+	} else if httpsPort != "" {
+		router.RunTLS(":"+httpsPort, "./certs/server.crt", "./certs/server.key")
 	} else {
 		panic("Either app.httpPort or app.HttpsPort should be set")
 	}
 }
 
 func Router() {
-	// gin.SetMode(gin.ReleaseMode)
+	if config.GetCopy().App.Mode == "prod" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	router := gin.Default()              // Creates a gin router with default middleware: logger and recovery (crash-free) middleware
 	router.MaxMultipartMemory = 16 << 20 // Set a lower memory limit for multipart forms (default is 32 MiB)
 
 	loadAssets()
-	injectRoutesV1()
-	injectRoutesV2()
-	serve()
+	injectRoutesV1(router)
+	injectRoutesV2(router)
+	serve(router)
 }

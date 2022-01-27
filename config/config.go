@@ -102,6 +102,7 @@ func (c *config) setOverwriteValue() {
 		{"WEB_APP_URL", "app.url", &cfg.App.Url},
 		{"WEB_APP_HTTP_PORT", "app.httpPort", &cfg.App.HttpPort},
 		{"WEB_APP_HTTPS_PORT", "app.httpsPort", &cfg.App.HttpsPort},
+		{"WEB_APP_MODE", "app.mode", &cfg.App.Mode},
 		{"WEB_EMAIL_SENDER", "app.email.sender", &cfg.Email.Sender},
 		{"WEB_EMAIL_REGION", "app.email.region", &cfg.Email.Region},
 		{"WEB_EMAIL_NUM_PER_DAY", "app.email.numPerDay", &cfg.Email.NumPerDay},

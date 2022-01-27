@@ -1,9 +1,9 @@
 app:
   name: questionnaire
-  url: http://127.0.0.1:3000 # Links inside reset password emails are generated based on this value
-  httpPort: 80
-  # httpsPort: 443
-  debug: true
+  url: http://127.0.0.1:3000 # This is the application (frontend) URL, not backend itself. Can be overrided by env
+  httpPort: 9000 # This is the port backend server should listen to
+  # httpsPort: 443 # This is the port backend server should listen to
+  mode: dev
   log: log
 
 database:

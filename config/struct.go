@@ -33,7 +33,7 @@ type App struct {
 	Url       string `yaml:"url,omitempty"`
 	HttpPort  string `yaml:"httpPort,omitempty"`
 	HttpsPort string `yaml:"httpsPort,omitempty"`
-	Debug     string `yaml:"debug,omitempty"`
+	Mode      string `yaml:"mode,omitempty"`
 	Log       string `yaml:"log,omitempty"`
 }
 
