@@ -6,11 +6,9 @@ import { Box } from '@mui/material';
 const PageWrapper = ({ children }) => (
   <Box
     sx={{
-      margin: '20px min(70px, 8%) 0 min(70px, 8%)',
-      padding: '0 5px',
+      margin: '20px auto 0 auto',
+      padding: '0 48px',
       textAlign: 'center',
-    }}
-    style={{
       overflowX: 'hidden',
       maxWidth: '1800px',
     }}
