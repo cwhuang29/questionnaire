@@ -94,7 +94,7 @@ const EmailNotificationModal = (props) => {
           }}
         >
           <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
-            選擇收信者
+            選擇收信者（註：括號中的身份是先前指派量表給該使用者時選擇的身份）
           </ListSubheader>
 
           <Stack spacing={2}>
