@@ -42,10 +42,11 @@ func DeleteFormStatus(c *gin.Context) {
 
 	email := json.Payload.Email
 	user := databases.GetUserByEmail(email)
-	if user.ID == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.UserNotFound})
-		return
-	}
+	// When a user be assigned a form, he/she may not had registered yet
+	// if user.ID == 0 {
+	//     c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.UserNotFound})
+	//     return
+	// }
 
 	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(id, email, true)
 	if dbFormStatus.ID == 0 {
@@ -58,9 +59,11 @@ func DeleteFormStatus(c *gin.Context) {
 		return
 	}
 
-	if err := databases.DeleteFormAnswerByFormIDAndUserID(id, user.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
-		return
+	if user.ID != 0 {
+		if err := databases.DeleteFormAnswerByFormIDAndUserID(id, user.ID); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
+			return
+		}
 	}
 
 	title := constants.FormStatusDeleteSucceed
