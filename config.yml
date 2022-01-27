@@ -1,6 +1,6 @@
 app:
   name: questionnaire
-  url: http://127.0.0.1:3000 # This is the application (frontend) URL, not backend itself. Can be overrided by env
+  url: http://127.0.0.1 # This is the application (frontend) URL, not backend itself. Can be overwrote by env
   httpPort: 9000 # This is the port backend server should listen to
   # httpsPort: 443 # This is the port backend server should listen to
   mode: dev
