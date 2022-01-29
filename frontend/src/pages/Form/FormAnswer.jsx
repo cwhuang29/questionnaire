@@ -119,13 +119,13 @@ const FormAnswer = (props) => {
                     <FormControlLabel
                       key={`${option}`}
                       // value={getOptionScore(idx, question.isReverseGrading, question.maxScore)}
-                      value={idx} // Calculate scores in the server
+                      value={idx} // Just record the index of the options
                       control={<Radio />}
                       label={option}
                       style={optionStyle}
                     />
                   ))}
-                  {/* Formik sets touched flags on blur event instead of on change. In the beginning, formik.touched equals to {} */}
+                  {/* Formik sets touched flags on blur event instead of on change. In the very beginning, formik.touched equals to {} */}
                   {formik.touched.answers && formik.errors.answers && (
                     <FormHelperText error={Boolean(formik.touched.answers[question.id] && formik.errors.answers[question.id])} style={{ marginLeft: 0 }}>
                       {formik.errors.answers[question.id]}

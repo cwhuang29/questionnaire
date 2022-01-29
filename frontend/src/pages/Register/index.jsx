@@ -155,7 +155,4 @@ const Register = () => {
   );
 };
 
-// TODO
-// {formik.touched.password && Boolean(formik.errors.password) && <ErrorMessage formik={formik} name="password" componen="div" className="text-red-500 text-xs" />}
-
 export default Register;
