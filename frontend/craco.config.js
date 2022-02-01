@@ -1,7 +1,5 @@
 const path = require(`path`);
 
-process.env.BROWSER = 'none';
-
 const alias = (prefix = `src`) => ({
   '@': `${prefix}/`,
   '@pages': `${prefix}/pages`,
