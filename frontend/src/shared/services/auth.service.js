@@ -2,13 +2,13 @@ import API from '@constants/apis';
 import fetch from '@services/roots';
 import userService from '@services/user.service';
 
-const register = ({ firstName, lastName, email, password, role }) =>
+const register = ({ firstName, lastName, email, password /* , role */ }) =>
   fetch.post(API.V2.REGISTER, {
     first_name: firstName,
     last_name: lastName,
     email,
     password,
-    role,
+    role: 'student',
   });
 
 const login = ({ email, password }) =>

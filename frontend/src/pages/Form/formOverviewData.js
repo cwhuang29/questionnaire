@@ -1,6 +1,6 @@
 import { getDisplayTime } from '@shared/utils/time';
 
-export const getFormStatusRowId = (row) => `${row.writerEmail}`; // Note: the id in the data if formId, not index of elements in the array
+export const getFormStatusRowId = (row) => `${row.writerEmail}`; // Note: the id in the data is formId, not index of elements in the array
 
 export const getFormResultRowId = (row) => `${row.email}`;
 
@@ -78,6 +78,8 @@ export const formResultBaseColumns = [
   },
 ];
 
+const getQuestionKeysName = (custId, quesNo) => `${custId}${quesNo}`;
+
 /*
  * Input: { name: 'aaa', email: 'bb@123.com', custId: 'key,' answers:[3,3,5] }
  * Output: { name: 'aaa', email: 'bb@123.com', custId: 'key', answers:[3,3,2], 'key-0': 3, 'key-1: 3', 'key-2: 5' }
@@ -85,7 +87,7 @@ export const formResultBaseColumns = [
 export const transformFormResultData = (data) => {
   const { formCustId: custId } = data;
   const rows = data.results.reduce(
-    (acc, cur) => [...acc, { ...cur, ...cur.answers.reduce((a, c, idx) => ({ ...a, [`${custId}-${idx + 1}`]: c + 1 }), {}) }],
+    (acc, cur) => [...acc, { ...cur, ...cur.answers.reduce((a, c, idx) => ({ ...a, [getQuestionKeysName(custId, idx + 1)]: c + 1 }), {}) }],
     []
   );
   return rows;
@@ -94,8 +96,8 @@ export const transformFormResultData = (data) => {
 export const transformFormResultColumns = (baseCols, data) => {
   const { formCustId: custId, maxQuestionsCount } = data;
   const questionKeys = Array.from(Array(maxQuestionsCount).keys(), (k) => ({
-    field: `${custId}-${k + 1}`,
-    headerName: `${custId}-${k + 1}`,
+    field: getQuestionKeysName(custId, k + 1),
+    headerName: getQuestionKeysName(custId, k + 1),
     flex: 1,
   }));
   return [...baseCols, ...questionKeys];

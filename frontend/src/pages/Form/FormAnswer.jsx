@@ -12,14 +12,15 @@ import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import formService from '@shared/services/form.service';
 
-import { Alert, Box, FormControl, FormControlLabel, FormHelperText, Radio, RadioGroup, Typography } from '@mui/material';
+import { Alert, Box, FormControl, FormControlLabel, FormHelperText, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 
-import { roles } from './createFormData';
+import { roleProfiles } from './createFormData';
 
 const PIXELS_PER_WORD = 14;
 
 const validationSchema = Yup.object({
-  answers: Yup.array().of(Yup.number('Should be number type').required(validateMsg.REQUIRED)).strict().required(),
+  // answers: Yup.array().of(Yup.number('Should be number type').required(validateMsg.REQUIRED)).strict().required(),
+  answers: Yup.array().of(Yup.string().required(validateMsg.REQUIRED)).strict().required(),
 });
 
 const FormAnswer = (props) => {
@@ -33,7 +34,7 @@ const FormAnswer = (props) => {
 
   const { minScore, optionsCount, formTitle: title, formIntro: intro, questions = [] } = formData;
   let role = null;
-  roles.forEach((r) => {
+  roleProfiles.forEach((r) => {
     role = title[r.label] !== '' ? r.label : role;
   });
 
@@ -83,7 +84,7 @@ const FormAnswer = (props) => {
     <PageWrapper>
       {!questions[role] ? (
         <Alert severity='error' style={{ fontWeight: 600 }}>
-          此份量表沒有任何問題，若有疑問請洽管理員。
+          此份量表沒有提供任何問題，若有疑問請洽管理員。
         </Alert>
       ) : (
         <Box
@@ -105,34 +106,49 @@ const FormAnswer = (props) => {
                 {question.label}
               </Typography>
 
-              <FormControl fullWidth>
-                {/* <FormLabel>This is label</FormLabel> */}
-                <RadioGroup
-                  row
-                  aria-labelledby={`question-${question.id}`}
-                  onChange={(evt, val) => {
-                    formik.setFieldValue(`answers[${question.id}]`, parseInt(val, 10));
-                  }}
-                  style={{ justifyContent: 'space-between' }}
-                >
-                  {question.options.map((option, idx) => (
-                    <FormControlLabel
-                      key={`${option}`}
-                      // value={getOptionScore(idx, question.isReverseGrading, question.maxScore)}
-                      value={idx} // Just record the index of the options
-                      control={<Radio />}
-                      label={option}
-                      style={optionStyle}
-                    />
-                  ))}
-                  {/* Formik sets touched flags on blur event instead of on change. In the very beginning, formik.touched equals to {} */}
-                  {formik.touched.answers && formik.errors.answers && (
-                    <FormHelperText error={Boolean(formik.touched.answers[question.id] && formik.errors.answers[question.id])} style={{ marginLeft: 0 }}>
-                      {formik.errors.answers[question.id]}
-                    </FormHelperText>
-                  )}
-                </RadioGroup>
-              </FormControl>
+              {!question.isMultipleChoice && (
+                <TextField
+                  fullWidth
+                  nam={`question-${question.id}`}
+                  label={`question-${question.id}`}
+                  value={formik.values.answers[id]}
+                  onChange={formik.handleChange}
+                  error={Boolean(formik.touched?.answers[question.id] && formik.errors?.answers[question.id])}
+                  helperText={formik.errors.answers[question.id]}
+                />
+              )}
+
+              {question.isMultipleChoice && (
+                <FormControl fullWidth>
+                  {/* <FormLabel>This is label</FormLabel> */}
+                  <RadioGroup
+                    row
+                    aria-labelledby={`question-${question.id}`}
+                    onChange={(evt, val) => {
+                      formik.setFieldValue(`answers[${question.id}]`, val);
+                    }}
+                    style={{ justifyContent: 'space-between' }}
+                  >
+                    {question.options.map((option, idx) => (
+                      <FormControlLabel
+                        key={`${option}`}
+                        value={idx} // Just record the index of the options and calculate scores in backend
+                        control={<Radio />}
+                        label={option}
+                        style={optionStyle}
+                      />
+                    ))}
+                    {/* Formik sets touched flags on blur event instead of on change. In the very beginning, formik.touched equals to {} */}
+                    {
+                      /* formik.touched.answers && formik.errors.answers */ true && (
+                        <FormHelperText error={Boolean(formik.touched?.answers[question.id] && formik.errors?.answers[question.id])} style={{ marginLeft: 0 }}>
+                          {formik.errors.answers[question.id]}
+                        </FormHelperText>
+                      )
+                    }
+                  </RadioGroup>
+                </FormControl>
+              )}
             </React.Fragment>
           ))}
 

@@ -95,11 +95,13 @@ const FormOverViewView = (props) => {
   const formOnSubmit = () => {
     navigate(`/update/form/${formId}`, { state: formData }); // The key should be 'state'
   };
+
   const AssignmentOnSubmit = async (assignmentData) => {
     const resp = await formService.createFormStatus(formId, assignmentData);
     setIsFetchingFormAssignStatusData(true); // Note: the form status and notification history won't update until emails are sent out
     return resp;
   };
+
   const notificationOnSubmit = async (notificationData) => {
     const resp = await notificationService.sendEmailNotificaionByFormId(formId, notificationData);
     setIsFetchingFormAssignStatusData(true);

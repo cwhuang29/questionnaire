@@ -19,11 +19,19 @@ import { Autocomplete, Box, Button, createFilterOptions, MenuItem, Stack, TextFi
 // eslint-disable-next-line no-unused-vars
 import styles from './index.module.css';
 
-import { createFormActionType, formEmptyValues, getDefaultQuestionState, optionsCountList, questionsEmptyState, roles } from './createFormData';
+import { createFormActionType, formEmptyValues, getDefaultQuestionState, optionsCountList, questionsEmptyState, roleProfiles, roles } from './createFormData';
 
 const filter = createFilterOptions();
 
 const researchList = []; // TODO
+
+const getNewQuestionState = (roleQuestionState) => {
+  const numOfQuestions = roleQuestionState.length;
+  const defaultQuestion = getDefaultQuestionState({ id: numOfQuestions });
+  const prevQuestionOptions = numOfQuestions === 0 ? [] : roleQuestionState[numOfQuestions - 1].options;
+
+  return { ...defaultQuestion, options: prevQuestionOptions };
+};
 
 const questionsReducer = (state, action) => {
   const { type, payload } = action;
@@ -32,7 +40,7 @@ const questionsReducer = (state, action) => {
     case createFormActionType.ADD_QUESTION:
       return {
         ...state,
-        [payload.role]: [...state[payload.role], getDefaultQuestionState(state[payload.role].length)],
+        [payload.role]: [...state[payload.role], getNewQuestionState(state[payload.role])],
       };
     case createFormActionType.SET_QUESTION:
       return {
@@ -55,7 +63,7 @@ const formikValidationSchema = Yup.object({
   formCustId: Yup.string().required(validateMsg.REQUIRED),
   minScore: Yup.number(validateMsg.IS_NUMBER).min(0).required(validateMsg.REQUIRED),
   optionsCount: Yup.number().min(1).max(10).required(validateMsg.REQUIRED),
-  formTitle: Yup.object().shape({ student: '', parent: '', teacher: '' }),
+  formTitle: Yup.object().shape(Object.fromEntries(roles.map((role) => [role, '']))),
   formIntro: Yup.object(),
   // date: Yup.date().default(() => new Date()).max(new Date(), "Are you a time traveler?!"),
   // wouldRecommend: Yup.boolean().default(false),
@@ -86,7 +94,7 @@ const FormEdit = (props) => {
         clearAllGlobalMessages();
       }
 
-      roles.forEach((role) =>
+      roleProfiles.forEach((role) =>
         questionState[role.label].forEach((question) => {
           if (question.label === '') {
             hasError = true;
@@ -279,7 +287,7 @@ const FormEdit = (props) => {
         </Stack>
         <br />
 
-        {roles.map((role) => (
+        {roleProfiles.map((role) => (
           <React.Fragment key={role.id}>
             <RoleDivider {...role} />
             <Stack spacing={3} sx={{ mb: '20px' }}>

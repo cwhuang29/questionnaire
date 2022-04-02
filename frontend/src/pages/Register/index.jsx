@@ -6,10 +6,11 @@ import * as Yup from 'yup';
 
 import { register } from '@actions/auth';
 import { validateMsg } from '@constants/messages';
-import ROLES from '@constants/roles';
+// import ROLES from '@constants/roles';
 import useAuth from '@hooks/useAuth';
 
 import { LoadingButton } from '@mui/lab';
+// eslint-disable-next-line no-unused-vars
 import { Alert, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 const validationSchema = Yup.object({
@@ -21,7 +22,7 @@ const validationSchema = Yup.object({
     is: (val) => !!(val && val.length > 0),
     then: Yup.string().oneOf([Yup.ref('password')], validateMsg.AUTH.PASSWORD_INCONSISTENTCY),
   }),
-  role: Yup.string().required(validateMsg.AUTH.ROLE_REQUIRED),
+  // role: Yup.string().required(validateMsg.AUTH.ROLE_REQUIRED),
 });
 
 const Register = () => {
@@ -44,7 +45,7 @@ const Register = () => {
       lastName: '',
       email: '',
       password: '',
-      role: '',
+      // role: '',
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -74,7 +75,7 @@ const Register = () => {
         maxWidth: '600px',
       }}
     >
-      {formik.touched.role && formik.errors.role && <Alert severity='error'>{formik.errors.role}</Alert>}
+      {/* formik.touched.role && formik.errors.role && <Alert severity='error'>{formik.errors.role}</Alert> */}
       {errorMessage && (
         <Alert severity='error' style={{ textAlign: 'left' }}>
           {errorMessage}
@@ -126,6 +127,7 @@ const Register = () => {
         helperText={formik.touched.password && formik.errors.password}
         style={{ marginBottom: '20px' }}
       />
+      {/*
       <FormControl fullWidth style={{ marginBottom: '20px' }}>
         <InputLabel id='role'>Role</InputLabel>
         <Select
@@ -147,6 +149,7 @@ const Register = () => {
           )}
         </Select>
       </FormControl>
+      */}
 
       <LoadingButton loading={loading} variant='contained' type='submit'>
         Submit

@@ -6,24 +6,26 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { GridOverlay } from '@mui/x-data-grid';
 
-// const NoRowsOverlay = () => (
-//   <div
-//     style={{
-//       display: 'flex',
-//       top: '58px',
-//       left: 0,
-//       right: 0,
-//       bottom: 0,
-//       height: 'auto',
-//       alignItems: 'center',
-//       justifyContent: 'center',
-//       position: 'absolute',
-//       overflow: 'hidden',
-//     }}
-//   >
-//     {messages.NO_DATA}
-//   </div>
-// );
+/*
+const NoRowsOverlay = () => (
+  <div
+    style={{
+      display: 'flex',
+      top: '58px',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      height: 'auto',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      overflow: 'hidden',
+    }}
+  >
+    {messages.NO_DATA}
+  </div>
+);
+*/
 
 const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
   flexDirection: 'column',
