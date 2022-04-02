@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"mime/multipart"
+	"strconv"
 	"strings"
 	"time"
 
@@ -341,7 +342,7 @@ func composeFormResult(formID int) FormResult {
 
 	formResultItems := make([]FormResultItem, len(dbFormAnswer))
 	for idx, f := range dbFormAnswer {
-		var answers []int
+		var answers []string
 		_ = json.Unmarshal([]byte(f.Answers), &answers)
 		user := databases.GetUser(f.UserID)
 		formStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
@@ -448,15 +449,23 @@ func getFormScore(form Form, role utils.RoleType, answer Answer) int {
 		questions = form.Questions.Parent
 	} else if role.IsTeacher() {
 		questions = form.Questions.Teacher
+	} else if role.IsCounseling() {
+		questions = form.Questions.Counseling
 	}
 
 	score := 0
 	minScore := form.MinScore
 	for idx, ans := range answer.Answers {
+		if !questions[idx].IsMultipleChoice {
+			continue // Short description questions are not evaluated
+		}
+
+		// ans is the index of the option (start from zero)
+		ansInt, _ := strconv.Atoi(ans)
 		if questions[idx].IsReverseGrading {
-			score += (questions[idx].MaxScore - (ans + minScore))
+			score += (questions[idx].MaxScore - (ansInt + minScore))
 		} else {
-			score += (ans + minScore)
+			score += (ansInt + minScore)
 		}
 	}
 

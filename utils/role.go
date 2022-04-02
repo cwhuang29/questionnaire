@@ -6,17 +6,18 @@ const (
 	Student RoleType = iota
 	Parent
 	Teacher
+	Counseling
 	Researcher
 	Admin // This role can only be set via backend (in the handlers.register)
 )
 
 func (r RoleType) String() string {
-	return [...]string{"Student", "Parent", "Teacher", "Researcher", "Admin"}[r]
+	return [...]string{"Student", "Parent", "Teacher", "Counseling", "Researcher", "Admin"}[r]
 }
 
 func (r RoleType) IsValidAndNotAdmin() bool {
 	switch r {
-	case Student, Parent, Teacher, Researcher:
+	case Student, Parent, Teacher, Counseling, Researcher:
 		return true
 	}
 	return false
@@ -39,6 +40,10 @@ func (r RoleType) IsParent() bool {
 
 func (r RoleType) IsTeacher() bool {
 	return r == Teacher
+}
+
+func (r RoleType) IsCounseling() bool {
+	return r == Counseling
 }
 
 func (r RoleType) IsResearcher() bool {

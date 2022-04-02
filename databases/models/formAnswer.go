@@ -14,5 +14,5 @@ type FormAnswer struct {
 	Role         int            `gorm:"not null"`
 	Answers      string         `gorm:"not null;type:text"`
 	CreatedAt    time.Time      `gorm:"autoCreateTime"`
-	DeletedAt    gorm.DeletedAt // https://gorm.io/docs/delete.html#Soft-Delete
+	DeletedAt    gorm.DeletedAt // https://gorm.io/docs/delete.html#Soft-Delete. Don't work for sqlite
 }

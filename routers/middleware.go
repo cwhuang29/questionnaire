@@ -16,6 +16,7 @@ var (
 	log = logger.New("Middleware")
 )
 
+// Make sure the request was sent from the correct frontend
 func shouldAllowCORS(appUrl, origin string) bool {
 	if origin != "" && origin == appUrl {
 		return true

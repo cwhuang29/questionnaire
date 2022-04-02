@@ -34,15 +34,17 @@ type Form struct {
 }
 
 type FormInfoByRole struct {
-	Student string `json:"student"`
-	Parent  string `json:"parent"`
-	Teacher string `json:"teacher"`
+	Student    string `json:"student"`
+	Parent     string `json:"parent"`
+	Teacher    string `json:"teacher"`
+	Counseling string `json:"counseling"`
 }
 
 type FormQuestion struct {
-	Student []Question `json:"student"`
-	Parent  []Question `json:"parent"`
-	Teacher []Question `json:"teacher"`
+	Student    []Question `json:"student"`
+	Parent     []Question `json:"parent"`
+	Teacher    []Question `json:"teacher"`
+	Counseling []Question `json:"counseling"`
 }
 
 type Question struct {
@@ -50,11 +52,12 @@ type Question struct {
 	Label            string   `json:"label"`
 	Options          []string `json:"options"`
 	IsReverseGrading bool     `json:"isReverseGrading"`
+	IsMultipleChoice bool     `json:"isMultipleChoice"`
 	MaxScore         int      `json:"maxScore"`
 }
 
 type Answer struct {
-	Answers []int `json:"answers"`
+	Answers []string `json:"answers"`
 }
 
 type Login struct {
@@ -99,7 +102,7 @@ type FormResultItem struct {
 	Role       string    `json:"role"`
 	AnswerTime time.Time `json:"answerTime"`
 	Score      int       `json:"score"`
-	Answers    []int     `json:"answers"`
+	Answers    []string  `json:"answers"`
 }
 
 type Article struct {
