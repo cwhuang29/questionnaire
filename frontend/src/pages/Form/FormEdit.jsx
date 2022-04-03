@@ -105,7 +105,7 @@ const FormEdit = (props) => {
               timestamp: Date.now(),
             });
           }
-          if (question.options.length !== values.optionsCount) {
+          if (question.isMultipleChoice && question.options.length !== values.optionsCount) {
             hasError = true;
             addGlobalMessage({
               title: `Number of options is not correct`,

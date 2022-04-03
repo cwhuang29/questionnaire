@@ -16,8 +16,6 @@ import { Alert, Box, FormControl, FormControlLabel, FormHelperText, Radio, Radio
 
 import { roleProfiles } from './createFormData';
 
-const PIXELS_PER_WORD = 14;
-
 const validationSchema = Yup.object({
   // answers: Yup.array().of(Yup.number('Should be number type').required(validateMsg.REQUIRED)).strict().required(),
   answers: Yup.array().of(Yup.string().required(validateMsg.REQUIRED)).strict().required(),
@@ -32,6 +30,7 @@ const FormAnswer = (props) => {
   const [openModal, setOpenFormModal] = useState(false);
   const [score, setScore] = useState();
 
+  // eslint-disable-next-line no-unused-vars
   const { minScore, optionsCount, formTitle: title, formIntro: intro, questions = [] } = formData;
   let role = null;
   roleProfiles.forEach((r) => {
@@ -42,9 +41,6 @@ const FormAnswer = (props) => {
   const getOptionScore = (idx, isReverseGrading, maxScore) => (isReverseGrading ? maxScore - (minScore + idx) : minScore + idx);
 
   const submitButtonText = '確認送出';
-  // eslint-disable-next-line no-unused-vars
-  const minOptionWidth = optionsCount * PIXELS_PER_WORD;
-  // const optionStyle = { width: `${100 / optionsCount}%`, minWidth: `${minOptionWidth}px`, marginRight: 0 };
   const optionStyle = { marginRight: '60px' };
 
   const formik = useFormik({
@@ -109,12 +105,12 @@ const FormAnswer = (props) => {
               {!question.isMultipleChoice && (
                 <TextField
                   fullWidth
-                  nam={`question-${question.id}`}
-                  label={`question-${question.id}`}
-                  value={formik.values.answers[id]}
+                  name={`answers[${question.id}]`} // Without this attr: Formik called `handleChange`, but you forgot to pass an `id` or `name` attribute to your input
+                  label={`question-${question.id + 1}`} // The text displayed
+                  value={formik.values.answers[question.id] || ''} // If assigning undefined as default value: A component is changing an uncontrolled input to be controlled
                   onChange={formik.handleChange}
-                  error={Boolean(formik.touched?.answers[question.id] && formik.errors?.answers[question.id])}
-                  helperText={formik.errors.answers[question.id]}
+                  error={formik.touched.answers && formik.errors.answers && Boolean(formik.touched.answers[question.id] && formik.errors.answers[question.id])}
+                  helperText={formik.errors.answers && formik.errors.answers[question.id]}
                 />
               )}
 
@@ -123,7 +119,7 @@ const FormAnswer = (props) => {
                   {/* <FormLabel>This is label</FormLabel> */}
                   <RadioGroup
                     row
-                    aria-labelledby={`question-${question.id}`}
+                    aria-labelledby={`question-${question.id + 1}`}
                     onChange={(evt, val) => {
                       formik.setFieldValue(`answers[${question.id}]`, val);
                     }}
@@ -138,14 +134,12 @@ const FormAnswer = (props) => {
                         style={optionStyle}
                       />
                     ))}
-                    {/* Formik sets touched flags on blur event instead of on change. In the very beginning, formik.touched equals to {} */}
-                    {
-                      /* formik.touched.answers && formik.errors.answers */ true && (
-                        <FormHelperText error={Boolean(formik.touched?.answers[question.id] && formik.errors?.answers[question.id])} style={{ marginLeft: 0 }}>
-                          {formik.errors.answers[question.id]}
-                        </FormHelperText>
-                      )
-                    }
+                    {/* Formik sets touched flags on blur event instead of on change. In the very beginning, formik.touched and formik.errors equal to {} */}
+                    {formik.touched.answers && formik.errors.answers && (
+                      <FormHelperText error={Boolean(formik.touched.answers[question.id] && formik.errors.answers[question.id])} style={{ marginLeft: 0 }}>
+                        {formik.errors.answers[question.id]}
+                      </FormHelperText>
+                    )}
                   </RadioGroup>
                 </FormControl>
               )}

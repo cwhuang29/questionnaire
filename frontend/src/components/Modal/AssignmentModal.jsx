@@ -171,14 +171,11 @@ const AssignmentModal = (props) => {
                 onChange={formik.handleChange}
                 error={formik.touched.role && Boolean(formik.errors.role)}
               >
-                {Object.entries(ROLES).map(
-                  ([value, label]) =>
-                    value < 3 && (
-                      <MenuItem key={value} value={parseInt(value, 10)}>
-                        {label}
-                      </MenuItem>
-                    )
-                )}
+                {Object.entries(ROLES).map(([value, label]) => (
+                  <MenuItem key={value} value={parseInt(value, 10)}>
+                    {label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Stack>

@@ -59,19 +59,20 @@ const StyledDataGrid = withStyles({
 })(MuiDataGrid);
 
 const DataGrid = (props) => {
-  // eslint-disable-next-line no-unused-vars
-  const { rows, columns, isLoading, onCellDoubleClick, autoHeight, height, getRowId } = props;
+  const { rows, columns, isLoading, onCellDoubleClick, autoHeight, checkboxSelection, onSelectionModelChange, getRowId } = props;
 
   // <div style={{ height: `${height}px`, width: '100%' }}>
   return (
     <div style={{ width: '100%' }}>
       <StyledDataGrid
+        hideFooterSelectedRowCount
+        disableDensitySelector
+        // height={height}
         autoHeight={autoHeight}
         rows={rows}
         columns={columns}
         loading={isLoading}
-        hideFooterSelectedRowCount
-        disableDensitySelector
+        checkboxSelection={checkboxSelection}
         components={{
           Toolbar: GridToolbar,
           LoadingOverlay: CustomLoadingOverlay,
@@ -80,6 +81,7 @@ const DataGrid = (props) => {
           NoRowsOverlay,
         }}
         onCellDoubleClick={onCellDoubleClick}
+        onSelectionModelChange={onSelectionModelChange}
         sx={{
           cursor: 'pointer',
           boxShadow: 2,
@@ -100,16 +102,18 @@ DataGrid.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   onCellDoubleClick: PropTypes.func,
   autoHeight: PropTypes.bool,
+  checkboxSelection: PropTypes.bool,
+  onSelectionModelChange: PropTypes.func,
   getRowId: PropTypes.func,
-  height: PropTypes.number,
 };
 
 DataGrid.defaultProps = {
   rows: [],
   onCellDoubleClick: null,
   autoHeight: true,
+  checkboxSelection: false,
+  onSelectionModelChange: null,
   getRowId: null,
-  height: 600,
 };
 
 export default DataGrid;

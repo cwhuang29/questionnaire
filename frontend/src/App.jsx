@@ -42,7 +42,6 @@ const App = () => {
         <Route path='/forms/:formId' element={<Form />} />
         <Route path='/forms/answer/:formId' element={<FormAnswerLayout />} />
         <Route path='/forms/answer/:formId' element={<FormAnswerLayout />} />
-        <Route path='/forms/result/:formId' element={<FormAnswerLayout />} /> {/* TODO */}
         <Route path='/create/form' element={<FormCreate />} />
         <Route path='/update/form/:formId' element={<FormUpdate />} />
         <Route path='/ecosystem'>

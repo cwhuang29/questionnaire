@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { SubmitAndCancelButtonGroup } from '@components/Button';
-import { questionsEmptyState, roles } from '@pages/Form/createFormData';
+import { questionsEmptyState, roleProfiles } from '@pages/Form/createFormData';
 
 import { Box, ListItemButton, ListItemText, ListSubheader, Modal as MuiModal, Typography } from '@mui/material';
 
@@ -67,7 +67,7 @@ const FormModal = (props) => {
           <FormDataItem field={fieldName.minScore} value={minScore} />
           <FormDataItem field={fieldName.optionsCount} value={optionsCount} />
 
-          {roles.map((role) => (
+          {roleProfiles.map((role) => (
             <React.Fragment key={role.id}>
               <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
                 給{role.display}的問題
@@ -77,7 +77,7 @@ const FormModal = (props) => {
               {questions[role.label].map((question, idx) => (
                 <React.Fragment key={question.label}>
                   <FormDataItem field={`題目${idx + 1}`} value={question.label} />
-                  <FormDataItem field='選項' value={question.options.join(', ')} />
+                  {question.isMultipleChoice && <FormDataItem field='選項' value={question.options.join(', ')} />}
                   <FormDataItem field='是否為反向計分' value={question.isReverseGrading ? '是' : '否'} />
                   {question.isReverseGrading && <FormDataItem field='總分（若為反向計分）' value={question.maxScore} />}
                   <hr />

@@ -14,6 +14,8 @@ export default {
     CREATE_FORM: '/v2/form/create',
     UPDATE_FORM: '/v2/form/update',
 
+    EXPORT_FORMS: '/v2/forms/export',
+
     EMAIL_NOTIFICATION: '/v2/forms/email',
 
     LOAN: '/loan/getAllRecord',

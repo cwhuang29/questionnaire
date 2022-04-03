@@ -29,6 +29,6 @@ export const validateMsg = {
   },
 };
 
-export const FORM_MESSAGE = {
+export const formMsg = {
   ACCESS_VIA_LINK: 'You can only access this page via links',
 };

@@ -51,6 +51,12 @@ const deleteFormStatus = (id, payload, token = authHeader()) =>
     .then((resp) => Promise.resolve(resp.data))
     .catch((err) => Promise.reject(extractErrorMessage(err)));
 
+const exportSelectedForms = (payload, token = authHeader()) =>
+  fetch
+    .post(apis.V2.EXPORT_FORMS, { formIds: payload }, { headers: token })
+    .then((resp) => Promise.resolve(resp.data))
+    .catch((err) => Promise.reject(extractErrorMessage(err)));
+
 // const getTodoForms = (data, token = authHeader()) => {
 //   const url = new URL(apis.V2.TODO_FORMS, window.location.href);
 //   Object.entries(data).forEach(([key, val]) => url.searchParams.set(key, val));
@@ -76,4 +82,6 @@ export default {
   getFormStatus,
   createFormStatus,
   deleteFormStatus,
+
+  exportSelectedForms,
 };

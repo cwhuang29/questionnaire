@@ -9,16 +9,17 @@ const ConfirmButton = (props) => {
   const wrapperStyle = {
     display: 'flex',
     justifyContent: 'space-evenly',
-    marginTop: '30px',
     maxWidth: '700px',
-    margin: '0 auto',
+    margin: '30px auto 0',
     cursor: disabledConfirm ? 'wait' : 'default',
   };
+
   const listItemButtonStyle = {
     maxWidth: '250px',
     minWidth: '175px',
     borderRadius: '4px',
   };
+
   const listItemTextStyle = { textAlign: 'center', fontWeight: '700', color: '#EDEDED' };
 
   return (

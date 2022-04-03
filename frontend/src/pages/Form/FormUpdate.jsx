@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 
 import { updateForm } from '@actions/form';
-import msg, { FORM_MESSAGE } from '@constants/messages';
+import msg, { formMsg } from '@constants/messages';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import { FORM_OPERATION_TYPE } from '@shared/constants';
@@ -32,7 +32,7 @@ const FormUpdate = () => {
     } else if (!formData) {
       // If user enter URL directly instead of redirecting to this page via <Form />, formToBeUpdated will be null
       addGlobalMessage({
-        title: FORM_MESSAGE.ACCESS_VIA_LINK,
+        title: formMsg.ACCESS_VIA_LINK,
         severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
         timestamp: Date.now(),
       });
