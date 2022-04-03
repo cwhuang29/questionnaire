@@ -2,6 +2,12 @@ package databases
 
 import "github.com/cwhuang29/questionnaire/databases/models"
 
+func GetFormAnswersByFormIDs(formIDs []int, isAdmin bool) (formAnswers []models.FormAnswer) {
+	db.Where("form_id IN ?", formIDs).Find(&formAnswers)
+	// db.Find(&formAnswers, formIDs)
+	return
+}
+
 func GetFormAnswerByFormID(formID int, isAdmin bool) (formAnswer []models.FormAnswer) {
 	db.Where("form_id = ?", formID).Find(&formAnswer)
 	return

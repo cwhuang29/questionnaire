@@ -38,6 +38,7 @@ func injectRoutesV2(router *gin.Engine) {
 		v2.OPTIONS("/forms/email/:formId", handlers.HandlePreflight)
 		v2.OPTIONS("/form/create", handlers.HandlePreflight)
 		v2.OPTIONS("/form/update/*formId", handlers.HandlePreflight)
+		v2.OPTIONS("/forms/export", handlers.HandlePreflight)
 
 		v2.POST("/login", handlers.LoginV2)
 
@@ -59,6 +60,7 @@ func injectRoutesV2(router *gin.Engine) {
 				v2.DELETE("/forms/status/:formId", handlers.DeleteFormStatus)
 				v2.GET("/forms/result/:formId", handlers.GetFormResult)
 				v2.POST("/forms/email/:formId", handlers.RemindWritingForm)
+				v2.POST("/forms/export", handlers.ExportSelectedForms)
 				// v2.GET("/forms/:formId", func(c *gin.Context) {
 				//     if strings.HasPrefix(c.Request.RequestURI, "/v2/form/status") {
 				//         handlers.AssignFormToUsers(c)

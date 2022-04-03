@@ -105,6 +105,10 @@ type FormResultItem struct {
 	Answers    []string  `json:"answers"`
 }
 
+type ExportFormIds struct {
+	FormIDs []int `json:"formIds"`
+}
+
 type Article struct {
 	ID         int      `json:"id"`
 	Title      string   `json:"title"`

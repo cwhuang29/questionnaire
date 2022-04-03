@@ -14,6 +14,12 @@ func GetFormByID(id int, isAdmin bool) (form models.Form) {
 	// return
 }
 
+func GetFormsByIDs(formIDs []int, isAdmin bool) (forms []models.Form) {
+	db.Where("id IN ?", formIDs).Find(&forms)
+	// db.Find(&formAnswers, formIDs)
+	return
+}
+
 func GetAllForms(isAdmin bool) (forms []models.Form) {
 	switch isAdmin {
 	case true:

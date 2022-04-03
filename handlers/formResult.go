@@ -14,6 +14,6 @@ func GetFormResult(c *gin.Context) {
 		return
 	}
 
-	formResult := composeFormResult(id)
+	formResult := getFormResultByFormID(id)
 	c.JSON(http.StatusOK, gin.H{"data": formResult})
 }

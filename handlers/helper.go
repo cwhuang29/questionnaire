@@ -133,6 +133,16 @@ func getFormByID(id int) Form {
 	return form
 }
 
+func getFormListByIDList(ids []int) []Form {
+	dbForms := databases.GetFormsByIDs(ids, true)
+
+	forms := make([]Form, len(dbForms))
+	for idx, dbForm := range dbForms {
+		forms[idx] = transformFormToWebFormat(dbForm)
+	}
+	return forms
+}
+
 func getFormStatusByFormID(formID int) []FormStatus {
 	dbFormStatus := databases.GetFormStatusByFormId(formID, true)
 	form := databases.GetFormByID(formID, true)
@@ -173,7 +183,7 @@ func getNotFinishFormStatusByUser(email string) []FormStatus {
 	return formStatus
 }
 
-func extractFormNecessaryInfoForAssignee(form Form, role utils.RoleType) Form {
+func extractParticularRoleInForm(form Form, role utils.RoleType) Form {
 	var filteredForm Form
 	var formTitle FormInfoByRole
 	var formIntro FormInfoByRole
@@ -191,6 +201,10 @@ func extractFormNecessaryInfoForAssignee(form Form, role utils.RoleType) Form {
 		formTitle = FormInfoByRole{Teacher: form.FormTitle.Teacher}
 		formIntro = FormInfoByRole{Teacher: form.FormIntro.Teacher}
 		questions = FormQuestion{Teacher: form.Questions.Teacher}
+	} else if role.IsCounseling() {
+		formTitle = FormInfoByRole{Counseling: form.FormTitle.Counseling}
+		formIntro = FormInfoByRole{Counseling: form.FormIntro.Counseling}
+		questions = FormQuestion{Counseling: form.Questions.Counseling}
 	}
 
 	filteredForm.ID = form.ID
@@ -242,7 +256,7 @@ func getFormStatusByFormIDAndWriterEmail(formID int, email string) FormStatus {
 }
 
 func getAnswerForm(form Form, user models.User, role utils.RoleType) (Form, error) {
-	form = extractFormNecessaryInfoForAssignee(form, role)
+	form = extractParticularRoleInForm(form, role)
 	return form, nil
 }
 
@@ -302,6 +316,14 @@ func parseJSONEmailNotification(c *gin.Context) (EmailNotification, error) {
 	return emailNotification, err
 }
 
+func parseJSONExportFormIds(c *gin.Context) (ExportFormIds, error) {
+	var exportFormIds ExportFormIds
+
+	// Note: the error "EOF" occurs when reading from the Request Body twice (e.g. c.GetRawData(), c.Request.Body)
+	err := c.ShouldBindBodyWith(&exportFormIds, binding.JSON)
+	return exportFormIds, err
+}
+
 func editFormPreprocessing(c *gin.Context) (Form, models.User, error) {
 	email := c.MustGet("email").(string)
 	form, err := parseJSONForm(c)
@@ -336,16 +358,19 @@ func storeAnswerToDB(formID int, user models.User, answer Answer) (models.FormAn
 	return dbFormAnswer, err
 }
 
-func composeFormResult(formID int) FormResult {
+func getFormResultByFormID(formID int) FormResult {
 	form := getFormByID(formID)
 	dbFormAnswer := databases.GetFormAnswerByFormID(formID, true)
+	return composeFormResult(form, dbFormAnswer)
+}
 
+func composeFormResult(form Form, dbFormAnswer []models.FormAnswer) FormResult {
 	formResultItems := make([]FormResultItem, len(dbFormAnswer))
 	for idx, f := range dbFormAnswer {
 		var answers []string
 		_ = json.Unmarshal([]byte(f.Answers), &answers)
 		user := databases.GetUser(f.UserID)
-		formStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
+		formStatus := databases.GetFormStatusByFormIdAndWriterEmail(form.ID, user.Email, true)
 
 		formResultItems[idx].Name = user.GetName()
 		formResultItems[idx].Email = user.Email
@@ -358,15 +383,20 @@ func composeFormResult(formID int) FormResult {
 	maxQuestionsCount := 0
 	if len(form.Questions.Student) > maxQuestionsCount {
 		maxQuestionsCount = len(form.Questions.Student)
-	} else if len(form.Questions.Parent) > maxQuestionsCount {
+	}
+	if len(form.Questions.Parent) > maxQuestionsCount {
 		maxQuestionsCount = len(form.Questions.Parent)
-	} else if len(form.Questions.Teacher) > maxQuestionsCount {
+	}
+	if len(form.Questions.Teacher) > maxQuestionsCount {
 		maxQuestionsCount = len(form.Questions.Teacher)
+	}
+	if len(form.Questions.Counseling) > maxQuestionsCount {
+		maxQuestionsCount = len(form.Questions.Counseling)
 	}
 
 	formResult := FormResult{
 		FormCustID:        form.FormCustID,
-		MaxQuestionsCount: form.OptionsCount,
+		MaxQuestionsCount: maxQuestionsCount,
 		FormLastUpdatedAt: form.UpdatedAt,
 		Results:           formResultItems,
 	}
@@ -470,4 +500,13 @@ func getFormScore(form Form, role utils.RoleType, answer Answer) int {
 	}
 
 	return score
+}
+
+func GetFormResultsByFormIDs(ids []int) []FormResult {
+	formResults := make([]FormResult, len(ids))
+
+	for idx, id := range ids {
+		formResults[idx] = getFormResultByFormID(id)
+	}
+	return formResults
 }

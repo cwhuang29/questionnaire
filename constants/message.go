@@ -29,6 +29,8 @@ const (
 	FormCreateSucceed = "Create a new form successfully"
 	FormUpdateSucceed = "Update a new form successfully"
 
+	FormResultExportSucceed = "All form results you selected are ready to download"
+
 	FormStatusDeleteSucceed = "Delete successfully. This user cannot access to this form from now on"
 
 	FormStatusCreateErr = "Failed to assign form to users"

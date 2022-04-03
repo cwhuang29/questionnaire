@@ -356,3 +356,17 @@ func RemindWritingForm(c *gin.Context) {
 	title := constants.EmailsHaveSent
 	c.JSON(http.StatusOK, gin.H{"title": title})
 }
+
+func ExportSelectedForms(c *gin.Context) {
+	exportFormIDs, err := parseJSONExportFormIds(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": err.Error()})
+		return
+	}
+
+	formResults := GetFormResultsByFormIDs(exportFormIDs.FormIDs)
+	fmt.Println(formResults)
+	succeedMsg := constants.FormResultExportSucceed
+	c.JSON(http.StatusOK, gin.H{"title": succeedMsg, "data": formResults})
+}
