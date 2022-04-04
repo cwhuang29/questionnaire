@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/cwhuang29/questionnaire/automation"
 	"github.com/cwhuang29/questionnaire/config"
 	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/cwhuang29/questionnaire/routers"
@@ -38,6 +39,10 @@ func setupDatabase() {
 	}
 }
 
+func setupAutomationTask() {
+	go automation.Exec()
+}
+
 var rootCmd = &cobra.Command{
 	Use:   "A questionnaire website",
 	Short: "a-questionnaire-website",
@@ -45,6 +50,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		setupConfig()
 		setupDatabase()
+		setupAutomationTask()
 		routers.Router()
 	},
 }

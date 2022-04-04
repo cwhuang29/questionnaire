@@ -6,6 +6,7 @@ import (
 
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/databases"
+	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,6 +14,14 @@ import (
  * 0: User doesn't bookmark this article
  * 1: User has bookmarked this article
  */
+
+func getQueryBookmarked(c *gin.Context) (int, error) {
+	isBookmarked, err := utils.Str2Int(getQueryPara(c, constants.QueryBookmarked))
+	if err != nil || (isBookmarked != 0 && isBookmarked != 1) {
+		err = fmt.Errorf(constants.QueryBookmarkedErr)
+	}
+	return isBookmarked, err
+}
 
 func GetUserBookmarkedArticles(c *gin.Context) {
 	offset, err := getQueryOffset(c)

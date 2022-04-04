@@ -59,6 +59,7 @@ const (
 	EmailHasSent          = "Email has been sent"
 	EmailsHaveSent        = "Emails have been sent"
 	EmailSentErr          = "Some emails did not successfully send out"
+	EmailsWillBeSend      = "The emails will be sent in the future at your assigned time"
 
 	HeaderAuthRequired = "The authorization cannot be completed"
 

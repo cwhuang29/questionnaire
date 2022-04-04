@@ -348,7 +348,7 @@ func RemindWritingForm(c *gin.Context) {
 	emailNotification = removeDuplicateEmail(emailNotification)
 
 	email := c.MustGet("email").(string)
-	if err = remindWritingFormByEmail(id, email, emailNotification); err != nil {
+	if err = SendRemindWritingFormByEmail(id, email, emailNotification); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.EmailSentErr, "errBody": err.Error()})
 		return
 	}
@@ -365,7 +365,7 @@ func ExportSelectedForms(c *gin.Context) {
 		return
 	}
 
-	formResults := GetFormResultsByFormIDs(exportFormIDs.FormIDs)
+	formResults := getFormResultsByFormIDs(exportFormIDs.FormIDs)
 	fmt.Println(formResults)
 	succeedMsg := constants.FormResultExportSucceed
 	c.JSON(http.StatusOK, gin.H{"title": succeedMsg, "data": formResults})

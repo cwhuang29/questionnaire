@@ -150,9 +150,21 @@ func getFormStatusByFormID(formID int) []FormStatus {
 	formStatus := make([]FormStatus, len(dbFormStatus))
 	for i, f := range dbFormStatus {
 		receiver := databases.GetUserByEmail(f.WriterEmail)
-		notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), formID, f.WriterEmail, true)
-		sender := databases.GetUser(notificationHistory.SenderId)
-		formStatus[i] = transformFormStatusToWebFormat(f, form, &receiver, &sender, &notificationHistory)
+
+		var createdAt *time.Time = new(time.Time)
+		var sender *models.User = new(models.User)
+
+		if utils.IsFuture(f.AssignedAt, 0) {
+			pendingNotification := databases.GetPendingNotificationByTypeAndFormIdAndReceiver(int(utils.NotificationEmail), formID, f.WriterEmail, true)
+			*sender = databases.GetUser(pendingNotification.SenderID)
+		} else {
+			notificationHistory := databases.GetNotificationHistoryByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), formID, f.WriterEmail, true)
+			if notificationHistory.ID != 0 {
+				*createdAt = notificationHistory.CreatedAt
+				*sender = databases.GetUser(notificationHistory.SenderID)
+			}
+		}
+		formStatus[i] = transformFormStatusToWebFormat(f, form, &receiver, sender, createdAt)
 	}
 
 	return formStatus
@@ -248,10 +260,21 @@ func getFormStatusByFormIDAndWriterEmail(formID int, email string) FormStatus {
 	form := databases.GetFormByID(formID, true)
 
 	receiver := databases.GetUserByEmail(dbFormStatus.WriterEmail)
-	notificationHistory := databases.GetNotificationByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), formID, dbFormStatus.WriterEmail, true)
-	sender := databases.GetUser(notificationHistory.SenderId)
 
-	formStatus := transformFormStatusToWebFormat(dbFormStatus, form, &receiver, &sender, &notificationHistory)
+	var createdAt *time.Time
+	var sender *models.User
+	if utils.IsFuture(dbFormStatus.AssignedAt, 0) {
+		pendingNotification := databases.GetPendingNotificationByTypeAndFormIdAndReceiver(int(utils.NotificationEmail), formID, dbFormStatus.WriterEmail, true)
+		*sender = databases.GetUser(pendingNotification.SenderID)
+	} else {
+		notificationHistory := databases.GetNotificationHistoryByTypeAndFormIdAndReceiverAndResult(int(utils.NotificationEmail), formID, dbFormStatus.WriterEmail, true)
+		if notificationHistory.ID != 0 {
+			*createdAt = notificationHistory.CreatedAt
+			*sender = databases.GetUser(notificationHistory.SenderID)
+		}
+	}
+
+	formStatus := transformFormStatusToWebFormat(dbFormStatus, form, &receiver, sender, createdAt)
 	return formStatus
 }
 
@@ -298,10 +321,7 @@ func parseJSONAssignForm(c *gin.Context) (AssignForm, error) {
 	var assignForm AssignForm
 	var err error
 
-	if err = c.ShouldBindBodyWith(&assignForm, binding.JSON); err == nil {
-		assignForm.Recipient = utils.RemoveDuplicateStrings(assignForm.Recipient)
-	}
-
+	err = c.ShouldBindBodyWith(&assignForm, binding.JSON)
 	return assignForm, err
 }
 
@@ -309,17 +329,13 @@ func parseJSONEmailNotification(c *gin.Context) (EmailNotification, error) {
 	var emailNotification EmailNotification
 	var err error
 
-	// Note: the error "EOF" occurs when reading from the Request Body twice (e.g. c.GetRawData(), c.Request.Body)
-	if err = c.ShouldBindBodyWith(&emailNotification, binding.JSON); err == nil {
-		emailNotification.Recipient = utils.RemoveDuplicateStrings(emailNotification.Recipient)
-	}
+	err = c.ShouldBindBodyWith(&emailNotification, binding.JSON)
 	return emailNotification, err
 }
 
 func parseJSONExportFormIds(c *gin.Context) (ExportFormIds, error) {
 	var exportFormIds ExportFormIds
 
-	// Note: the error "EOF" occurs when reading from the Request Body twice (e.g. c.GetRawData(), c.Request.Body)
 	err := c.ShouldBindBodyWith(&exportFormIds, binding.JSON)
 	return exportFormIds, err
 }
@@ -408,6 +424,7 @@ func removeDuplicateEmail(emailNotification EmailNotification) EmailNotification
 	return emailNotification
 }
 
+// Remove users who have been assigned to this form before
 func removeDuplicateAssign(id int, assignForm AssignForm) AssignForm {
 	dbFormStatus := databases.GetFormStatusByFormId(id, true)
 
@@ -440,7 +457,7 @@ func notificationPostprocessing(dbNotificationHistory []models.NotificationHisto
 	return dbNotificationHistory
 }
 
-func remindWritingFormByEmail(formId int, senderEmail string, emailNotification EmailNotification) error {
+func SendRemindWritingFormByEmail(formId int, senderEmail string, emailNotification EmailNotification) error {
 	dbNotificationHistory := notificationPreprocessing(formId, senderEmail, emailNotification)
 	databases.InsertNotificationHistory(dbNotificationHistory)
 
@@ -469,6 +486,12 @@ func remindWritingFormByEmail(formId int, senderEmail string, emailNotification 
 	log.Info(fields)
 
 	return nil
+}
+
+func storeFutureNotification(formId int, role utils.RoleType, senderEmail string, emailNotification EmailNotification) error {
+	dbPendingNotification := transformEmailNotificationToPendingNotification(emailNotification, formId, role, senderEmail, utils.NotificationEmail)
+	_, err := databases.InsertPendingNotifications(dbPendingNotification)
+	return err
 }
 
 func getFormScore(form Form, role utils.RoleType, answer Answer) int {
@@ -502,11 +525,15 @@ func getFormScore(form Form, role utils.RoleType, answer Answer) int {
 	return score
 }
 
-func GetFormResultsByFormIDs(ids []int) []FormResult {
+func getFormResultsByFormIDs(ids []int) []FormResult {
 	formResults := make([]FormResult, len(ids))
 
 	for idx, id := range ids {
 		formResults[idx] = getFormResultByFormID(id)
 	}
 	return formResults
+}
+
+func isNotificaionEffectImmediately(assignForm AssignForm) bool {
+	return !utils.IsFuture(assignForm.EffectiveTime, constants.NotificationSendTimeEpsilon)
 }

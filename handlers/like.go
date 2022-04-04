@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/cwhuang29/questionnaire/databases"
+	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,6 +14,14 @@ import (
  * 0: User doesn't like this article
  * 1: User has liked this article
  */
+
+func getQueryLiked(c *gin.Context) (int, error) {
+	isLiked, err := utils.Str2Int(getQueryPara(c, constants.QueryLiked))
+	if err != nil || (isLiked != 0 && isLiked != 1) {
+		err = fmt.Errorf(constants.QueryLikedErr)
+	}
+	return isLiked, err
+}
 
 func Like(c *gin.Context) {
 	id, err := getParamArticleID(c)

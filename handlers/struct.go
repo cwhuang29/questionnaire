@@ -66,10 +66,11 @@ type Login struct {
 }
 
 type EmailNotification struct {
-	Recipient []string `json:"email"`
-	Subject   string   `json:"subject"`
-	Content   string   `json:"content"`
-	Footer    string   `json:"footer,omitempty"`
+	EffectiveTime time.Time `json:"effectiveTime"`
+	Recipient     []string  `json:"email"`
+	Subject       string    `json:"subject"`
+	Content       string    `json:"content"`
+	Footer        string    `json:"footer,omitempty"`
 }
 
 type AssignForm struct {
@@ -86,7 +87,7 @@ type FormStatus struct {
 	Role              string    `json:"role"`
 	Status            string    `json:"status"`
 	EmailSender       string    `json:"emailSender"`
-	EmailLastSentTime time.Time `json:"emailLastSentTime"`
+	EmailLastSentTime time.Time `json:"emailLastSentTime,omitempty"`
 }
 
 type FormResult struct {

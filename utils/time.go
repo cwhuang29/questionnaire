@@ -11,3 +11,12 @@ func IsExpired(startTime time.Time, period int) bool {
 	}
 	return false
 }
+
+func IsFuture(baseTime time.Time, epsilon int) bool {
+	now := time.Now().UTC()
+
+	if baseTime.Sub(now) > -time.Duration(epsilon) {
+		return true
+	}
+	return false
+}

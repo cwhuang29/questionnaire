@@ -63,11 +63,11 @@ func createTables() {
 	if !(db.Migrator().HasTable(&models.FormStatus{})) {
 		db.Migrator().CreateTable(&models.FormStatus{})
 	}
-	// if !(db.Migrator().HasTable(&models.FormHistory{})) {
-	//     db.Migrator().CreateTable(&models.FormHistory{})
-	// }
 	if !(db.Migrator().HasTable(&models.NotificationHistory{})) {
 		db.Migrator().CreateTable(&models.NotificationHistory{})
+	}
+	if !(db.Migrator().HasTable(&models.PendingNotification{})) {
+		db.Migrator().CreateTable(&models.PendingNotification{})
 	}
 	if !(db.Migrator().HasTable(&models.FormAnswer{})) {
 		db.Migrator().CreateTable(&models.FormAnswer{})

@@ -48,7 +48,7 @@ func transformFormToDBFormat(form Form, user models.User) (f models.Form) {
 	return
 }
 
-func transformFormStatusToWebFormat(formStatus models.FormStatus, form models.Form, receiver, sender *models.User, notificationHistory *models.NotificationHistory) (f FormStatus) {
+func transformFormStatusToWebFormat(formStatus models.FormStatus, form models.Form, receiver, sender *models.User, createdAt *time.Time) (f FormStatus) {
 	f.ID = formStatus.FormID
 	f.Name = form.FormName
 	f.WriterEmail = formStatus.WriterEmail
@@ -62,18 +62,13 @@ func transformFormStatusToWebFormat(formStatus models.FormStatus, form models.Fo
 	if sender != nil {
 		f.EmailSender = sender.GetName()
 	}
-	if notificationHistory != nil {
-		f.EmailLastSentTime = notificationHistory.CreatedAt
-	}
-	// if receiver != nil && receiver.ID != 0 {
-	//     f.WriterName = receiver.GetName()
+	// if createdAt != nil {
+	//     f.EmailLastSentTime = createdAt
 	// }
-	// if sender != nil && sender.ID != 0 {
-	//     f.EmailSender = sender.GetName()
-	// }
-	// if notificationHistory != nil && notificationHistory.ID != 0 {
-	//     f.EmailLastSentTime = notificationHistory.CreatedAt
-	// }
+	// Same as above cause when there is no record, gorm returns an empty struct
+	// Besides, time.Time is a struct which cannot have a nil value. It's "zero" value is: 0001-01-01 00:00:00 +0000 UTC
+	f.EmailLastSentTime = *createdAt
+
 	return
 }
 
@@ -94,29 +89,45 @@ func transformFormAnswerToDBFormat(answer Answer, formID, userID, formStatusID i
 
 func transformAssignFormToFormStatusDBFormat(id int, assignForm AssignForm) []models.FormStatus {
 	dbFormStatus := make([]models.FormStatus, len(assignForm.Recipient))
-	now := time.Now()
 
 	for idx, email := range assignForm.Recipient {
 		dbFormStatus[idx].FormID = id
 		dbFormStatus[idx].WriterEmail = email
 		dbFormStatus[idx].Role = assignForm.Role
 		dbFormStatus[idx].Status = int(utils.FormStatusAssign)
-		dbFormStatus[idx].AssignedAt = now
+		dbFormStatus[idx].AssignedAt = assignForm.EffectiveTime // The time might be in future
 	}
 	return dbFormStatus
 }
 
-func transformEmailNotificationToNotificationHistory(emailNotification EmailNotification, formId int, senderEmail string, notificationType utils.NotificationType) []models.NotificationHistory {
+func transformEmailNotificationToNotificationHistory(emailNotification EmailNotification, formID int, senderEmail string, notificationType utils.NotificationType) []models.NotificationHistory {
 	sender := databases.GetUserByEmail(senderEmail)
 
 	dbNotificationHistory := make([]models.NotificationHistory, len(emailNotification.Recipient))
 	for idx, email := range emailNotification.Recipient {
-		dbNotificationHistory[idx].Receiver = email
-		dbNotificationHistory[idx].FormId = formId
 		dbNotificationHistory[idx].NotificationType = int(notificationType)
-		dbNotificationHistory[idx].SenderId = sender.ID
+		dbNotificationHistory[idx].FormID = formID
+		dbNotificationHistory[idx].SenderID = sender.ID
+		dbNotificationHistory[idx].Receiver = email
 	}
 	return dbNotificationHistory
+}
+
+func transformEmailNotificationToPendingNotification(emailNotification EmailNotification, formID int, role utils.RoleType, senderEmail string, notificationType utils.NotificationType) []models.PendingNotification {
+	sender := databases.GetUserByEmail(senderEmail)
+
+	dbPendingNotification := make([]models.PendingNotification, len(emailNotification.Recipient))
+	for idx, email := range emailNotification.Recipient {
+		dbPendingNotification[idx].NotificationType = int(notificationType)
+		dbPendingNotification[idx].Role = int(role)
+		dbPendingNotification[idx].FormID = formID
+		dbPendingNotification[idx].SenderID = sender.ID
+		dbPendingNotification[idx].Receiver = email
+		dbPendingNotification[idx].Content = emailNotification.Content
+		dbPendingNotification[idx].Footer = emailNotification.Footer
+		dbPendingNotification[idx].EffectiveTime = emailNotification.EffectiveTime
+	}
+	return dbPendingNotification
 }
 
 func articleFormatDBToOverview(article models.Article) (a Article) {

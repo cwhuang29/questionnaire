@@ -41,7 +41,7 @@ func DeleteFormStatus(c *gin.Context) {
 	}
 
 	email := json.Payload.Email
-	user := databases.GetUserByEmail(email)
+	// user := databases.GetUserByEmail(email)
 	// When a user be assigned a form, he/she may not had registered yet
 	// if user.ID == 0 {
 	//     c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.UserNotFound})
@@ -59,15 +59,22 @@ func DeleteFormStatus(c *gin.Context) {
 		return
 	}
 
-	if user.ID != 0 {
-		if err := databases.DeleteFormAnswerByFormIDAndUserID(id, user.ID); err != nil {
+	if utils.IsFuture(dbFormStatus.AssignedAt, 0) {
+		if err := databases.DeletePendingNotificationByFormStatus(dbFormStatus); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
 			return
 		}
 	}
 
+	// if user.ID != 0 {
+	//     if err := databases.DeleteFormAnswerByFormIDAndUserID(id, user.ID); err != nil {
+	//         c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
+	//         return
+	//     }
+	// }
+
 	title := constants.FormStatusDeleteSucceed
-	content := "Note: you can now reassign this user to this form with same/different roles"
+	content := "You can now reassign this user with same/different roles"
 	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
 }
 
@@ -92,27 +99,36 @@ func CreateFormStatus(c *gin.Context) {
 
 	assignForm.EmailNotification = removeDuplicateEmail(assignForm.EmailNotification)
 	assignForm = removeDuplicateAssign(id, assignForm)
-
-	dbFormStatus := createNewFormAssignRecords(id, assignForm)
-	if len(dbFormStatus) == 0 {
+	if len(assignForm.Recipient) == 0 {
 		title := "There is no new assignee. Please check your email list again"
 		c.JSON(http.StatusOK, gin.H{"title": title})
 		return
 	}
 
+	dbFormStatus := createNewFormAssignRecords(id, assignForm)
 	if _, err := insertFormStatusToDb(dbFormStatus); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.FormStatusCreateErr, "errBody": constants.DatabaseErr})
 		return
 	}
 
 	email := c.MustGet("email").(string)
-	emailNotification := assignForm.EmailNotification
-	if err = remindWritingFormByEmail(id, email, emailNotification); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.EmailSentErr, "errBody": err.Error()})
-		return
-	}
+	sendImmediately := isNotificaionEffectImmediately(assignForm)
+	if sendImmediately {
+		if err = SendRemindWritingFormByEmail(id, email, assignForm.EmailNotification); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.EmailSentErr, "errBody": err.Error()})
+			return
+		}
 
-	title := constants.EmailsHaveSent
-	content := "Note: all emails that have been assigned before were ignored"
-	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
+		title := constants.EmailsHaveSent
+		content := "All emails that have been assigned before were ignored"
+		c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
+	} else {
+		if err := storeFutureNotification(id, role, email, assignForm.EmailNotification); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.ReloadAndRetry, "errBody": err.Error()})
+			return
+		}
+
+		title := constants.EmailsWillBeSend
+		c.JSON(http.StatusOK, gin.H{"title": title})
+	}
 }
