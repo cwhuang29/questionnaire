@@ -34,6 +34,11 @@ const StyledDataGrid = withStyles({
       flexDirection: 'column',
       alignItems: 'flex-start', // Vertically aligned
       justifyContent: 'center', // Horizontally aligned
+      padding: '3px 12px 3px',
+    },
+    '& .MuiDataGrid-row': {
+      maxHeight: 'none !important',
+      '&:nth-child(2n)': { backgroundColor: 'rgba(235, 235, 235, .6)' },
     },
     '& .MuiDataGrid-cell:hover': {
       backgroundColor: '#b9d5ff91',
@@ -42,10 +47,7 @@ const StyledDataGrid = withStyles({
     '& .MuiDataGrid-row:hover': {
       backgroundColor: 'inherit',
     },
-    '& .MuiDataGrid-row': {
-      maxHeight: 'none !important',
-      '&:nth-child(2n)': { backgroundColor: 'rgba(235, 235, 235, .6)' },
-    },
+
     // '& div[data-rowIndex][role="row"]': {
     //   fontSize: 18,
     //   height: 60,
@@ -59,44 +61,47 @@ const StyledDataGrid = withStyles({
 })(MuiDataGrid);
 
 const DataGrid = (props) => {
-  const { rows, columns, isLoading, onCellDoubleClick, autoHeight, checkboxSelection, onSelectionModelChange, getRowId } = props;
+  const { height, rows, columns, isLoading, onCellDoubleClick, autoHeight, checkboxSelection, onSelectionModelChange, getRowId } = props;
 
-  // <div style={{ height: `${height}px`, width: '100%' }}>
+  const heightCSS = autoHeight ? {} : { height }; // These two setting should not go together
+
   return (
-    <div style={{ width: '100%' }}>
-      <StyledDataGrid
-        hideFooterSelectedRowCount
-        disableDensitySelector
-        // height={height}
-        autoHeight={autoHeight}
-        rows={rows}
-        columns={columns}
-        loading={isLoading}
-        checkboxSelection={checkboxSelection}
-        components={{
-          Toolbar: GridToolbar,
-          LoadingOverlay: CustomLoadingOverlay,
-          ColumnSortedDescendingIcon: SortedDescendingIcon,
-          ColumnSortedAscendingIcon: SortedAscendingIcon,
-          NoRowsOverlay,
-        }}
-        onCellDoubleClick={onCellDoubleClick}
-        onSelectionModelChange={onSelectionModelChange}
-        sx={{
-          cursor: 'pointer',
-          boxShadow: 2,
-          border: 2,
-          borderColor: 'primary.light',
-          // '& .cold': { },
-        }}
-        // getCellClassName={(params) => (params.value >= 15 ? 'hot' : 'cold')}
-        getRowId={getRowId}
-      />
+    <div style={{ display: 'flex', overflow: 'auto', ...heightCSS }}>
+      <div style={{ flexGrow: 2 }}>
+        <StyledDataGrid
+          hideFooterSelectedRowCount
+          disableDensitySelector
+          autoHeight={autoHeight}
+          rows={rows}
+          columns={columns}
+          loading={isLoading}
+          checkboxSelection={checkboxSelection}
+          components={{
+            Toolbar: GridToolbar,
+            LoadingOverlay: CustomLoadingOverlay,
+            ColumnSortedDescendingIcon: SortedDescendingIcon,
+            ColumnSortedAscendingIcon: SortedAscendingIcon,
+            NoRowsOverlay,
+          }}
+          onCellDoubleClick={onCellDoubleClick}
+          onSelectionModelChange={onSelectionModelChange}
+          sx={{
+            cursor: 'pointer',
+            boxShadow: 2,
+            border: 2,
+            borderColor: 'primary.light',
+            // '& .cold': { },
+          }}
+          // getCellClassName={(params) => (params.value >= 15 ? 'hot' : 'cold')}
+          getRowId={getRowId}
+        />
+      </div>
     </div>
   );
 };
 
 DataGrid.propTypes = {
+  height: PropTypes.number,
   rows: PropTypes.array,
   columns: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
@@ -109,8 +114,9 @@ DataGrid.propTypes = {
 
 DataGrid.defaultProps = {
   rows: [],
+  height: 600,
   onCellDoubleClick: null,
-  autoHeight: true,
+  autoHeight: false,
   checkboxSelection: false,
   onSelectionModelChange: null,
   getRowId: null,

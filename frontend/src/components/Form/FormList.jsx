@@ -188,7 +188,7 @@ const FormListView = (props) => {
           onCellDoubleClick={onCellDoubleClick}
           checkboxSelection
           onSelectionModelChange={onSelectionModelChange}
-          height={800}
+          height={615}
         />
         <div style={{ marginTop: '20 !important' }}>
           <ConfirmButton onConfirm={onConfirm} disabledConfirm={isLoading || loading} confirmButtonText={confirmButtonText} />

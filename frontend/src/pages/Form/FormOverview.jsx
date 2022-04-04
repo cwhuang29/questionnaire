@@ -19,7 +19,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MailIcon from '@mui/icons-material/Mail';
-import { IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 
 import {
@@ -31,27 +31,31 @@ import {
   transformFormResultData,
 } from './formOverviewData';
 
+const iconButtonStyle = { marginTop: '-5px' };
+
+const muiIconStyle = { fontSize: '35px', color: '#656565' };
+
 const getFormByIdForComponent = (formId) => () => getFormById(formId);
 
 const getURLQueryFormId = () => window.location.pathname.split('/').pop(); // e.g. http://127.0.0.1/form/5
 
 const FormModalIcon = ({ onClick }) => (
-  <IconButton aria-label='icon-button' style={{ marginTop: '-5px' }} onClick={onClick}>
+  <IconButton aria-label='icon-button' style={iconButtonStyle} onClick={onClick}>
     <StyledBadge badgeContent='' color='primary' variant='dot'>
-      <InsertDriveFileIcon style={{ fontSize: '35px', color: '#656565' }} />
+      <InsertDriveFileIcon style={muiIconStyle} />
     </StyledBadge>
   </IconButton>
 );
 
 const AssignmentModalIcon = ({ onClick }) => (
-  <IconButton aria-label='icon-button' style={{ marginTop: '-5px' }} onClick={onClick}>
-    <AssignmentIcon style={{ fontSize: '35px', color: '#656565' }} />
+  <IconButton aria-label='icon-button' style={iconButtonStyle} onClick={onClick}>
+    <AssignmentIcon style={muiIconStyle} />
   </IconButton>
 );
 
 const NotificationModalIcon = ({ onClick }) => (
-  <IconButton aria-label='icon-button' style={{ marginTop: '-5px' }} onClick={onClick}>
-    <MailIcon style={{ fontSize: '35px', color: '#656565' }} />
+  <IconButton aria-label='icon-button' style={iconButtonStyle} onClick={onClick}>
+    <MailIcon style={muiIconStyle} />
   </IconButton>
 );
 
@@ -67,7 +71,7 @@ const Title = ({ children }) => (
   </Typography>
 );
 
-const SpaceingComponent = () => <div style={{ marginBottom: '2.5em' }} />;
+const SpaceingComponent = () => <div style={{ marginBottom: '2.8em' }} />;
 
 const FormOverViewView = (props) => {
   const { data, error, isLoading } = props;
@@ -146,10 +150,10 @@ const FormOverViewView = (props) => {
         })
       )
       .finally(() => setIsFetchingFormResultData(false));
-  }, []);
+  }, []); // Just fetch one time
 
   const deleteFormStatus = (params) => () => {
-    // Note: the index of data has been set to writerEmail by getRowId(), so the following two lines are equivalent in this case
+    // Note: the index of data has been set to writerEmail by getRowId(), so the following two lines are equivalent
     const { id } = params;
     const email = params.row.writerEmail;
 
@@ -209,16 +213,24 @@ const FormOverViewView = (props) => {
             emailList={formAssignStatusData}
           />
 
-          <FormActionItem title='查看量表' Icon={<FormModalIcon onClick={formModalOnOpen} />} />
-          <FormActionItem title='分配量表' Icon={<AssignmentModalIcon onClick={assignmentModalOnOpen} />} />
-          <FormActionItem title='寄通知信' Icon={<NotificationModalIcon onClick={notificationModalOnOpen} />} />
+          <Box sx={{ display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row', cursor: 'default' }}>
+            <FormActionItem title='查看量表' Icon={<FormModalIcon onClick={formModalOnOpen} />} />
+            <FormActionItem title='分配量表' Icon={<AssignmentModalIcon onClick={assignmentModalOnOpen} />} />
+            <FormActionItem title='寄通知信' Icon={<NotificationModalIcon onClick={notificationModalOnOpen} />} />
+          </Box>
 
           <Title>量表填寫狀況</Title>
-          <DataGrid isLoading={isFetchingFormAssignStatusData} columns={formStatusColumns} rows={formAssignStatusData} getRowId={getFormStatusRowId} />
+          <DataGrid
+            height={500}
+            isLoading={isFetchingFormAssignStatusData}
+            columns={formStatusColumns}
+            rows={formAssignStatusData}
+            getRowId={getFormStatusRowId}
+          />
           <SpaceingComponent />
 
           <Title>量表回答狀況</Title>
-          <DataGrid isLoading={isFetchingFormResultData} columns={formResultColumns} rows={formResultData} getRowId={getFormResultRowId} />
+          <DataGrid height={500} isLoading={isFetchingFormResultData} columns={formResultColumns} rows={formResultData} getRowId={getFormResultRowId} />
           <SpaceingComponent />
         </>
       ) : (

@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "0.24.0",
     "babel-plugin-module-resolver": "^4.1.0",
+    "date-fns": "^2.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-babel-module": "^5.3.1",
     "eslint-import-resolver-webpack": "^0.13.2",
@@ -26,6 +27,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "formik": "2.2.9",
     "history": "4.10.1",
+    "moment": "^2.29.2",
     "prettier": "^2.4.1",
     "prop-types": "15.7.2",
     "react": "^17.0.2",
@@ -56,12 +58,20 @@
     "react-error-overlay": "6.0.9"
   },
   "eslintConfig": {
-    "extends": ["react-app", "airbnb", "plugin:import/errors", "plugin:import/warnings"],
+    "extends": [
+      "react-app",
+      "airbnb",
+      "plugin:import/errors",
+      "plugin:import/warnings"
+    ],
     "rules": {
       "react/jsx-filename-extension": [
         1,
         {
-          "extensions": [".js", ".jsx"]
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
         }
       ],
       "react/function-component-definition": [
@@ -74,14 +84,25 @@
     "settings": {
       "import/resolver": {
         "node": {
-          "moduleDirectory": ["node_modules", "src/"]
+          "moduleDirectory": [
+            "node_modules",
+            "src/"
+          ]
         }
       }
     }
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
     "eslint": "^7.11.0",

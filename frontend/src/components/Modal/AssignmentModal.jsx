@@ -9,6 +9,7 @@ import ROLES from '@constants/roles';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 
+import DateTimePicker from '@mui/lab/DateTimePicker';
 import {
   Autocomplete,
   Box,
@@ -26,6 +27,7 @@ import {
 const filter = createFilterOptions();
 
 const initialValues = {
+  effectiveTime: new Date(),
   email: [],
   role: '',
   subject: '',
@@ -34,6 +36,10 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object({
+  effectiveTime: Yup.date()
+    .required()
+    .min(new Date(Date.now() - 30000)) // The default value of dateTimePicker is Date.now()
+    .max(new Date('2100-10-10')),
   email: Yup.array().of(Yup.string().email(validateMsg.AUTH.EMAIL_REQUIRED).max(50, validateMsg.TOO_LONG)).min(1, validateMsg.REQUIRED),
   role: Yup.string().required(validateMsg.AUTH.ROLE_REQUIRED),
   subject: Yup.string().required(validateMsg.REQUIRED),
@@ -112,9 +118,36 @@ const AssignmentModal = (props) => {
           }}
         >
           <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
-            指定填寫者（將一併寄出通知信件）
+            生效時間
           </ListSubheader>
+          <DateTimePicker
+            renderInput={(_props) => (
+              <TextField
+                {...{ ..._props /* , fullWidth: true */ }}
+                error={formik.touched.effectiveTime && Boolean(formik.errors.effectiveTime)}
+                helperText={formik.touched.effectiveTime && formik.errors.effectiveTime}
+                // 3d param is set to `false` in order to not clear errors
+                onBlur={() => formik.setFieldTouched('effectiveTime', true, false)}
+              />
+            )}
+            clearable
+            showTodayButton
+            todayText='now'
+            label='請輸入時間'
+            leftArrowButtonText='Open previous month'
+            rightArrowButtonText='Open next month'
+            inputFormat='yyyy/MM/dd HH:mm:ss'
+            minDate={new Date('2022-01-01')}
+            value={formik.values.effectiveTime}
+            // 3d param is set to `true` in order to run validation
+            onChange={(newValue) => formik.setFieldValue('effectiveTime', newValue, true)}
+            // shouldDisableDate={isWeekend} // import isWeekend from "date-fns/isWeekend";
+            // How to use with formik: https://next.material-ui-pickers.dev/guides/forms
+          />
 
+          <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
+            指定填寫者（屆時將一併寄出通知信件）
+          </ListSubheader>
           <Stack spacing={2}>
             <Autocomplete
               multiple
@@ -208,7 +241,7 @@ const AssignmentModal = (props) => {
             <TextField
               fullWidth
               multiline
-              rows={4}
+              rows={3}
               name='footer'
               label='EmailFooter'
               value={formik.values.footer}

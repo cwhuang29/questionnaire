@@ -5,6 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 import GlobalMessageBar from '@components/MessageBar';
 
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import 'index.css';
 
 import App from 'App';
@@ -16,7 +18,9 @@ ReactDOM.render(
     <React.StrictMode>
       <GlobalMessageBar>
         <BrowserRouter>
-          <App />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <App />
+          </LocalizationProvider>
         </BrowserRouter>
       </GlobalMessageBar>
     </React.StrictMode>
