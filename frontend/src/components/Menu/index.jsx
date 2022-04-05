@@ -32,6 +32,13 @@ const MenuBarItem = ({ label, onClick }) => (
   </MenuItem>
 );
 
+const loginDefaultMenuItems = [{ label: '登出', url: '/logout' }];
+
+const unLoginDefaultMenuItems = [
+  { label: '登入', url: '/login' },
+  { label: '註冊', url: '/register' },
+];
+
 const isCreateOrUpdateForm = (pathname) => /\/create\/form|\/update\/form/.test(pathname);
 
 const Menu = () => {
@@ -41,13 +48,7 @@ const Menu = () => {
 
   const onClick = (url) => () => navigate(`${url}`);
   const adminItems = isAdmin() && !isCreateOrUpdateForm(pathname) ? [{ label: '創建問卷', url: '/create/form' }] : [];
-  const menuBarItems = jwt
-    ? [{ label: '登出', url: '/logout' }]
-    : [
-        { label: '登入', url: '/login' },
-        { label: '註冊', url: '/register' },
-      ];
-
+  const menuBarItems = jwt ? loginDefaultMenuItems : unLoginDefaultMenuItems;
   const allItems = [...menuBarItems, ...adminItems];
 
   return (
