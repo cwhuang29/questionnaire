@@ -1,24 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 
-import { getCreditCardLoan } from '@actions/loan';
 import TransactionModal from '@components/Transaction/TransactionModal';
 
 const title = '明細總覽';
 
 export const CreditCardTransactionRecord = () => {
   const [open, setOpen] = useState(true);
-  const [record, setRecord] = useState(null);
   const onClose = () => setOpen(false);
-  const dispatch = useDispatch();
+  const record = {};
 
-  useEffect(() => {
-    dispatch(getCreditCardLoan())
-      .then((data) => {
-        setRecord(data);
-      })
-      .catch(() => {});
-  }, [dispatch]);
   return record ? (
     <TransactionModal
       open={open}
