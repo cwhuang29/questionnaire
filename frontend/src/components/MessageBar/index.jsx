@@ -24,7 +24,7 @@ const GlobalMessageBar = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [isClosedManually, setIsClosedManually] = useState(false);
   const [startNextTimer, setStartNextTimer] = useState(true);
-  const generateKey = ({ timestamp, title, content }) => `${timestamp}${title}${content}`;
+  const generateKey = ({ timestamp, title, content }) => `${timestamp}${title}${content.slice(0, 20)}`;
 
   useEffect(() => {
     if (messages.length === 0) {

@@ -16,7 +16,7 @@ const FormUpdate = () => {
   const isAdminUser = isAdmin();
   const { addGlobalMessage } = useGlobalMessageContext();
   const { formId } = useParams();
-  const { state: formData } = useLocation();
+  const { state: formData } = useLocation(); // Passed from FormOverview
 
   const title = '更新量表';
   const submitAction = (data) => updateForm(formId, data);

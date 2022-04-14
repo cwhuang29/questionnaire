@@ -10,6 +10,7 @@ import Login from '@pages/Login';
 import Logout from '@pages/Logout';
 import Register from '@pages/Register';
 import Test from '@pages/Test';
+import { UserOverview } from '@pages/User';
 
 const NoMatch = () => (
   <div>
@@ -39,6 +40,7 @@ const App = () => {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
         <Route path='/logout' element={<Logout />} />
+        <Route path='/users/overview' element={<UserOverview />} />
         <Route path='/forms/:formId' element={<Form />} />
         <Route path='/forms/answer/:formId' element={<FormAnswerLayout />} />
         <Route path='/forms/answer/:formId' element={<FormAnswerLayout />} />

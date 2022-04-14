@@ -5,6 +5,8 @@ export default {
     LOGIN: '/v2/login',
     REGISTER: '/v2/register',
 
+    USERS_OVERVIEW: '/v2/users/overview',
+
     FORMS: '/v2/forms',
     // FORM: '/v2/forms',
     TODO_FORMS: '/v2/forms/todo',

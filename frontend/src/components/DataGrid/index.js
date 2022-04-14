@@ -67,7 +67,7 @@ const DataGrid = (props) => {
 
   return (
     <div style={{ display: 'flex', overflow: 'auto', ...heightCSS }}>
-      <div style={{ flexGrow: 2 }}>
+      <div style={{ flexGrow: 1 }}>
         <StyledDataGrid
           hideFooterSelectedRowCount
           disableDensitySelector
@@ -101,13 +101,13 @@ const DataGrid = (props) => {
 };
 
 DataGrid.propTypes = {
-  height: PropTypes.number,
-  rows: PropTypes.array,
-  columns: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  onCellDoubleClick: PropTypes.func,
+  columns: PropTypes.array.isRequired,
+  rows: PropTypes.array,
+  height: PropTypes.number,
   autoHeight: PropTypes.bool,
   checkboxSelection: PropTypes.bool,
+  onCellDoubleClick: PropTypes.func,
   onSelectionModelChange: PropTypes.func,
   getRowId: PropTypes.func,
 };
@@ -115,9 +115,9 @@ DataGrid.propTypes = {
 DataGrid.defaultProps = {
   rows: [],
   height: 600,
-  onCellDoubleClick: null,
   autoHeight: false,
   checkboxSelection: false,
+  onCellDoubleClick: null,
   onSelectionModelChange: null,
   getRowId: null,
 };

@@ -18,7 +18,11 @@ const PageWrapper = ({ children }) => (
 );
 
 PageWrapper.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]),
+};
+
+PageWrapper.defaultProps = {
+  children: null,
 };
 
 export default PageWrapper;

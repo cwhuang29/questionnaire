@@ -71,7 +71,7 @@ const Title = ({ children }) => (
   </Typography>
 );
 
-const SpaceingComponent = () => <div style={{ marginBottom: '2.8em' }} />;
+const SpacingComponent = () => <div style={{ marginBottom: '2.8em' }} />;
 
 const FormOverViewView = (props) => {
   const { data, error, isLoading } = props;
@@ -102,12 +102,15 @@ const FormOverViewView = (props) => {
 
   const AssignmentOnSubmit = async (assignmentData) => {
     const resp = await formService.createFormStatus(formId, assignmentData);
-    setIsFetchingFormAssignStatusData(true); // Note: the form status and notification history won't update until emails are sent out
+    // Update form status after the assignment took effect
+    // Note: the form status and notification history won't update until emails are sent out
+    setIsFetchingFormAssignStatusData(true);
     return resp;
   };
 
   const notificationOnSubmit = async (notificationData) => {
     const resp = await notificationService.sendEmailNotificaionByFormId(formId, notificationData);
+    // Update form status after the notifications sent out
     setIsFetchingFormAssignStatusData(true);
     return resp;
   };
@@ -227,11 +230,11 @@ const FormOverViewView = (props) => {
             rows={formAssignStatusData}
             getRowId={getFormStatusRowId}
           />
-          <SpaceingComponent />
+          <SpacingComponent />
 
           <Title>量表回答狀況</Title>
           <DataGrid height={500} isLoading={isFetchingFormResultData} columns={formResultColumns} rows={formResultData} getRowId={getFormResultRowId} />
-          <SpaceingComponent />
+          <SpacingComponent />
         </>
       ) : (
         <div />

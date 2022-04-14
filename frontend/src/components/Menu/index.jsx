@@ -32,14 +32,17 @@ const MenuBarItem = ({ label, onClick }) => (
   </MenuItem>
 );
 
-const loginDefaultMenuItems = [{ label: '登出', url: '/logout' }];
+const loginDefaultMenuItems = [
+  { label: '查看用戶', url: '/users/overview' },
+  { label: '登出', url: '/logout' },
+];
 
 const unLoginDefaultMenuItems = [
   { label: '登入', url: '/login' },
   { label: '註冊', url: '/register' },
 ];
 
-const isCreateOrUpdateForm = (pathname) => /\/create\/form|\/update\/form/.test(pathname);
+const isCreateOrUpdateFormPage = (pathname) => /\/create\/form|\/update\/form/.test(pathname);
 
 const Menu = () => {
   const { pathname } = useLocation(); // URL http://127.0.0.1:3000/?a=123#ok returns {pathname: '/', search: '?a=123', hash: '#ok' ...}
@@ -47,7 +50,7 @@ const Menu = () => {
   const { jwt } = useAuth();
 
   const onClick = (url) => () => navigate(`${url}`);
-  const adminItems = isAdmin() && !isCreateOrUpdateForm(pathname) ? [{ label: '創建問卷', url: '/create/form' }] : [];
+  const adminItems = isAdmin() && !isCreateOrUpdateFormPage(pathname) ? [{ label: '創建問卷', url: '/create/form' }] : [];
   const menuBarItems = jwt ? loginDefaultMenuItems : unLoginDefaultMenuItems;
   const allItems = [...menuBarItems, ...adminItems];
 
