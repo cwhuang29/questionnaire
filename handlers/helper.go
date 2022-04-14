@@ -115,6 +115,18 @@ func getUser(email string) models.User {
 	return databases.GetUserByEmail(email)
 }
 
+func getAllUsers() []User {
+	dbUsers := databases.GetAllUsers()
+
+	users := make([]User, len(dbUsers))
+	for i, u := range dbUsers {
+		dbFormStatus := databases.GetFormStatusByUserEmail(u.Email, true)
+		dbForms := getFormsByFormStatuses(dbFormStatus)
+		users[i] = transformUserToWebFormat(u, dbFormStatus, dbForms)
+	}
+
+	return users
+}
 func getAllForms() []Form {
 	dbForms := databases.GetAllForms(true)
 
@@ -144,7 +156,7 @@ func getFormListByIDList(ids []int) []Form {
 }
 
 func getFormStatusByFormID(formID int) []FormStatus {
-	dbFormStatus := databases.GetFormStatusByFormId(formID, true)
+	dbFormStatus := databases.GetFormStatusByFormID(formID, true)
 	form := databases.GetFormByID(formID, true)
 
 	formStatus := make([]FormStatus, len(dbFormStatus))
@@ -281,6 +293,24 @@ func getFormStatusByFormIDAndWriterEmail(formID int, email string) FormStatus {
 func getAnswerForm(form Form, user models.User, role utils.RoleType) (Form, error) {
 	form = extractParticularRoleInForm(form, role)
 	return form, nil
+}
+
+func getFormsByFormStatuses(formStatus []models.FormStatus) []models.Form {
+	formIDs := make([]int, len(formStatus))
+
+	for idx, formAnswer := range formStatus {
+		formIDs[idx] = formAnswer.FormID
+	}
+	return databases.GetFormsByIDs(formIDs, true)
+}
+
+func getFormsByFormAnswers(formAnswers []models.FormAnswer) []models.Form {
+	formIDs := make([]int, len(formAnswers))
+
+	for idx, formAnswer := range formAnswers {
+		formIDs[idx] = formAnswer.FormID
+	}
+	return databases.GetFormsByIDs(formIDs, true)
 }
 
 func insertFormToDb(form models.Form) (int, error) {
@@ -426,7 +456,7 @@ func removeDuplicateEmail(emailNotification EmailNotification) EmailNotification
 
 // Remove users who have been assigned to this form before
 func removeDuplicateAssign(id int, assignForm AssignForm) AssignForm {
-	dbFormStatus := databases.GetFormStatusByFormId(id, true)
+	dbFormStatus := databases.GetFormStatusByFormID(id, true)
 
 	hasAssignedEmail := make([]string, len(dbFormStatus))
 	for idx, f := range dbFormStatus {

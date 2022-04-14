@@ -19,6 +19,11 @@ func GetUser(id int) (user models.User) {
 	return
 }
 
+func GetAllUsers() (users []models.User) {
+	db.Order("id desc").Find(&users)
+	return
+}
+
 func GetUserByEmail(email string) (user models.User) {
 	db.Table("users").Where("email = ?", email).Find(&user)
 	return

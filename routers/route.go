@@ -29,6 +29,7 @@ func injectRoutesV2(router *gin.Engine) {
 		v2.OPTIONS("/login", handlers.HandlePreflight)
 		v2.OPTIONS("/register", handlers.HandlePreflight)
 		v2.OPTIONS("/users/me", handlers.HandlePreflight)
+		v2.OPTIONS("/users/overview", handlers.HandlePreflight)
 		v2.OPTIONS("/forms", handlers.HandlePreflight)
 		v2.OPTIONS("/forms/todo", handlers.HandlePreflight)
 		v2.OPTIONS("/forms/:formId", handlers.HandlePreflight)
@@ -53,6 +54,7 @@ func injectRoutesV2(router *gin.Engine) {
 
 			v2.Use(AdminRequired())
 			{
+				v2.GET("/users/overview", handlers.UsersOverview)
 				v2.GET("/forms", handlers.Forms)
 				v2.GET("/forms/:formId", handlers.Forms) // ":" is mandatory oaram, "*" is optional params
 				v2.GET("/forms/status/:formId", handlers.GetFormStatus)

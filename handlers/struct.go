@@ -16,6 +16,16 @@ func (s UserStatus) String() string {
 	return [...]string{"guest", "member", "verified member", "admin", "verified admin"}[s]
 }
 
+type User struct {
+	Name          string    `json:"name,omitempty"`
+	Email         string    `json:"email,omitempty"`
+	CreatedAt     time.Time `json:"createdAt,omitempty"`
+	FillOutCount  int       `json:"fillOutCount"`
+	FillOutNames  []string  `json:"fillOutNames"`
+	AssignedCount int       `json:"assignedCount"`
+	AssignedNames []string  `json:"assignedNames"`
+}
+
 type Form struct {
 	ID     int    `json:"id"`
 	Author string `json:"author,omitempty"`

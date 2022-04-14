@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
@@ -10,6 +11,38 @@ import (
 	"github.com/cwhuang29/questionnaire/databases/models"
 	"github.com/cwhuang29/questionnaire/utils"
 )
+
+const (
+	USER_OVERVIEW_FORM_DISPLAY_STATUS = "%s (%s)"
+)
+
+func getFormOverViewDisplayStatus(name string, t time.Time) string {
+	formattedTime := fmt.Sprintf("%d-%02d-%02d %02d:%02d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute())
+	return fmt.Sprintf(USER_OVERVIEW_FORM_DISPLAY_STATUS, name, formattedTime)
+}
+
+func transformUserToWebFormat(user models.User, formStatuses []models.FormStatus, forms []models.Form) (u User) {
+	assignedNames := make([]string, len(formStatuses))
+	fillOutNames := make([]string, 0)
+
+	for idx, formStatus := range formStatuses {
+		formName := forms[idx].FormName
+
+		assignedNames[idx] = getFormOverViewDisplayStatus(formName, formStatus.AssignedAt)
+		if utils.FormStatus(formStatus.Status).IsFinish() {
+			fillOutNames = append(fillOutNames, getFormOverViewDisplayStatus(formName, *formStatus.FinishAt))
+		}
+	}
+
+	u.Name = user.GetName()
+	u.Email = user.Email
+	u.CreatedAt = user.CreatedAt
+	u.FillOutCount = len(fillOutNames)
+	u.FillOutNames = fillOutNames
+	u.AssignedCount = len(assignedNames)
+	u.AssignedNames = assignedNames
+	return
+}
 
 func transformFormToWebFormat(form models.Form) (f Form) {
 	f.ResearchName = strings.Split(form.ResearchName, ",")
