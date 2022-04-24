@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/cwhuang29/questionnaire/constants"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 )
@@ -132,6 +133,7 @@ func Initial(configFilePath string) error {
 
 	cfg.setDefaultValue()
 	cfg.setOverwriteValue()
+	cfg.OriginURL = os.Getenv(constants.ORIGIN_URL_KEY)
 
 	return nil
 }
