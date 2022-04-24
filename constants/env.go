@@ -1,6 +1,5 @@
 package constants
 
 const (
-	ORIGIN_URL_KEY = "origin_url"
+	ORIGIN_HEADER_URL_KEY = "ORIGIN_HEADER_URL"
 )
-

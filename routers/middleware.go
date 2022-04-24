@@ -26,10 +26,10 @@ func shouldAllowCORS(appUrl, origin string) bool {
 
 func CORSRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		originURL := config.GetCopy().OriginURL
-		if shouldAllowCORS(originURL, c.Request.Header.Get("Origin")) {
-			c.Header("Access-Control-Allow-Origin", originURL)   // No slash in the end
-			c.Header("Access-Control-Allow-Credentials", "true") // To set cookies, frontend send requests with withCredentials = true
+		originHeaderURL := config.GetCopy().OriginHeaderURL
+		if shouldAllowCORS(originHeaderURL, c.Request.Header.Get("Origin")) {
+			c.Header("Access-Control-Allow-Origin", originHeaderURL) // No slash in the end
+			c.Header("Access-Control-Allow-Credentials", "true")     // To set cookies, frontend send requests with withCredentials = true
 			c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
 			c.Header("Access-Control-Allow-Headers", "Accept,Authorization,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token,X-Questionnaire-Header")
 			c.Header("Access-Control-Max-Age", "600")
