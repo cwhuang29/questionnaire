@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -133,7 +134,9 @@ func Initial(configFilePath string) error {
 
 	cfg.setDefaultValue()
 	cfg.setOverwriteValue()
-	cfg.OriginURL = os.Getenv(constants.ORIGIN_URL_KEY)
+	cfg.OriginHeaderURL = os.Getenv(constants.ORIGIN_HEADER_URL_KEY)
 
+	fmt.Println("Config setup!")
+	fmt.Println(cfg)
 	return nil
 }

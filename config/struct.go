@@ -21,12 +21,12 @@ type env struct {
 }
 
 type config struct {
-	App       `yaml:"app,omitempty"`
-	Database  `yaml:"database,omitempty"`
-	Admin     `yaml:"admin,omitempty"`
-	Email     `yaml:"email,omitempty"`
-	JWT       `yaml:"jwt,omitempty"`
-	OriginURL string
+	App             `yaml:"app,omitempty"`
+	Database        `yaml:"database,omitempty"`
+	Admin           `yaml:"admin,omitempty"`
+	Email           `yaml:"email,omitempty"`
+	JWT             `yaml:"jwt,omitempty"`
+	OriginHeaderURL string
 }
 
 type App struct {
