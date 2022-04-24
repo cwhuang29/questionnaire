@@ -68,7 +68,7 @@ const App = () => {
 // <Route path='/home' element={<Home />} />
 // React router v5
 // useEffect(() => {
-//   const unlisten = history.listen((location) => {
+//   const unlisten = history.listen((location) => { // Run this function every time user enters this page
 //     clearAllGlobalMessages();
 //   });
 //   return () => {
