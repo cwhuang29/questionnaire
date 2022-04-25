@@ -95,12 +95,10 @@ func transformFormStatusToWebFormat(formStatus models.FormStatus, form models.Fo
 	if sender != nil {
 		f.EmailSender = sender.GetName()
 	}
-	// if createdAt != nil {
-	//     f.EmailLastSentTime = createdAt
-	// }
-	// Same as above cause when there is no record, gorm returns an empty struct
-	// Besides, time.Time is a struct which cannot have a nil value. It's "zero" value is: 0001-01-01 00:00:00 +0000 UTC
-	f.EmailLastSentTime = *createdAt
+	if createdAt != nil {
+		// time.Time is a struct which cannot have a nil value. It's "zero" value is: 0001-01-01 00:00:00 +0000 UTC
+		f.EmailLastSentTime = *createdAt
+	}
 
 	return
 }
