@@ -4,6 +4,14 @@ import (
 	"time"
 )
 
+func ConvertToTimezone(t time.Time, tz string) time.Time {
+	loc, err := time.LoadLocation(tz)
+	if err != nil {
+		panic(err)
+	}
+	return t.In(loc)
+}
+
 func IsExpired(startTime time.Time, period int) bool {
 	now := time.Now().UTC().Truncate(time.Second)
 	if now.Sub(startTime).Seconds() > float64(period) {

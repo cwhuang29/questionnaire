@@ -17,7 +17,8 @@ const (
 )
 
 func getFormOverViewDisplayStatus(name string, t time.Time) string {
-	formattedTime := fmt.Sprintf("%d-%02d-%02d %02d:%02d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute())
+	tt := utils.ConvertToTimezone(t, constants.DefaultTZ)
+	formattedTime := fmt.Sprintf("%d-%02d-%02d %02d:%02d", tt.Year(), tt.Month(), tt.Day(), tt.Hour(), tt.Minute())
 	return fmt.Sprintf(USER_OVERVIEW_FORM_DISPLAY_STATUS, name, formattedTime)
 }
 
