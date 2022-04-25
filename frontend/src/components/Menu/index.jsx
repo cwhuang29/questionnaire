@@ -33,8 +33,8 @@ const MenuBarItem = ({ label, onClick }) => (
 );
 
 const loginDefaultMenuItems = [
-  { label: '查看用戶', url: '/users/overview' },
   { label: '登出', url: '/logout' },
+  { label: '查看用戶', url: '/users/overview' },
 ];
 
 const unLoginDefaultMenuItems = [
@@ -50,8 +50,8 @@ const Menu = () => {
   const { jwt } = useAuth();
 
   const onClick = (url) => () => navigate(`${url}`);
-  const adminItems = isAdmin() && !isCreateOrUpdateFormPage(pathname) ? [{ label: '創建問卷', url: '/create/form' }] : [];
   const menuBarItems = jwt ? loginDefaultMenuItems : unLoginDefaultMenuItems;
+  const adminItems = isAdmin() && !isCreateOrUpdateFormPage(pathname) ? [{ label: '創建問卷', url: '/create/form' }] : [];
   const allItems = [...menuBarItems, ...adminItems];
 
   return (

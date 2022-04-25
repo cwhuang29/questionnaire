@@ -14,11 +14,11 @@ export const snakeCaseToCamelCase = (s) => {
 
 export const toTransactionNumber = (s) => {
   const str = s.toString();
-  const flag = Number.isNaN(str.charAt(0));
-  const prefix = flag ? str.charAt(0) : '';
-  const startIdx = flag ? 1 : 0;
+  const hasSign = Number.isNaN(str.charAt(0));
+  const sign = hasSign ? str.charAt(0) : '';
+  const startIdx = hasSign ? 1 : 0;
   const ss = str.slice(startIdx).split('.');
 
   ss[0] = ss[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return prefix + ss.join('.');
+  return sign + ss.join('.');
 };
