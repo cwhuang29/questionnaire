@@ -47,6 +47,8 @@ const (
 	QueryBookmarkedErr = "Parameter bookmarked should be either 0 or 1"
 	QueryLikedErr      = "Parameter liked should be either 0 or 1"
 
+	NoNewAssignee = "There is no new assignee. Please check your email list again"
+
 	EmailNotFound         = "Email not found"
 	EmailOccupied         = "This email is already registered"
 	EmailChangeAnother    = "Please use another email"

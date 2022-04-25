@@ -497,8 +497,8 @@ func SendRemindWritingFormByEmail(formId int, senderEmail string, emailNotificat
 		fail := len(failedEmails)
 		log.ErrorMsg("Sent notification emails failed. Total: ", total, ". Failed: ", fail, ". Operator: ", senderEmail, ". Form Id: ", formId)
 
-		errBody := fmt.Sprintf("Failed emails: %s", failedEmails)
-		return errors.New(errBody)
+		errText := fmt.Sprintf("Failed emails: %s", failedEmails)
+		return errors.New(errText)
 	}
 
 	dbNotificationHistory = notificationPostprocessing(dbNotificationHistory, failedEmails)

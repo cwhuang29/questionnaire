@@ -100,8 +100,7 @@ func CreateFormStatus(c *gin.Context) {
 	assignForm.EmailNotification = removeDuplicateEmail(assignForm.EmailNotification)
 	assignForm = removeDuplicateAssign(id, assignForm)
 	if len(assignForm.Recipient) == 0 {
-		title := "There is no new assignee. Please check your email list again"
-		c.JSON(http.StatusOK, gin.H{"title": title})
+		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.NoNewAssignee})
 		return
 	}
 
@@ -115,7 +114,8 @@ func CreateFormStatus(c *gin.Context) {
 	sendImmediately := isNotificaionEffectImmediately(assignForm)
 	if sendImmediately {
 		if err = SendRemindWritingFormByEmail(id, email, assignForm.EmailNotification); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.EmailSentErr, "errBody": err.Error()})
+			// Even if the emails did not send out successfully, the users are still assigned
+			c.JSON(http.StatusOK, gin.H{"errHead": constants.EmailSentErr, "errBody": err.Error()})
 			return
 		}
 

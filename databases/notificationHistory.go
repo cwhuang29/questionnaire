@@ -10,7 +10,7 @@ func GetNotificationByTypeAndFormId(notificationType, formId int) (notificationH
 }
 
 func GetNotificationHistoryByTypeAndFormIdAndReceiverAndResult(notificationType, formId int, receiver string, result bool) (notificationHistory models.NotificationHistory) {
-	db.Where("notification_type = ? and form_id = ? and receiver = ? and result = ?", notificationType, formId, receiver, result).Last(&notificationHistory)
+	db.Where("notification_type = ? and form_id = ? and receiver = ? and result = ?", notificationType, formId, receiver, result).Find(&notificationHistory)
 	return
 }
 
