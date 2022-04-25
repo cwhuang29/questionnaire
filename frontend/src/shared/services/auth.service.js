@@ -17,13 +17,13 @@ const login = ({ email, password }) =>
       email,
       password,
     })
-    .then(async (resp) => {
+    .then(async resp => {
       const { token: jwtToken } = resp.data;
       let userData = {}; // The user data stores in user table
 
       if (jwtToken) {
         const header = { Authorization: `Bearer ${resp.data.token}` };
-        const user = await userService.getCurrentUserData(header).catch((error) => Promise.reject(error));
+        const user = await userService.getCurrentUserData(header).catch(error => Promise.reject(error));
         userData = { ...user.data };
       }
 

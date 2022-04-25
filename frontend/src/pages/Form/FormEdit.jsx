@@ -25,7 +25,7 @@ const filter = createFilterOptions();
 
 const researchList = []; // TODO
 
-const getNewQuestionState = (roleQuestionState) => {
+const getNewQuestionState = roleQuestionState => {
   const numOfQuestions = roleQuestionState.length;
   const defaultQuestion = getDefaultQuestionState({ id: numOfQuestions });
   const prevQuestionOptions = numOfQuestions === 0 ? [] : roleQuestionState[numOfQuestions - 1].options;
@@ -45,7 +45,7 @@ const questionsReducer = (state, action) => {
     case createFormActionType.SET_QUESTION:
       return {
         ...state,
-        [payload.role]: state[payload.role].map((question) => (question.id === payload.value.id ? payload.value : question)),
+        [payload.role]: state[payload.role].map(question => (question.id === payload.value.id ? payload.value : question)),
       };
     case createFormActionType.REMOVE_QUESTION:
       return {
@@ -63,13 +63,13 @@ const formikValidationSchema = Yup.object({
   formCustId: Yup.string().required(validateMsg.REQUIRED),
   minScore: Yup.number(validateMsg.IS_NUMBER).min(0).required(validateMsg.REQUIRED),
   optionsCount: Yup.number().min(1).max(10).required(validateMsg.REQUIRED),
-  formTitle: Yup.object().shape(Object.fromEntries(roles.map((role) => [role, '']))),
+  formTitle: Yup.object().shape(Object.fromEntries(roles.map(role => [role, '']))),
   formIntro: Yup.object(),
   // date: Yup.date().default(() => new Date()).max(new Date(), "Are you a time traveler?!"),
   // wouldRecommend: Yup.boolean().default(false),
 });
 
-const FormEdit = (props) => {
+const FormEdit = props => {
   const { title, operationType, submitAction, formData } = props;
   const initialFormValues = operationType === FORM_OPERATION_TYPE.CREATE ? formEmptyValues : formData;
   const initialQuestionsValues = operationType === FORM_OPERATION_TYPE.CREATE ? questionsEmptyState : formData.questions;
@@ -86,7 +86,7 @@ const FormEdit = (props) => {
     initialValues: initialFormValues,
     validationSchema: formikValidationSchema,
     validateOnChange: false,
-    validate: (values) => {
+    validate: values => {
       let hasError = false;
 
       if (!loading) {
@@ -94,8 +94,8 @@ const FormEdit = (props) => {
         clearAllGlobalMessages();
       }
 
-      roleProfiles.forEach((role) =>
-        questionState[role.label].forEach((question) => {
+      roleProfiles.forEach(role =>
+        questionState[role.label].forEach(question => {
           if (question.label === '') {
             hasError = true;
             addGlobalMessage({
@@ -118,7 +118,7 @@ const FormEdit = (props) => {
       );
       return hasError ? { questionError: '' } : {};
     },
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       if (!loading) {
         return;
       }
@@ -132,7 +132,7 @@ const FormEdit = (props) => {
 
       const finalValue = { ...values, questions: questionState };
       await dispatch(submitAction(finalValue))
-        .then((resp) => {
+        .then(resp => {
           clearAllGlobalMessages();
           addGlobalMessage({
             title: resp.title,
@@ -141,7 +141,7 @@ const FormEdit = (props) => {
           });
           navigate('/');
         })
-        .catch((err) => {
+        .catch(err => {
           clearAllGlobalMessages();
           addGlobalMessage({
             title: err.title,
@@ -157,7 +157,7 @@ const FormEdit = (props) => {
     },
   });
   const submitButtonOnClick = () => {
-    formik.validateForm().then((formErrors) => {
+    formik.validateForm().then(formErrors => {
       if (Object.keys(formErrors).length === 0) {
         const finalValue = { ...formik.values, questions: questionState };
         setModalData(finalValue);
@@ -180,7 +180,7 @@ const FormEdit = (props) => {
 
   const handleChildChange =
     ({ role }) =>
-    (value) =>
+    value =>
       questionDispatch({ type: createFormActionType.SET_QUESTION, payload: { role, value } });
 
   return (
@@ -202,10 +202,10 @@ const FormEdit = (props) => {
             defaultValue={initialFormValues.researchName}
             renderOption={(_props, option) => <li {..._props}>{option.label}</li>}
             onChange={(e, value) => {
-              const revisedValue = value.map((v) => (v.constructor === Object ? v.label : v)); // The element in the option list are obejcts
+              const revisedValue = value.map(v => (v.constructor === Object ? v.label : v)); // The element in the option list are obejcts
               formik.setFieldValue('researchName', revisedValue); // Use this to replace value={formik.values.researchName}
             }}
-            renderInput={(params) => (
+            renderInput={params => (
               <TextField
                 {...params}
                 label='研究名稱'
@@ -216,14 +216,14 @@ const FormEdit = (props) => {
             )}
             filterOptions={(options, params) => {
               const { inputValue } = params;
-              const isExisting = options.some((option) => inputValue === option.label);
+              const isExisting = options.some(option => inputValue === option.label);
               const filtered = filter(options, params);
               if (inputValue !== '' && !isExisting) {
                 filtered.push({ inputValue, label: inputValue });
               }
               return filtered;
             }}
-            getOptionLabel={(option) => {
+            getOptionLabel={option => {
               if (typeof option === 'string') {
                 return option; // Value selected with enter, right from the input
               }
@@ -277,7 +277,7 @@ const FormEdit = (props) => {
               helperText={formik.touched.optionsCount && formik.errors.optionsCount}
               sx={{ width: '48%' }}
             >
-              {optionsCountList.map((option) => (
+              {optionsCountList.map(option => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -287,7 +287,7 @@ const FormEdit = (props) => {
         </Stack>
         <br />
 
-        {roleProfiles.map((role) => (
+        {roleProfiles.map(role => (
           <React.Fragment key={role.id}>
             <RoleDivider {...role} />
             <Stack spacing={3} sx={{ mb: '20px' }}>
@@ -315,7 +315,7 @@ const FormEdit = (props) => {
               />
             </Stack>
 
-            {questionState[role.label].map((question) => (
+            {questionState[role.label].map(question => (
               <Question key={question.id} role={role.label} value={question} handleChange={handleChildChange({ role: role.label })} />
             ))}
 

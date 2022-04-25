@@ -24,7 +24,7 @@ const validationSchema = Yup.object({
   footer: Yup.string(),
 });
 
-const EmailNotificationModal = (props) => {
+const EmailNotificationModal = props => {
   const { open, onClose, onSubmit, submitButtonText, cancelButtonText, isFetchingEmail, emailList } = props;
   const [loading, setLoading] = useState(false);
   const { addGlobalMessage } = useGlobalMessageContext();
@@ -34,7 +34,7 @@ const EmailNotificationModal = (props) => {
     initialValues,
     validationSchema,
     // validate: (values) => console.log(JSON.stringify(values, null, 2)),
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       setLoading(true);
       addGlobalMessage({
         title: msg.REQUEST_IS_HANDLING,
@@ -42,7 +42,7 @@ const EmailNotificationModal = (props) => {
         timestamp: Date.now(),
       });
       await onSubmit(values)
-        .then((resp) => {
+        .then(resp => {
           addGlobalMessage({
             title: resp.title,
             content: resp.content,
@@ -51,7 +51,7 @@ const EmailNotificationModal = (props) => {
           });
           onClose();
         })
-        .catch((err) => {
+        .catch(err => {
           addGlobalMessage({
             title: err.title,
             content: err.content,
@@ -111,10 +111,10 @@ const EmailNotificationModal = (props) => {
               onChange={(e, value) => {
                 // Since this Autocomplete only accesses inputs from options list, the element in the give array is the same as those in input data
                 // However, after reopening modal, the old data provied by defaultValue will be array of string
-                const revisedValue = value.map((v) => (v.constructor === Object ? v.writerEmail : v));
+                const revisedValue = value.map(v => (v.constructor === Object ? v.writerEmail : v));
                 formik.setFieldValue('email', revisedValue);
               }}
-              renderInput={(params) => (
+              renderInput={params => (
                 <TextField
                   {...params}
                   label='請輸入email'
@@ -123,7 +123,7 @@ const EmailNotificationModal = (props) => {
                   helperText={formik.touched.email && formik.errors.email}
                 />
               )}
-              getOptionLabel={(option) => {
+              getOptionLabel={option => {
                 if (typeof option === 'string') {
                   return option;
                 }

@@ -31,9 +31,9 @@ const columns = [
     flex: 1,
     align: 'left',
     valueFormatter: ({ value }) => value.join(', '),
-    renderCell: (params) => (
+    renderCell: params => (
       <div>
-        {params.value.map((p) => (
+        {params.value.map(p => (
           <div key={p} style={{ fontSize: '0.8rem !important', margin: '2px 0px' }}>
             {p}
           </div>
@@ -62,7 +62,7 @@ const columns = [
   },
 ];
 
-const FormListView = (props) => {
+const FormListView = props => {
   const navigate = useNavigate();
   const { data, error, isLoading } = props;
   const { data: formData = [] } = data;
@@ -72,23 +72,23 @@ const FormListView = (props) => {
   const { addGlobalMessage } = useGlobalMessageContext();
   const confirmButtonText = '輸出表單';
 
-  const onCellDoubleClick = (params) => {
+  const onCellDoubleClick = params => {
     if (params.field === 'formName') {
       navigate(`/forms/${params.id}`);
     }
   };
 
-  const onSelectionModelChange = (ids) => setSelectedRows(ids); // An array contains ids of all rows selected
+  const onSelectionModelChange = ids => setSelectedRows(ids); // An array contains ids of all rows selected
 
-  const exportAllSelectedForm = (formIds) => formService.exportSelectedForms(formIds);
+  const exportAllSelectedForm = formIds => formService.exportSelectedForms(formIds);
 
-  const generateCSV = (resultData) => {
+  const generateCSV = resultData => {
     // console.log(JSON.stringify(resultData, null, 2));
     const resultDataSortBySelectedOrder = resultData.sort((a, b) => selectedRows.indexOf(a.id) - selectedRows.indexOf(b.id));
 
     const csvBody = new Map();
-    resultDataSortBySelectedOrder.forEach((form) =>
-      form.results.forEach((result) => {
+    resultDataSortBySelectedOrder.forEach(form =>
+      form.results.forEach(result => {
         csvBody.set(result.email, [result.name, result.email, result.role]);
         // csvBody[result.email] = [result.name, result.email, result.role];
       })
@@ -97,13 +97,13 @@ const FormListView = (props) => {
     let csvTitle = ['Name', 'Email', 'Role'];
     const commonTitle = ['Answer Time', 'Score'];
 
-    resultDataSortBySelectedOrder.forEach((form) => {
+    resultDataSortBySelectedOrder.forEach(form => {
       const questionIds = Array(form.maxQuestionsCount)
         .fill()
         .map((_, idx) => `${form.formCustId}${idx}`);
-      csvTitle = [...csvTitle, ...commonTitle.map((t) => `${t} (${form.formCustId})`), ...questionIds];
+      csvTitle = [...csvTitle, ...commonTitle.map(t => `${t} (${form.formCustId})`), ...questionIds];
 
-      const emailsOfThisForm = form.results.map((result) => result.email);
+      const emailsOfThisForm = form.results.map(result => result.email);
       Array.from(csvBody).forEach(([key, val]) => {
         if (!emailsOfThisForm.includes(key)) {
           const emptyAttr = { answerTime: '', score: '' };
@@ -113,7 +113,7 @@ const FormListView = (props) => {
         }
       });
 
-      form.results.forEach((result) => {
+      form.results.forEach(result => {
         const userAnswers = [result.answerTime, result.score, ...result.answers, ...Array(form.maxQuestionsCount - result.answers.length).fill('')];
         csvBody.set(result.email, csvBody.get(result.email).concat(userAnswers));
         // csvBody[result.email] = csvBody.get(result.email).concat(userAnswers);
@@ -131,7 +131,7 @@ const FormListView = (props) => {
 
   const submit = async () => {
     const resultData = await exportAllSelectedForm(selectedRows)
-      .then((resp) => {
+      .then(resp => {
         addGlobalMessage({
           title: resp.title,
           severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
@@ -139,7 +139,7 @@ const FormListView = (props) => {
         });
         return resp.data;
       })
-      .catch((err) => {
+      .catch(err => {
         addGlobalMessage({
           title: err.title,
           content: err.content,

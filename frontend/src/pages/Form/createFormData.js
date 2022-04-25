@@ -6,7 +6,7 @@ import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 
 export const roles = ['student', 'parent', 'teacher', 'counseling'];
 
-const getEmptyQuestionForEachRole = () => Object.fromEntries(roles.map((role) => [role, []]));
+const getEmptyQuestionForEachRole = () => Object.fromEntries(roles.map(role => [role, []]));
 
 export const roleProfiles = [
   { id: 0, display: '學生', label: 'student', icon: <FaceIcon /> },

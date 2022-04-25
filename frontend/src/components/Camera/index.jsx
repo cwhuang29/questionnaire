@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 const ImageUploader = () => {
   const [image, setImage] = useState(null);
 
-  onImageChange = (event) => {
+  onImageChange = event => {
     if (event.target.files && event.target.files[0]) {
       const img = event.target.files[0];
       setImage(URL.createObjectURL(img));

@@ -8,10 +8,10 @@ import { extractErrorMessage } from '@utils/handleErrorMessage';
  * Besides, in backend, I put all data in the object with the key "data", just like what axios did
  * So to get the actual data, the syntax is "resp.data.data"
  */
-export const getAllForms = () => (dispatch) =>
+export const getAllForms = () => dispatch =>
   formService
     .getAllForms()
-    .then((resp) => {
+    .then(resp => {
       dispatch({
         type: FORM_STATUS.FETCH_FORMS_SUCCESS,
         payload: { forms: resp.data.data }, // resp.data: { data: [{form01}, {form02}] }. resp.data.data:  [{form01}, {form02}]
@@ -20,12 +20,12 @@ export const getAllForms = () => (dispatch) =>
       // then we will have to modify not only component but also this underlying functions
       return Promise.resolve(resp.data);
     })
-    .catch((err) => Promise.reject(extractErrorMessage(err)));
+    .catch(err => Promise.reject(extractErrorMessage(err)));
 
-export const getFormById = (id) => (dispatch) =>
+export const getFormById = id => dispatch =>
   formService
     .getFormById(id)
-    .then((resp) => {
+    .then(resp => {
       dispatch({
         type: FORM_STATUS.FETCH_FORM_SUCCESS,
         payload: { form: resp.data.data }, // returns {form01}
@@ -33,12 +33,12 @@ export const getFormById = (id) => (dispatch) =>
 
       return Promise.resolve(resp.data);
     })
-    .catch((err) => Promise.reject(extractErrorMessage(err)));
+    .catch(err => Promise.reject(extractErrorMessage(err)));
 
-export const getFormsByUser = () => (dispatch) =>
+export const getFormsByUser = () => dispatch =>
   formService
     .getTodoForms()
-    .then((resp) => {
+    .then(resp => {
       dispatch({
         type: FORM_STATUS.FETCH_TODO_FORMS_SUCCESS,
         payload: { forms: resp.data.data },
@@ -46,18 +46,18 @@ export const getFormsByUser = () => (dispatch) =>
 
       return Promise.resolve(resp.data);
     })
-    .catch((err) => Promise.reject(extractErrorMessage(err)));
+    .catch(err => Promise.reject(extractErrorMessage(err)));
 
 // TODO Add dispatch logic
-export const createForm = (data) => () =>
+export const createForm = data => () =>
   formService
     .createForm(data)
-    .then((resp) => Promise.resolve(resp.data))
-    .catch((err) => Promise.reject(extractErrorMessage(err)));
+    .then(resp => Promise.resolve(resp.data))
+    .catch(err => Promise.reject(extractErrorMessage(err)));
 
 // TODO Add dispatch logic
 export const updateForm = (id, data) => () =>
   formService
     .updateForm(id, data)
-    .then((resp) => Promise.resolve(resp.data))
-    .catch((err) => Promise.reject(extractErrorMessage(err)));
+    .then(resp => Promise.resolve(resp.data))
+    .catch(err => Promise.reject(extractErrorMessage(err)));

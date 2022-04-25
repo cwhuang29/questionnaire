@@ -32,22 +32,22 @@ const reducer = (state, action) => {
   }
 };
 
-export const Question = (props) => {
+export const Question = props => {
   const { role, value, handleChange } = props;
   // If user is editing an existing form, the options come from database. Otherwise, the options may come from previous multiple choice question
   // eslint-disable-next-line no-nested-ternary
   const initialState = value.label ? value : value.options.length ? { ...emptyState, options: value.options } : emptyState;
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const transferStateToParent = (changedInput) => handleChange({ id: value.id, ...state, ...changedInput });
+  const transferStateToParent = changedInput => handleChange({ id: value.id, ...state, ...changedInput });
 
-  const handleReverseGradingChange = (evt) => {
+  const handleReverseGradingChange = evt => {
     const payload = evt.target.checked;
     dispatch({ type: actionType.SET_REVERSE_GRADING, payload });
     transferStateToParent({ isReverseGrading: payload });
   };
 
-  const handleIsMultipleChoice = (evt) => {
+  const handleIsMultipleChoice = evt => {
     const payload = evt.target.checked;
     dispatch({ type: actionType.SET_MULTIPLE_CHOICE, payload });
 
@@ -59,13 +59,13 @@ export const Question = (props) => {
   };
 
   // An onChange event on an input of type number will give you the string corresponding to the entered number. That is a browser behaviour
-  const handleMaxPointChange = (evt) => {
+  const handleMaxPointChange = evt => {
     const maxScore = parseInt(evt.target.value, 10);
     dispatch({ type: actionType.SET_MAX_POINT, payload: maxScore });
     transferStateToParent({ maxScore });
   };
 
-  const handleQuestionChange = (evt) => {
+  const handleQuestionChange = evt => {
     const label = evt.target.value;
     dispatch({ type: actionType.SET_QUESTION, payload: label });
     transferStateToParent({ label });
@@ -110,7 +110,7 @@ export const Question = (props) => {
           options={[]}
           defaultValue={state.options}
           renderOption={(_props, option) => <li {..._props}>{option}</li>}
-          renderInput={(params) => <TextField {...params} label='Options' name={`${role}-${value.id}-option`} value={state.options} />}
+          renderInput={params => <TextField {...params} label='Options' name={`${role}-${value.id}-option`} value={state.options} />}
           onChange={handleOptionsChange}
         />
       )}

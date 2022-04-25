@@ -19,7 +19,7 @@ const validationSchema = Yup.object({
   email: Yup.string().email(validateMsg.AUTH.EMAIL_REQUIRED).required(validateMsg.REQUIRED),
   password: Yup.string().min(8, validateMsg.AUTH.PASSWORD_MIN).required(validateMsg.AUTH.PASSWORD_REQUIRED),
   changepassword: Yup.string().when('password', {
-    is: (val) => !!(val && val.length > 0),
+    is: val => !!(val && val.length > 0),
     then: Yup.string().oneOf([Yup.ref('password')], validateMsg.AUTH.PASSWORD_INCONSISTENTCY),
   }),
   // role: Yup.string().required(validateMsg.AUTH.ROLE_REQUIRED),
@@ -48,13 +48,13 @@ const Register = () => {
       // role: '',
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       setLoading(true);
       setErrorMessage('');
 
       await dispatch(register(values))
         .then(() => navigate('/login'))
-        .catch((err) => setErrorMessage(`${err.title}. ${err.content || ''}`))
+        .catch(err => setErrorMessage(`${err.title}. ${err.content || ''}`))
         .finally(() => setLoading(false));
     },
   });

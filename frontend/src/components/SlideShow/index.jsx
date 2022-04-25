@@ -40,7 +40,7 @@ const Slideshow = () => {
   useEffect(() => {
     resetTimeout();
     timeoutRef.current = setTimeout(() => {
-      setIndex((prevIndex) => (prevIndex === images.length - 1 ? 2 : prevIndex + 1));
+      setIndex(prevIndex => (prevIndex === images.length - 1 ? 2 : prevIndex + 1));
       setShowAnimation(true);
     }, SLIDE_SHOW_DELAY);
     return () => resetTimeout();

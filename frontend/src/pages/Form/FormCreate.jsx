@@ -16,7 +16,7 @@ const FormCreate = () => {
   const { addGlobalMessage } = useGlobalMessageContext();
 
   const title = '創建新量表';
-  const submitAction = (data) => createForm(data);
+  const submitAction = data => createForm(data);
 
   useEffect(() => {
     if (isAdminUser) {

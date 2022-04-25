@@ -9,15 +9,15 @@ import { getDisplayTime } from '@shared/utils/time';
 
 import { Typography } from '@mui/material';
 
-const transformTodoForms = (data) =>
-  data.map((d) => ({
+const transformTodoForms = data =>
+  data.map(d => ({
     title: d.name,
     redirectTo: `/forms/answer/${d.id}`,
     assignedAt: getDisplayTime(new Date(d.assignedAt)),
     img: '/assets/persona/student.jpeg',
   }));
 
-const HomeUserView = (props) => {
+const HomeUserView = props => {
   const { data, error, isLoading } = props;
   const { user } = useAuth();
   const { data: formData = {} } = data;

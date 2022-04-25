@@ -41,17 +41,17 @@ const GlobalMessageBar = ({ children }) => {
     }
     setTimeout(() => {
       setStartNextTimer(true);
-      setMessages((prevMessages) => prevMessages.slice(1));
+      setMessages(prevMessages => prevMessages.slice(1));
     }, GLOBAL_MESSAGE_DISPLAY_PERIOD);
     setStartNextTimer(false);
   }, [isClosedManually, messages]);
 
-  const onClose = (msg) => () => {
+  const onClose = msg => () => {
     setIsClosedManually(true);
-    setMessages((prevMessages) => prevMessages.filter((prevMsg) => generateKey(prevMsg) !== generateKey(msg)));
+    setMessages(prevMessages => prevMessages.filter(prevMsg => generateKey(prevMsg) !== generateKey(msg)));
   };
 
-  const addGlobalMessage = useCallback((message) => setMessages((prevMessages) => [...prevMessages, message]), []);
+  const addGlobalMessage = useCallback(message => setMessages(prevMessages => [...prevMessages, message]), []);
 
   const clearAllGlobalMessages = useCallback(() => setMessages([]), []);
 
@@ -63,7 +63,7 @@ const GlobalMessageBar = ({ children }) => {
     <>
       <MessageBarWrapper>
         <Stack spacing={1}>
-          {messages.map((message) => (
+          {messages.map(message => (
             <MessageBarItem key={`${generateKey(message)}`} message={message} onClose={onClose} />
           ))}
         </Stack>

@@ -36,9 +36,9 @@ const columns = [
     minWidth: 100,
     align: 'left',
     valueFormatter: ({ value }) => value?.join(', ') || '',
-    renderCell: (params) => (
+    renderCell: params => (
       <div>
-        {params.value?.map((p) => (
+        {params.value?.map(p => (
           <div key={p} style={{ fontSize: '0.8rem !important', margin: '2px 0px' }}>
             {p}
           </div>
@@ -59,9 +59,9 @@ const columns = [
     minWidth: 100,
     align: 'left',
     valueFormatter: ({ value }) => value?.join(', ') || '',
-    renderCell: (params) => (
+    renderCell: params => (
       <div>
-        {params.value?.map((p) => (
+        {params.value?.map(p => (
           <div key={p} style={{ fontSize: '0.8rem !important', margin: '2px 0px' }}>
             {p}
           </div>
@@ -84,9 +84,9 @@ const SpacingComponent = () => <div style={{ marginBottom: '2.8em' }} />;
 
 const getUserOverview = () => userService.getAllUsers();
 
-const getRowId = (row) => `${row.email}`;
+const getRowId = row => `${row.email}`;
 
-const UserOverViewView = (props) => {
+const UserOverViewView = props => {
   const { data, error, isLoading } = props;
   const { data: userData = [] } = data;
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Box, ListItemButton, ListItemText } from '@mui/material';
 
-const SubmitAndCancelButtonGroup = (props) => {
+const SubmitAndCancelButtonGroup = props => {
   const { disabledSubmit, disabledCancel, onSubmit, onCancel, submitButtonText, cancelButtonText } = props;
 
   const wrapperStyle = { display: 'flex', justifyContent: 'space-evenly', maxWidth: '700px', margin: '30px auto 0 auto' };

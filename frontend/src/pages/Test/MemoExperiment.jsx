@@ -34,7 +34,7 @@ export const TestMemo = () => {
       The blue component contains three sub-components. 1 input field and 2 black tiles. If you typed something, you have seen that the left tile and the blue
       tile have updated with every keystroke, while the number of paints of the right tile didnt change. The right tile is wrapped in a React.memo function
       which prevents the function from re-rendering when the props dont change.
-      <input value={text} placeholder='Write something' onChange={(e) => setText(e.target.value)} />
+      <input value={text} placeholder='Write something' onChange={e => setText(e.target.value)} />
       <Updates updates={updates.current} />
       <Tile />
       <TileMemo />
@@ -53,7 +53,7 @@ export const RenderExample = () => {
   const [isOn, setIsOn] = useState(false);
   // 如果要做 toggle 切換 on off !this.state.isON 狀態，一般來說會建議使用 updater function 而非 Object 的原因是 React 在他的 Synthetic event 會 batch 所有的 setState，
   // 在同時觸發多個 setState 的時候，Object 會用 merge，this.state 就不會是上一個經過 setState 後的值，而是原本的 state，updater function input prevState 則是上一個經過 setState 後的值
-  const handleClick = useCallback(() => setIsOn((prevIsOn) => !prevIsOn), []); // useCallback prevents component from re-creating -> Button will not rerender
+  const handleClick = useCallback(() => setIsOn(prevIsOn => !prevIsOn), []); // useCallback prevents component from re-creating -> Button will not rerender
 
   return (
     <div>

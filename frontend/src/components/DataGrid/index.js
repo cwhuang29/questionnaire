@@ -60,7 +60,7 @@ const StyledDataGrid = withStyles({
   },
 })(MuiDataGrid);
 
-const DataGrid = (props) => {
+const DataGrid = props => {
   const { height, rows, columns, isLoading, onCellDoubleClick, autoHeight, checkboxSelection, onSelectionModelChange, getRowId } = props;
 
   const heightCSS = autoHeight ? {} : { height }; // These two setting should not go together

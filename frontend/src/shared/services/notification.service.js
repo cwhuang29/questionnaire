@@ -6,8 +6,8 @@ import { extractErrorMessage } from '@utils/handleErrorMessage';
 const sendEmailNotificaionByFormId = (id, data, token = authHeader()) =>
   fetch
     .post(`${apis.V2.EMAIL_NOTIFICATION}/${id}`, data, { headers: token })
-    .then((resp) => Promise.resolve(resp.data))
-    .catch((err) => Promise.reject(extractErrorMessage(err))); // http://127.0.0.1/v2/form/email/6
+    .then(resp => Promise.resolve(resp.data))
+    .catch(err => Promise.reject(extractErrorMessage(err))); // http://127.0.0.1/v2/form/email/6
 
 // const sendEmailNotificaionByFormId = (id, data, token = authHeader()) => {
 //   const url = new URL(apis.V2.EMAIL_NOTIFICATION, window.location.href);

@@ -21,7 +21,7 @@ const validationSchema = Yup.object({
   answers: Yup.array().of(Yup.string().required(validateMsg.REQUIRED)).strict().required(),
 });
 
-const FormAnswer = (props) => {
+const FormAnswer = props => {
   const { formId } = useParams();
   const { formData } = props;
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const FormAnswer = (props) => {
   // eslint-disable-next-line no-unused-vars
   const { minScore, optionsCount, formTitle: title, formIntro: intro, questions = [] } = formData;
   let role = null;
-  roleProfiles.forEach((r) => {
+  roleProfiles.forEach(r => {
     role = title[r.label] !== '' ? r.label : role;
   });
 
@@ -49,14 +49,14 @@ const FormAnswer = (props) => {
     },
     validationSchema,
     // validate: (values) => console.log(JSON.stringify(values, null, 2)),
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       await formService
         .sendFormAnswer(formId, values)
-        .then((resp) => {
+        .then(resp => {
           setScore(resp.data);
           setOpenFormModal(true);
         })
-        .catch((err) => {
+        .catch(err => {
           addGlobalMessage({
             title: err.title,
             content: err.content,
@@ -95,7 +95,7 @@ const FormAnswer = (props) => {
           <Typography variant='h6' component='div' sx={{ fontWeight: '500', marginBottom: '20px' }}>
             {intro[role]}
           </Typography>
-          {questions[role].map((question) => (
+          {questions[role].map(question => (
             <React.Fragment key={question.id}>
               <Typography variant='h5' component='div' sx={{ fontWeight: '500', textAlign: 'left', margin: '55px 0 20px' }}>
                 <span style={{ padding: '0 20px 0 0' }}>{question.id + 1}.</span>

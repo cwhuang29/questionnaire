@@ -12,7 +12,7 @@ const company = {
   UberEat紀錄: '優食台灣股份有限公司',
 };
 
-const TransactionList = (props) => {
+const TransactionList = props => {
   const { content } = props;
 
   return (

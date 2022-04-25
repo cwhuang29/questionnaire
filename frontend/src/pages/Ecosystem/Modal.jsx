@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
 
-const Modal = (props) => {
+const Modal = props => {
   const {
     open,
     onClose,

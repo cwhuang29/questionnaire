@@ -35,7 +35,7 @@ const iconButtonStyle = { marginTop: '-5px' };
 
 const muiIconStyle = { fontSize: '35px', color: '#656565' };
 
-const getFormByIdForComponent = (formId) => () => getFormById(formId);
+const getFormByIdForComponent = formId => () => getFormById(formId);
 
 const getURLQueryFormId = () => window.location.pathname.split('/').pop(); // e.g. http://127.0.0.1/form/5
 
@@ -73,7 +73,7 @@ const Title = ({ children }) => (
 
 const SpacingComponent = () => <div style={{ marginBottom: '2.8em' }} />;
 
-const FormOverViewView = (props) => {
+const FormOverViewView = props => {
   const { data, error, isLoading } = props;
   const [openFormModal, setOpenFormModal] = useState(false);
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
@@ -100,7 +100,7 @@ const FormOverViewView = (props) => {
     navigate(`/update/form/${formId}`, { state: formData }); // The key should be 'state'
   };
 
-  const AssignmentOnSubmit = async (assignmentData) => {
+  const AssignmentOnSubmit = async assignmentData => {
     const resp = await formService.createFormStatus(formId, assignmentData);
     // Update form status after the assignment took effect
     // Note: the form status and notification history won't update until emails are sent out
@@ -108,7 +108,7 @@ const FormOverViewView = (props) => {
     return resp;
   };
 
-  const notificationOnSubmit = async (notificationData) => {
+  const notificationOnSubmit = async notificationData => {
     const resp = await notificationService.sendEmailNotificaionByFormId(formId, notificationData);
     // Update form status after the notifications sent out
     setIsFetchingFormAssignStatusData(true);
@@ -122,8 +122,8 @@ const FormOverViewView = (props) => {
     setIsFetchingFormAssignStatusData(true);
     formService
       .getFormStatus(formId)
-      .then((resp) => setFormAssignStatusData(resp.data))
-      .catch((err) =>
+      .then(resp => setFormAssignStatusData(resp.data))
+      .catch(err =>
         addGlobalMessage({
           title: err.title,
           content: err.content,
@@ -138,13 +138,13 @@ const FormOverViewView = (props) => {
     setIsFetchingFormResultData(true);
     formService
       .getFormResult(formId)
-      .then((resp) => {
+      .then(resp => {
         const transformedData = transformFormResultData(resp.data);
         const transformedColumns = transformFormResultColumns(formResultBaseColumns, resp.data);
         setFormResultData(transformedData);
         setFormResultColumns(transformedColumns);
       })
-      .catch((err) =>
+      .catch(err =>
         addGlobalMessage({
           title: err.title,
           content: err.content,
@@ -155,14 +155,14 @@ const FormOverViewView = (props) => {
       .finally(() => setIsFetchingFormResultData(false));
   }, []); // Just fetch one time
 
-  const deleteFormStatus = (params) => () => {
+  const deleteFormStatus = params => () => {
     // Note: the index of data has been set to writerEmail by getRowId(), so the following two lines are equivalent
     const { id } = params;
     const email = params.row.writerEmail;
 
     formService
       .deleteFormStatus(formId, { email })
-      .then((resp) => {
+      .then(resp => {
         addGlobalMessage({
           title: resp.title,
           content: resp.content,
@@ -170,10 +170,10 @@ const FormOverViewView = (props) => {
           timestamp: Date.now(),
         });
 
-        const remainRows = formAssignStatusData.filter((d) => d.writerEmail !== id);
+        const remainRows = formAssignStatusData.filter(d => d.writerEmail !== id);
         setFormAssignStatusData(remainRows); // This is the only way to update rows in datagrid
       })
-      .catch((err) => {
+      .catch(err => {
         addGlobalMessage({
           title: err.title,
           content: err.content,
@@ -190,7 +190,7 @@ const FormOverViewView = (props) => {
       type: 'actions',
       align: 'center',
       width: 80,
-      getActions: (params) => [<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={deleteFormStatus(params)} /* showInMenu */ />],
+      getActions: params => [<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={deleteFormStatus(params)} /* showInMenu */ />],
     }),
     [formAssignStatusData] // Otherwise formAssignStatusData in the deleteFormStatus() equals to its initial value, i.e. {}
   );

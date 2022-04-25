@@ -19,7 +19,7 @@ const FormUpdate = () => {
   const { state: formData } = useLocation(); // Passed from FormOverview
 
   const title = '更新量表';
-  const submitAction = (data) => updateForm(formId, data);
+  const submitAction = data => updateForm(formId, data);
 
   useEffect(() => {
     if (!isAdminUser) {

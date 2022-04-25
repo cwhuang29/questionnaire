@@ -6,7 +6,7 @@ import { ConfirmButton } from '@components/Button';
 
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
 
-const FormResultModal = (props) => {
+const FormResultModal = props => {
   const { open, score } = props;
   const navigate = useNavigate();
   const onConfirm = () => navigate(-1);

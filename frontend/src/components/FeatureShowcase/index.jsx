@@ -22,7 +22,7 @@ const FeatureShowcase = ({ features }) => (
   <ThemeProvider theme={theme}>
     <Box>
       <Grid container rowSpacing={{ sm: 1, md: 2, lg: 3 }} columnSpacing={{ sm: 2, md: 4, lg: 5 }}>
-        {features.map((feature) => (
+        {features.map(feature => (
           <Grid item xs={12} sm={6} md={4} key={feature.title}>
             <FeatureShowcaseItem feature={feature} />
           </Grid>

@@ -31,7 +31,7 @@ const FormDataItem = ({ field, value }) => (
 //   <span style={{ fontWeight: 'bold' }}>{field}: </span>{value}
 // </Typography>
 
-const FormModal = (props) => {
+const FormModal = props => {
   const { open, onClose, onSubmit, submitButtonText, cancelButtonText, formData } = props;
   const { researchName, formName, formCustId, minScore, optionsCount, formTitle, formIntro, questions } = formData || {};
   const onCancel = () => onClose();
@@ -67,7 +67,7 @@ const FormModal = (props) => {
           <FormDataItem field={fieldName.minScore} value={minScore} />
           <FormDataItem field={fieldName.optionsCount} value={optionsCount} />
 
-          {roleProfiles.map((role) => (
+          {roleProfiles.map(role => (
             <React.Fragment key={role.id}>
               <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
                 給{role.display}的問題

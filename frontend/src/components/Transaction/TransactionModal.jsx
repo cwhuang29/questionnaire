@@ -5,7 +5,7 @@ import TransactionList from '@components/Transaction/TransactionList';
 
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
 
-const TransactionModal = (props) => {
+const TransactionModal = props => {
   const {
     open,
     onClose,

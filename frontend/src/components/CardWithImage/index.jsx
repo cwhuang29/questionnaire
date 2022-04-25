@@ -16,12 +16,12 @@ const theme = createTheme({
 //   { title: '量表03', img: '/assets/persona/student.jpeg', disable: true },
 // ];
 
-const CardWithImage = (props) => {
+const CardWithImage = props => {
   const navigate = useNavigate();
   const { data, isLoading } = props;
 
   const writeDisplay = '開始填寫';
-  const onClick = (url) => () => navigate(url);
+  const onClick = url => () => navigate(url);
   const displayData = isLoading || Object.keys(data).length === 0 ? [] : data;
 
   return (
@@ -36,7 +36,7 @@ const CardWithImage = (props) => {
           justifyContent: 'center',
         }}
       >
-        {displayData.map((d) => (
+        {displayData.map(d => (
           <Card
             key={d.title}
             sx={{

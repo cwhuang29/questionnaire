@@ -8,7 +8,7 @@ import withFetchService from '@shared/hooks/withFetchService';
 
 import FormAnswer from './FormAnswer';
 
-const FormAnswerLayoutView = (props) => {
+const FormAnswerLayoutView = props => {
   const { data, error, isLoading } = props;
   const { data: formData = {} } = data;
 
@@ -18,7 +18,7 @@ const FormAnswerLayoutView = (props) => {
   );
 };
 
-const getAnswerFormForComponent = (formId) => () => formService.getAnswerForm(formId);
+const getAnswerFormForComponent = formId => () => formService.getAnswerForm(formId);
 
 const FormAnswerLayout = React.memo(() => {
   const { formId } = useParams();

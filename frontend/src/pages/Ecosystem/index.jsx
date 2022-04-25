@@ -46,7 +46,7 @@ const Ecosystem = () => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleContent = (modalInfo) => setInfo(modalInfo);
+  const handleContent = modalInfo => setInfo(modalInfo);
   const flowChipOnClick = (currInfo = { title: messages.MISSING, content: '' }) => {
     handleOpen();
     handleContent({ title: currInfo.title, content: currInfo.content });
@@ -91,7 +91,7 @@ const Ecosystem = () => {
 
       <Modal open={open} onClose={handleClose} info={info} />
 
-      {scenario.map((flow) => (
+      {scenario.map(flow => (
         <SectionWrapper padding={minWidthCheck ? '8.2em 0' : '1.7em 0'} background={flow.backgroundColor} key={flow.title}>
           <Typography variant='h3' component='div' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
             {flow.title}

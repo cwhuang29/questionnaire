@@ -1,4 +1,4 @@
-export const getCookie = (name) => {
+export const getCookie = name => {
   const dc = document.cookie;
   const prefix = `${name}=`;
   let begin = dc.indexOf(`; ${prefix}`);

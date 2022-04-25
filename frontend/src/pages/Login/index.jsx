@@ -36,13 +36,13 @@ const Login = () => {
       password: '',
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       setLoading(true);
       setErrorMessage('');
 
       await dispatch(login(values))
         .then(() => navigate('/'))
-        .catch((err) => setErrorMessage(`${err.title}. ${err.content || ''}`))
+        .catch(err => setErrorMessage(`${err.title}. ${err.content || ''}`))
         .finally(() => setLoading(false));
     },
   });

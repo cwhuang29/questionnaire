@@ -1,3 +1,3 @@
-const getAuth = (state) => state.auth;
+const getAuth = state => state.auth;
 
 export default getAuth;

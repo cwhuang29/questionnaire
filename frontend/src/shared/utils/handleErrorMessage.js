@@ -1,7 +1,7 @@
 import msg from '@constants/messages';
 
 // https://axios-http.com/docs/handling_errors
-export const extractErrorMessage = (err) => {
+export const extractErrorMessage = err => {
   let errMsg;
 
   if (err.response) {

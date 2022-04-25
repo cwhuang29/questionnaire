@@ -32,27 +32,29 @@ const MenuBarItem = ({ label, onClick }) => (
   </MenuItem>
 );
 
-const loginDefaultMenuItems = [
-  { label: '登出', url: '/logout' },
-  { label: '查看用戶', url: '/users/overview' },
-];
+const loginMenuItems = [{ label: '登出', url: '/logout' }];
 
-const unLoginDefaultMenuItems = [
+const unloginMenuItems = [
   { label: '登入', url: '/login' },
   { label: '註冊', url: '/register' },
 ];
 
-const isCreateOrUpdateFormPage = (pathname) => /\/create\/form|\/update\/form/.test(pathname);
+const adminDefaultItems = [{ label: '查看用戶', url: '/users/overview' }];
+
+const isCreateOrUpdateFormPage = pathname => /\/create\/form|\/update\/form/.test(pathname);
 
 const Menu = () => {
   const { pathname } = useLocation(); // URL http://127.0.0.1:3000/?a=123#ok returns {pathname: '/', search: '?a=123', hash: '#ok' ...}
   const navigate = useNavigate(); // To use useNavigate, this component should have a <BrowserRouter> higher up in the tree
   const { jwt } = useAuth();
 
-  const onClick = (url) => () => navigate(`${url}`);
-  const menuBarItems = jwt ? loginDefaultMenuItems : unLoginDefaultMenuItems;
-  const adminItems = isAdmin() && !isCreateOrUpdateFormPage(pathname) ? [{ label: '創建問卷', url: '/create/form' }] : [];
-  const allItems = [...menuBarItems, ...adminItems];
+  const onClick = url => () => navigate(`${url}`);
+  let menuBarItems = jwt ? loginMenuItems : unloginMenuItems;
+
+  if (isAdmin()) {
+    const adminMenuBarItems = isCreateOrUpdateFormPage(pathname) ? adminDefaultItems : [{ label: '創建問卷', url: '/create/form' }, ...adminDefaultItems];
+    menuBarItems = [...menuBarItems, ...adminMenuBarItems];
+  }
 
   return (
     <AppBar sx={{ backgroundColor: '#654FCE', position: 'sticky' }}>
@@ -69,10 +71,10 @@ const Menu = () => {
           // </Box>
         }
 
-        {allItems.map((menu, idx) => (
+        {menuBarItems.map((menu, idx) => (
           <React.Fragment key={menu.label}>
             <MenuBarItem label={menu.label} onClick={onClick(menu.url)} />
-            {idx !== allItems.length - 1 && <MenuBarDivider />}
+            {idx !== menuBarItems.length - 1 && <MenuBarDivider />}
           </React.Fragment>
         ))}
       </Toolbar>

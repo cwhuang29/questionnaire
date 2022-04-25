@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Box, Chip } from '@mui/material';
 
-export const RoleDivider = (props) => {
+export const RoleDivider = props => {
   const { display, icon } = props;
 
   return (

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Box, ListItemButton, ListItemText } from '@mui/material';
 
-const ConfirmButton = (props) => {
+const ConfirmButton = props => {
   const { disabledConfirm, onConfirm, confirmButtonText } = props;
 
   const wrapperStyle = {

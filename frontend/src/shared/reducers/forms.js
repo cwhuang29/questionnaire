@@ -10,7 +10,7 @@ const forms = (state = initialState, action) => {
     case FETCH_FORMS_SUCCESS:
       return { ...state, ...payload };
     case FETCH_FORM_SUCCESS:
-      return { ...state, forms: state.forms.map((form) => (form.id === payload.form.id ? payload.form : form)) };
+      return { ...state, forms: state.forms.map(form => (form.id === payload.form.id ? payload.form : form)) };
     case FETCH_USER_FORMS_SUCCESS:
       return { ...state, todoForms: payload.forms };
     default:

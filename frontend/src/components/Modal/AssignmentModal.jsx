@@ -47,7 +47,7 @@ const validationSchema = Yup.object({
   footer: Yup.string(),
 });
 
-const AssignmentModal = (props) => {
+const AssignmentModal = props => {
   const { open, onClose, onSubmit, submitButtonText, cancelButtonText } = props;
   const [loading, setLoading] = useState(false);
   const { addGlobalMessage } = useGlobalMessageContext();
@@ -57,7 +57,7 @@ const AssignmentModal = (props) => {
     initialValues,
     validationSchema,
     // validate: (values) => console.log(JSON.stringify(values, null, 2)),
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       setLoading(true);
       addGlobalMessage({
         title: msg.REQUEST_IS_HANDLING,
@@ -66,7 +66,7 @@ const AssignmentModal = (props) => {
       });
 
       await onSubmit(values)
-        .then((resp) => {
+        .then(resp => {
           addGlobalMessage({
             title: resp.title,
             content: resp.content,
@@ -75,7 +75,7 @@ const AssignmentModal = (props) => {
           });
           onClose();
         })
-        .catch((err) => {
+        .catch(err => {
           addGlobalMessage({
             title: err.title,
             content: err.content,
@@ -121,7 +121,7 @@ const AssignmentModal = (props) => {
             生效時間
           </ListSubheader>
           <DateTimePicker
-            renderInput={(_props) => (
+            renderInput={_props => (
               <TextField
                 {...{ ..._props /* , fullWidth: true */ }}
                 error={formik.touched.effectiveTime && Boolean(formik.errors.effectiveTime)}
@@ -140,7 +140,7 @@ const AssignmentModal = (props) => {
             minDate={new Date('2022-01-01')}
             value={formik.values.effectiveTime}
             // 3d param is set to `true` in order to run validation
-            onChange={(newValue) => formik.setFieldValue('effectiveTime', newValue, true)}
+            onChange={newValue => formik.setFieldValue('effectiveTime', newValue, true)}
             // shouldDisableDate={isWeekend} // import isWeekend from "date-fns/isWeekend";
             // How to use with formik: https://next.material-ui-pickers.dev/guides/forms
           />
@@ -163,10 +163,10 @@ const AssignmentModal = (props) => {
               onChange={(e, value) => {
                 // If user clicks enter right after typing, the "value" appended in the array is of type string
                 // If user press keydown to the option list and select the value he just typed, the "value" will have type object ({inputValue: 'abc', label: 'abc'}) (the key "label" is named by MUI)
-                const revisedValue = value.map((v) => (v.constructor === Object ? v.label : v));
+                const revisedValue = value.map(v => (v.constructor === Object ? v.label : v));
                 formik.setFieldValue('email', revisedValue);
               }}
-              renderInput={(params) => (
+              renderInput={params => (
                 <TextField
                   {...params}
                   label='請輸入email'
@@ -177,14 +177,14 @@ const AssignmentModal = (props) => {
               )}
               filterOptions={(options, params) => {
                 const { inputValue } = params;
-                const isExisting = options.some((option) => inputValue === option.label);
+                const isExisting = options.some(option => inputValue === option.label);
                 const filtered = filter(options, params);
                 if (inputValue !== '' && !isExisting) {
                   filtered.push({ inputValue, label: inputValue });
                 }
                 return filtered;
               }}
-              getOptionLabel={(option) => {
+              getOptionLabel={option => {
                 if (typeof option === 'string') {
                   return option; // Value selected with enter, right from the input
                 }

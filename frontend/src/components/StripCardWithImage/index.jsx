@@ -22,7 +22,7 @@ const StripCardWithImage = ({ scenarios }) => (
   <ThemeProvider theme={theme}>
     <Box>
       <Grid container rowSpacing={{ xs: 2, sm: 2, md: 3, lg: 3 }} columnSpacing={{ sm: 2, md: 3, lg: 4 }}>
-        {scenarios.map((scenario) => (
+        {scenarios.map(scenario => (
           <Grid item xs={12} sm={12} md={6} key={scenario.title}>
             <StripCardWithImageItem prop={scenario} />
           </Grid>

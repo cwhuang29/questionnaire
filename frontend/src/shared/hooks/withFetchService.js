@@ -6,7 +6,7 @@ import messages from '@constants/messages';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 
-const ServiceFetcher = (props) => {
+const ServiceFetcher = props => {
   const { render, fetchService, toDispatch, ...notForHOCProps } = props; // Method 1 (render props)
   // const { Component, fetchService, toDispatch, ...notForHOCProps } = props; // Method 2
 
@@ -22,8 +22,8 @@ const ServiceFetcher = (props) => {
     setIsLoading(true);
     // dispatch(fetchService())
     fetch()
-      .then((fetchData) => setData(fetchData))
-      .catch((err) => {
+      .then(fetchData => setData(fetchData))
+      .catch(err => {
         setError(err);
         addGlobalMessage({
           title: err.title || messages.UNKNOWN_ERROR,
@@ -46,7 +46,7 @@ const render = (Component, props) => <Component {...props} />;
 const withFetchService =
   (Component, fetchService, toDispatch = true) =>
   ({ ...props }) =>
-    <ServiceFetcher fetchService={fetchService} toDispatch={toDispatch} render={(_props) => render(Component, _props)} {...props} />;
+    <ServiceFetcher fetchService={fetchService} toDispatch={toDispatch} render={_props => render(Component, _props)} {...props} />;
 
 // Method 2
 // const withFetchService = (Component, fetchService) => {
