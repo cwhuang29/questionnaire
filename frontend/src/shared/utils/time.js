@@ -6,4 +6,4 @@ export const getTodayDate = () => {
 // Backend stores time in the UTC time zone. When the API responses with data such as { "createdAt":"2022-04-25T15:33:13.056Z" } (type is time.Time)
 // The JS new Date(value) changes time zone from UTC to user's location
 export const getDisplayTime = (date = new Date()) =>
-  `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
+  `${date.getFullYear()}/${`0${date.getMonth() + 1}`.slice(-2)}/${date.getDate()} ${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;

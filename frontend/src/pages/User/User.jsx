@@ -17,7 +17,7 @@ const transformTodoForms = data =>
     img: '/assets/persona/student.jpeg',
   }));
 
-const HomeUserView = props => {
+const UserView = props => {
   const { data, error, isLoading } = props;
   const { user } = useAuth();
   const { data: formData = {} } = data;
@@ -40,12 +40,12 @@ const HomeUserView = props => {
 
 const getFormByUserForComponent = () => getFormsByUser();
 
-const HomeUser = withFetchService(HomeUserView, getFormByUserForComponent);
+const User = withFetchService(UserView, getFormByUserForComponent);
 
-HomeUserView.propTypes = {
+UserView.propTypes = {
   data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   isLoading: PropTypes.bool.isRequired,
   error: PropTypes.object.isRequired,
 };
 
-export default HomeUser;
+export default User;

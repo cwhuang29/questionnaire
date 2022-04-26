@@ -1,3 +1,4 @@
+import User from './User';
 import UserOverview from './UserOverview';
 
-export { UserOverview };
+export { User, UserOverview };

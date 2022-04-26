@@ -7,16 +7,16 @@ import PageWrapper from '@components/HomePageWrapper';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import useAuth from '@hooks/useAuth';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
+import { User } from '@pages/User';
 import msg from '@shared/constants/messages';
+import { isAdmin } from '@utils/admin.js';
+
+import { Typography } from '@mui/material';
+
 // import FeatureShowcase from '@components/FeatureShowcase';
 // import HomePageImageList from '@components/HomePageImageList';
 // import SlideShow from '@components/SlideShow';
-import { isAdmin } from '@utils/admin.js';
-
 // import { homePageScenarios } from '@pages/Home/homeData';
-import { Typography } from '@mui/material';
-
-import HomeUser from './HomeUser';
 
 const Home = () => {
   // const [searchParams] = useSearchParams();
@@ -54,7 +54,7 @@ const Home = () => {
           <FormList />
         </>
       ) : jwt ? (
-        <HomeUser />
+        <User />
       ) : (
         <div />
       )}
@@ -64,7 +64,3 @@ const Home = () => {
 };
 
 export default Home;
-
-/* <FeatureShowcase features={homePageFeatures} /> */
-/* <HomePageImageList /> */
-/* <SlideShow /> */

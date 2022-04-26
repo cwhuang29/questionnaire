@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, createTheme, ThemeProvider, Typography } from '@mui/material';
 
+const BUTTON_TEXT = '開始填寫';
+
 const theme = createTheme({
   breakpoints: {
     values: { xs: 0, sm: 750, md: 900, lg: 1200, xl: 1536 },
@@ -20,9 +22,8 @@ const CardWithImage = props => {
   const navigate = useNavigate();
   const { data, isLoading } = props;
 
-  const writeDisplay = '開始填寫';
   const onClick = url => () => navigate(url);
-  const displayData = isLoading || Object.keys(data).length === 0 ? [] : data;
+  const displayData = isLoading || Object.keys(data).length === 0 ? [] : data; // The underlying HOC returns {} when responses are not ready yet
 
   return (
     <ThemeProvider theme={theme}>
@@ -40,7 +41,7 @@ const CardWithImage = props => {
           <Card
             key={d.title}
             sx={{
-              // Optimal for five items
+              // Optimal setting for five items
               maxWidth: '700px',
               minWidth: '285px',
               width: '18%',
@@ -65,7 +66,7 @@ const CardWithImage = props => {
             </CardActionArea>
             <CardActions>
               <Button size='small' onClick={onClick(d.redirectTo)}>
-                {writeDisplay}
+                {BUTTON_TEXT}
               </Button>
             </CardActions>
           </Card>
@@ -89,7 +90,7 @@ CardWithImage.propTypes = {
 
 export default CardWithImage;
 
-// Optimal for seven items
+// Optimal setting for seven items
 // sx={{
 //   maxWidth: '300px',
 //   minWidth: '205px',

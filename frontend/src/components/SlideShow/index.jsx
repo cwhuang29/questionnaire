@@ -8,11 +8,6 @@ const images = [
   { src: '/assets/slideShow/slideShow02.png', key: 2 },
   { src: '/assets/slideShow/slideShow03.png', key: 3 },
   { src: '/assets/slideShow/slideShow01.png', key: 4 },
-  // { src: '/assets/mascot/mascot_rocket.png', key: 0 },
-  // { src: '/assets/mascot/mascot_money_pig.png', key: 1 },
-  // { src: '/assets/mascot/mascot_walk.gif', key: 2 },
-  // { src: '/assets/mascot/mascot_rocket.png', key: 3 },
-  // { src: '/assets/mascot/mascot_money_pig.png', key: 4 },
 ]; // Duplicate first slide in the end and last slide in the beginning
 
 const Slideshow = () => {
@@ -28,8 +23,8 @@ const Slideshow = () => {
 
   const transitionEnd = () => {
     if (index === images.length - 1) {
-      setIndex(1); // The timeout will be reset (and not execute) due to index changes
-      setShowAnimation(false); // There is a time span before reseting to true. If user clicks dot before that time, slides will move without animation
+      setIndex(1); // The timeout will be reset (and not execute) due to index changes trigger the following useEffect
+      setShowAnimation(false); // There is a time span before reseting to true. If user clicks dots in this short window of time, slides will move without animation
     }
     // if (index === 0 && isMovingBackward) {
     //   setIndex(images.length - 2);
