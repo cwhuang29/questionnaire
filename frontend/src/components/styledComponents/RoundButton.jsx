@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const RoundButton = styled.button`
+export const RoundButton = styled.button`
   display: ${props => (props.isShow ? 'block' : 'none')};
   background-color: ${props => (props.warning ? '#FF3960' : 'palevioletred')};
   color: ${props => (props.warning ? '#FF3960' : 'palevioletred')};
@@ -15,5 +15,3 @@ const RoundButton = styled.button`
   border: 0;
   box-shadow: 1px 1px 1px 1px #777777;
 `;
-
-export default RoundButton;

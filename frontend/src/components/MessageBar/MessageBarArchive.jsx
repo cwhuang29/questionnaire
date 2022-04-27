@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Proptypes from 'prop-types';
 import styled from 'styled-components';
 
-import RoundButton from '@components/styledComponents/RoundButton';
+import { CrossButton } from '@components/styledComponents/CrossButton';
+import { RoundButton } from '@components/styledComponents/RoundButton';
 
 const Wrapper = styled.div`
   display: block;
@@ -35,30 +36,6 @@ const MessageBody = styled.p`
   margin-right: 20px;
 `;
 
-const Cross = styled.a`
-  position: absolute;
-  right: 11.5px;
-  top: 4px;
-  opacity: 0.55;
-  :hover {
-    opacity: 1;
-  }
-  &::before,
-  &::after {
-    position: absolute;
-    content: ' ';
-    height: 13px;
-    width: 3.3px;
-    background-color: #fff;
-  }
-  &::before {
-    transform: rotate(45deg);
-  }
-  &::after {
-    transform: rotate(-45deg);
-  }
-`;
-
 const MessageBarArchive = ({ isShow, isShowButton, msgHead, msgBody }) => {
   const [showMsgBar, setShowMsgBar] = useState(isShow);
   const crossOnClick = () => setShowMsgBar(!showMsgBar);
@@ -67,7 +44,7 @@ const MessageBarArchive = ({ isShow, isShowButton, msgHead, msgBody }) => {
     showMsgBar && (
       <Wrapper>
         <RoundButton warning isShow={isShowButton} disabled>
-          <Cross onClick={crossOnClick} />
+          <CrossButton onClick={crossOnClick} />
         </RoundButton>
         <MessageHead>{msgHead}</MessageHead>
         <MessageBody>{msgBody}</MessageBody>
