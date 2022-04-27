@@ -1,6 +1,6 @@
-import React from "react";
-import Proptypes from "prop-types";
-import styled from "styled-components";
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 const InputWithIconWrapper = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ const Input = ({ value, onChange }) => (
   <InputWrapper
     value={value}
     onChange={onChange}
-    type="text"
+    type='text'
     // onKeyPress={(evt) => {
     //   if (!/[0-9\.]/.test(evt.key)) {
     //     evt.preventDefault();
@@ -40,9 +40,18 @@ const Input = ({ value, onChange }) => (
 export const InputWithIcon = ({ value, onChange, src }) => (
   <InputWithIconWrapper>
     <Input value={value} onChange={onChange} />
-    <img src={src} width="32" />
+    <img src={src} width='32' alt='' />
   </InputWithIconWrapper>
 );
+
+Input.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func,
+};
+
+Input.defaultProps = {
+  onChange: null,
+};
 
 InputWithIcon.propTypes = {
   value: PropTypes.string.isRequired,
