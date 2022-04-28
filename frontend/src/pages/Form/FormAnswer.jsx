@@ -105,6 +105,8 @@ const FormAnswer = props => {
               {!question.isMultipleChoice && (
                 <TextField
                   fullWidth
+                  multiline
+                  rows={5}
                   name={`answers[${question.id}]`} // Without this attr: Formik called `handleChange`, but you forgot to pass an `id` or `name` attribute to your input
                   label={`question-${question.id + 1}`} // The text displayed
                   value={formik.values.answers[question.id] || ''} // If assigning undefined as default value: A component is changing an uncontrolled input to be controlled
