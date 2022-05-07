@@ -104,6 +104,7 @@ const FormListView = props => {
       csvTitle = [...csvTitle, ...commonTitle.map(t => `${t} (${form.formCustId})`), ...questionIds];
 
       const emailsOfThisForm = form.results.map(result => result.email);
+      // Set up empty-value cells for each users
       Array.from(csvBody).forEach(([key, val]) => {
         if (!emailsOfThisForm.includes(key)) {
           const emptyAttr = { answerTime: '', score: '' };
@@ -113,8 +114,10 @@ const FormListView = props => {
         }
       });
 
+      // Fill in values if the user has answered forms
       form.results.forEach(result => {
-        const userAnswers = [result.answerTime, result.score, ...result.answers, ...Array(form.maxQuestionsCount - result.answers.length).fill('')];
+        const parsedAnswers = result.answers.map(answer => answer.replaceAll('\n', '\u2028')); // Ensure the newlines won't break the format of exported CSVs
+        const userAnswers = [result.answerTime, result.score, ...parsedAnswers, ...Array(form.maxQuestionsCount - result.answers.length).fill('')];
         csvBody.set(result.email, csvBody.get(result.email).concat(userAnswers));
         // csvBody[result.email] = csvBody.get(result.email).concat(userAnswers);
       });
