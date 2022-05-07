@@ -1,13 +1,14 @@
 app:
   name: questionnaire
   url: http://127.0.0.1:3000 # This is the application (frontend) URL, not backend itself. Can be overwrote by env
-  httpPort: 9000 # This is the port backend server should listen to
-  # httpsPort: 443 # This is the port backend server should listen to
+  httpPort: 9000 # This is the HTTP port backend server should listen to
+  # httpsPort: 443 # This is the HTTPS port backend server should listen to
   mode: dev
   log: log
+  originHeaderURL: http://127.0.0.1:3000 # Same as url
 
 database:
-  driver: sqlite # mysql, sqlite
+  driver: mysql # mysql, sqlite
   host: 127.0.0.1
   port: 3306
   database: questionnaire
@@ -20,7 +21,7 @@ admin:
     - admin123@gmail.com
 
 email:
-  sender: inewsforpharm@gmail.com
+  sender: XXXX@gmail.com # Fill in your email
   region: us-east-1
   numPerDay: 50000
   numPerSec: 14

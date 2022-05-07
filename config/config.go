@@ -119,6 +119,11 @@ func (c *config) setOverwriteValue() {
 			logrus.Info(e.msg + " is overwrote by env " + e.key + ". Set to " + value + ".")
 		}
 	}
+
+	originHeaderURL := os.Getenv(constants.ORIGIN_HEADER_URL_KEY)
+	if originHeaderURL != "" {
+		cfg.OriginHeaderURL = originHeaderURL
+	}
 }
 
 func Initial(configFilePath string) error {
@@ -134,9 +139,7 @@ func Initial(configFilePath string) error {
 
 	cfg.setDefaultValue()
 	cfg.setOverwriteValue()
-	cfg.OriginHeaderURL = os.Getenv(constants.ORIGIN_HEADER_URL_KEY)
 
-	fmt.Println("Config setup!")
-	fmt.Println(cfg)
+	fmt.Println("Config has been setup!")
 	return nil
 }

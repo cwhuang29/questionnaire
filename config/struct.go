@@ -21,21 +21,21 @@ type env struct {
 }
 
 type config struct {
-	App             `yaml:"app,omitempty"`
-	Database        `yaml:"database,omitempty"`
-	Admin           `yaml:"admin,omitempty"`
-	Email           `yaml:"email,omitempty"`
-	JWT             `yaml:"jwt,omitempty"`
-	OriginHeaderURL string
+	App      `yaml:"app,omitempty"`
+	Database `yaml:"database,omitempty"`
+	Admin    `yaml:"admin,omitempty"`
+	Email    `yaml:"email,omitempty"`
+	JWT      `yaml:"jwt,omitempty"`
 }
 
 type App struct {
-	Name      string `yaml:"name,omitempty"`
-	Url       string `yaml:"url,omitempty"`
-	HttpPort  string `yaml:"httpPort,omitempty"`
-	HttpsPort string `yaml:"httpsPort,omitempty"`
-	Mode      string `yaml:"mode,omitempty"`
-	Log       string `yaml:"log,omitempty"`
+	Name            string `yaml:"name,omitempty"`
+	Url             string `yaml:"url,omitempty"`
+	OriginHeaderURL string `yaml:"originHeaderURL,omitempty"`
+	HttpPort        string `yaml:"httpPort,omitempty"`
+	HttpsPort       string `yaml:"httpsPort,omitempty"`
+	Mode            string `yaml:"mode,omitempty"`
+	Log             string `yaml:"log,omitempty"`
 }
 
 type Database struct {
