@@ -57,11 +57,11 @@ const Menu = () => {
   }
 
   return (
-    <AppBar sx={{ backgroundColor: '#654FCE', position: 'sticky' }}>
+    <AppBar sx={{ backgroundColor: 'rgb(244,177,131)', position: 'sticky' }}>
       <Toolbar>
         <Box onClick={() => navigate('/')} sx={{ flexGrow: 1 }}>
           <Typography variant='h6' component='div' sx={{ cursor: 'default', fontWeight: 'bold' }}>
-            ＸＸＸ問卷填寫平台
+            臺師大DER研究問卷填寫平台
           </Typography>
         </Box>
 

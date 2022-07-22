@@ -14,7 +14,7 @@ const (
 	ResetPasswordBody = `
 <div style="width: 68%%; margin-left: auto; margin-right: auto; color: #3D3D3D">
   <div style=" color: #FCD432; text-align: center; font-weight: 700; font-size: 2rem">
-    i.news
+	臺師大DER研究問卷填寫平台
   </div>
   <p style="font-size: 1.2rem">Hello %s</p>
   <p>You are receiving this email because we received a password reset request from your account. Please click the following button to change your password.</p>
@@ -37,11 +37,10 @@ const (
 	NotificationBody = `
 <div style="width: 65%%; margin: 0 auto; color: #2E2E2E">
   <div style=" color: #FCD432; text-align: center; font-weight: 700; font-size: 1.7rem">
-	XXX 問卷平台
+	臺師大DER研究問卷填寫平台
   </div>
   <p style="font-size: 1.1rem">%s</p>
   <br>
-  <p style="font-size: 1.1rem">Best regards,<br>XXX研究團隊</p>
   <br>
   <div style="text-align: left; color: #6E6E6E; font-size: 0.96rem">
   <p>%s</p>
