@@ -87,7 +87,7 @@
           "@selectors": "./src/shared/selectors",
           "@services": "./src/shared/services",
           "@utils": "./src/shared/utils",
-          "@home": "./src/pages/Home",
+          "@home": "./src/pages/Home"
         }
       }
     },
