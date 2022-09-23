@@ -6,6 +6,8 @@ This website helps researchers get rid of manually creating tons of Google Forms
 
 ## Technical Stack
 
-Frontend: React, Redux, react-router-dom, styled-components, Formik, Yup, Material UI
-Backend: Go, Gin, MySQL
-Host: AWS, Docker
+* Frontend: React, Redux, react-router-dom, styled-components, Formik, Yup, Material UI
+
+* Backend: Go, Gin, MySQL
+
+* Host: AWS, Docker
