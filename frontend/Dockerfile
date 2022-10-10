@@ -7,6 +7,7 @@ COPY . .
 
 ARG SERVER_URL="http://127.0.0.1:9000"
 
+# Override this value when building image. This value is used by src/config.js
 ENV REACT_APP_SERVER_URL=${SERVER_URL}
 
 RUN yarn install
