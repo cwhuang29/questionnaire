@@ -8,6 +8,31 @@ This website helps researchers get rid of manually creating tons of Google Forms
 
 * Frontend: React, Redux, react-router-dom, styled-components, Formik, Yup, Material UI
 
-* Backend: Go, Gin, MySQL
+* Backend: Go, Gin, Gorm, MySQL
 
 * Host: AWS, Docker
+
+## Demo
+
+### Questionnaire page
+![Questionnaire page](demo/01-questionnaire-page.png)
+
+### Main page
+![Main page](demo/02-main-page.png)
+
+### Assign feature
+![Assign feature](demo/03-assign-feature.png)
+
+### Notify feature
+![Notify feature](demo/04-notify-feature.png)
+
+### Create page
+![Create page 01](demo/05-create-page-01.png)
+
+![Create page 02](demo/06-create-page-02.png)
+
+### Preview feature
+![Preview feature](demo/07-preview-feature.png)
+
+### User page
+![User page](demo/08-user-page.png)
