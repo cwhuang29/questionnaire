@@ -1,8 +1,18 @@
 # Questionnaire System
 
-This questionnaire website is developed to facilitate researchers in the department of psychology.
+This system is designed to facilitate researchers in the psychology department, assisting researchers to get rid of manually creating tons of Google Forms and recording thousands of respondents through excel files.
 
-This website helps researchers get rid of manually creating tons of Google Forms and recording hundreds of respondents through excel files. Researchers can create questionnaires, assign them to students, and send email notifications, after which students are able to fill them out online. Once the questionnaires have been collected, the researchers can manage, group by, and do statistics on them.
+Researchers set up questionnaires, assigned them to respondents, and sent notification emails. Respondents fill them out afterward. The system enables researchers to manage and do statistics on them via this system.
+
+Each questionnaire contains at most four-part, each part for one role (students, parents, teachers, counselors.) Every part has zero or multiple questions, which can be multiple-choice or essay questions.
+
+There's an effective time for every questionnaire. It is possible for researchers to prepare questionnaires in advance and assign them to a group of respondents. These questionnaires will remain invisible and thus cannot be accessed until the effective time.
+
+Functions provided:
+* Questionnaire related: create, modify, delete, fill out, preview, export, assign to respondents, send notification emails
+
+* Users related: register, login, check pending questionnaires, check questionnaire/user statistics
+
 
 ## Technical Stack
 
@@ -11,6 +21,7 @@ This website helps researchers get rid of manually creating tons of Google Forms
 * Backend: Go, Gin, Gorm, MySQL
 
 * Host: AWS, Docker
+
 
 ## Demo
 
