@@ -57,6 +57,7 @@ const GlobalMessageBar = ({ children }) => {
 
   // Context uses reference identity (Object.is) to determine when to re-render
   // Whenever the Provider's value changes, the whole component (and its children) rerender
+  // Use useRef to prevent the whole children/tree re-render (mutating the .current property doesn’t cause a re-render)
   const globalMessageValue = useRef({ addGlobalMessage, clearAllGlobalMessages });
 
   return (
