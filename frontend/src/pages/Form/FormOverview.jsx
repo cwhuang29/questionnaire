@@ -37,7 +37,7 @@ const muiIconStyle = { fontSize: '35px', color: '#656565' };
 
 const getFormByIdForComponent = formId => () => getFormById(formId);
 
-const getURLQueryFormId = () => window.location.pathname.split('/').pop(); // e.g. http://127.0.0.1/form/5
+const getURLQueryFormId = () => window.location.pathname.split('/').pop(); // e.g. http://127.0.0.1/forms/5
 
 const FormModalIcon = ({ onClick }) => (
   <IconButton aria-label='icon-button' style={iconButtonStyle} onClick={onClick}>
@@ -59,6 +59,12 @@ const NotificationModalIcon = ({ onClick }) => (
   </IconButton>
 );
 
+const DeleteModalIcon = ({ onClick }) => (
+  <IconButton aria-label='icon-button' style={iconButtonStyle} onClick={onClick}>
+    <DeleteIcon style={muiIconStyle} />
+  </IconButton>
+);
+
 const FormActionItem = ({ title, Icon }) => (
   <Typography variant='h5' component='div' sx={{ fontWeight: 'bold', marginBottom: '1em', textAlign: 'left' }}>
     {title}&nbsp;{Icon}
@@ -75,6 +81,7 @@ const SpacingComponent = () => <div style={{ marginBottom: '2.8em' }} />;
 
 const FormOverViewView = props => {
   const { data, error, isLoading } = props;
+
   const [openFormModal, setOpenFormModal] = useState(false);
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
   const [openNotificationModal, setOpenNotificationModal] = useState(false);
@@ -83,9 +90,9 @@ const FormOverViewView = props => {
   const [isFetchingFormResultData, setIsFetchingFormResultData] = useState(true);
   const [formResultData, setFormResultData] = useState([]);
   const [formResultColumns, setFormResultColumns] = useState([]);
-  const navigate = useNavigate();
   const { addGlobalMessage } = useGlobalMessageContext();
 
+  const navigate = useNavigate();
   const formId = getURLQueryFormId();
   const { data: formData = {} } = data;
 
@@ -95,6 +102,32 @@ const FormOverViewView = props => {
   const assignmentModalOnClose = () => setOpenAssignmentModal(false);
   const notificationModalOnOpen = () => setOpenNotificationModal(true);
   const notificationModalOnClose = () => setOpenNotificationModal(false);
+  const deleteFormOnOpen = async () => {
+    // eslint-disable-next-line no-alert
+    const confirm = window.confirm('確定要刪除此量表嗎？');
+    if (!confirm) {
+      return;
+    }
+    await formService
+      .deleteForm(formId)
+      .then(resp => {
+        addGlobalMessage({
+          title: resp.title,
+          content: resp.content,
+          severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
+          timestamp: Date.now(),
+        });
+        navigate('/home');
+      })
+      .catch(err => {
+        addGlobalMessage({
+          title: err.title,
+          content: err.content,
+          severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
+          timestamp: Date.now(),
+        });
+      });
+  };
 
   const formOnSubmit = () => {
     navigate(`/update/form/${formId}`, { state: formData }); // The key should be 'state'
@@ -220,6 +253,7 @@ const FormOverViewView = props => {
             <FormActionItem title='查看量表' Icon={<FormModalIcon onClick={formModalOnOpen} />} />
             <FormActionItem title='分配量表' Icon={<AssignmentModalIcon onClick={assignmentModalOnOpen} />} />
             <FormActionItem title='寄通知信' Icon={<NotificationModalIcon onClick={notificationModalOnOpen} />} />
+            <FormActionItem title='刪除量表' Icon={<DeleteModalIcon onClick={deleteFormOnOpen} />} />
           </Box>
 
           <Title>量表填寫狀況</Title>
@@ -258,6 +292,10 @@ AssignmentModalIcon.propTypes = {
 };
 
 NotificationModalIcon.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
+
+DeleteModalIcon.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 

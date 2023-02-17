@@ -1,6 +1,8 @@
 package databases
 
 import (
+	"strconv"
+
 	"github.com/cwhuang29/questionnaire/databases/models"
 )
 
@@ -72,4 +74,35 @@ func UpdateForm(form models.Form) (models.Form, error) {
 	}
 
 	return form, nil
+}
+
+func DeleteForm(id int) error {
+	tx := db.Begin() // Use 'tx' from this point, not 'db'
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	if err := tx.Delete(models.Form{}, id).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err := tx.Exec("DELETE FROM form_statuses WHERE form_id = " + strconv.Itoa(id)).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err := tx.Exec("DELETE FROM form_answers WHERE form_id = " + strconv.Itoa(id)).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
+	return nil
 }

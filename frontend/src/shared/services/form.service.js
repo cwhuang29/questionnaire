@@ -13,6 +13,12 @@ const createForm = (data, token = authHeader()) => fetch.post(apis.V2.CREATE_FOR
 
 const updateForm = (id, data, token = authHeader()) => fetch.post(`${apis.V2.UPDATE_FORM}/${id}`, data, { headers: token });
 
+const deleteForm = (id, token = authHeader()) =>
+  fetch
+    .delete(`${apis.V2.FORMS}/${id}`, { headers: token })
+    .then(resp => Promise.resolve(resp.data))
+    .catch(err => Promise.reject(extractErrorMessage(err)));
+
 const createFormStatus = (id, data, token = authHeader()) =>
   fetch
     .post(`${apis.V2.FORM_STATUS}/${id}`, data, { headers: token })
@@ -79,6 +85,7 @@ export default {
 
   createForm,
   updateForm,
+  deleteForm,
   getFormStatus,
   createFormStatus,
   deleteFormStatus,

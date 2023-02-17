@@ -9,7 +9,7 @@ import Form, { FormAnswerLayout, FormCreate, FormUpdate } from '@pages/Form';
 import Login from '@pages/Login';
 import Logout from '@pages/Logout';
 import Register from '@pages/Register';
-import Test from '@pages/Test';
+// import Test from '@pages/Test';
 import { UserOverview } from '@pages/User';
 
 const NoMatch = () => (
@@ -50,11 +50,13 @@ const App = () => {
           <Route path='' element={<Ecosystem />} />
           <Route path=':ecosystem' element={<Ecosystem />} />
         </Route>
+        {/*
         <Route path='/test'>
           <Route path='' element={<Test />} />
           <Route path=':testId' element={<Test />} />
           <Route path=':testId/:test02Id' element={<Test />} />
         </Route>
+        */}
         <Route path='*' element={<NoMatch />} />
       </Routes>
     </>

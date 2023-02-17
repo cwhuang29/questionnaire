@@ -12,7 +12,7 @@ import PageWrapper from '@components/HomePageWrapper';
 import msg, { validateMsg } from '@constants/messages';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
-import { FORM_OPERATION_TYPE } from '@shared/constants';
+import { FORM_OPERATION_TYPE, MAX_OPTIONS_COUNT } from '@shared/constants';
 
 import { LoadingButton } from '@mui/lab';
 import { Autocomplete, Box, Button, createFilterOptions, MenuItem, Stack, TextField, Typography } from '@mui/material';
@@ -62,7 +62,7 @@ const formikValidationSchema = Yup.object({
   formName: Yup.string().required(validateMsg.REQUIRED),
   formCustId: Yup.string().required(validateMsg.REQUIRED),
   minScore: Yup.number(validateMsg.IS_NUMBER).min(0).required(validateMsg.REQUIRED),
-  optionsCount: Yup.number().min(1).max(10).required(validateMsg.REQUIRED),
+  optionsCount: Yup.number().min(1).max(MAX_OPTIONS_COUNT).required(validateMsg.REQUIRED),
   formTitle: Yup.object().shape(Object.fromEntries(roles.map(role => [role, '']))),
   formIntro: Yup.object(),
   // date: Yup.date().default(() => new Date()).max(new Date(), "Are you a time traveler?!"),

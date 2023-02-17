@@ -266,6 +266,22 @@ func UpdateForm(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"title": succeedMsg, "formId": dbFormID})
 }
 
+func DeleteForm(c *gin.Context) {
+	id, err := getParamFormID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"data": nil})
+		return
+	}
+	form := getFormByID(id)
+	err = databases.DeleteForm(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
+		return
+	}
+	msg := fmt.Sprintf("Form %s (id: %d) has been successfully deleted", form.FormName, form.ID)
+	c.JSON(http.StatusOK, gin.H{"title": msg})
+}
+
 func GetAnswerForm(c *gin.Context) {
 	id, err := getParamFormID(c)
 	if err != nil {

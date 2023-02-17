@@ -57,6 +57,7 @@ func injectRoutesV2(router *gin.Engine) {
 				v2.GET("/users/overview", handlers.UsersOverview)
 				v2.GET("/forms", handlers.Forms)
 				v2.GET("/forms/:formId", handlers.Forms) // ":" is mandatory oaram, "*" is optional params
+				v2.DELETE("/forms/:formId", handlers.DeleteForm)
 				v2.GET("/forms/status/:formId", handlers.GetFormStatus)
 				v2.POST("/forms/status/:formId", handlers.CreateFormStatus)
 				v2.DELETE("/forms/status/:formId", handlers.DeleteFormStatus)
@@ -75,7 +76,7 @@ func injectRoutesV2(router *gin.Engine) {
 				// })
 
 				v2.POST("/form/create", handlers.CreateForm)
-				v2.POST("/form/update/*formId", handlers.UpdateForm)
+				v2.POST("/form/update/:formId", handlers.UpdateForm)
 			}
 		}
 	}
