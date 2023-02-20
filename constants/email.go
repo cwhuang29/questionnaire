@@ -37,11 +37,11 @@ const (
 	NotificationBody = `
 <div style="width: 65%%; margin: 0 auto; color: #2E2E2E">
   <div style=" color: #FCD432; text-align: center; font-weight: 700; font-size: 1.7rem">
-	XXX 問卷平台
+	臺師大DER研究問卷填寫平台
   </div>
   <p style="font-size: 1.1rem">%s</p>
   <br>
-  <p style="font-size: 1.1rem">Best regards,<br>XXX研究團隊</p>
+  <p style="font-size: 1.1rem">Best regards,<br>臺師大DER研究問卷填寫平台</p>
   <br>
   <div style="text-align: left; color: #6E6E6E; font-size: 0.96rem">
   <p>%s</p>

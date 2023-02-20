@@ -61,7 +61,7 @@ const Menu = () => {
       <Toolbar>
         <Box onClick={() => navigate('/')} sx={{ flexGrow: 1 }}>
           <Typography variant='h6' component='div' sx={{ cursor: 'default', fontWeight: 'bold' }}>
-            ＸＸＸ問卷填寫平台
+            臺師大DER研究問卷填寫平台
           </Typography>
         </Box>
 
