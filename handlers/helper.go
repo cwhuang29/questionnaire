@@ -425,7 +425,7 @@ func composeFormResult(form Form, dbFormAnswer []models.FormAnswer) FormResult {
 		formResultItems[idx].Role = utils.RoleType(formStatus.Role).String()
 		formResultItems[idx].AnswerTime = f.CreatedAt
 		formResultItems[idx].Score = getFormScore(questions, form.MinScore, answers)
-		formResultItems[idx].Answer = getDisplayAnswer(questions, form.MinScore, answers)
+		formResultItems[idx].Answer = getDisplayedAnswer(questions, form.MinScore, answers)
 	}
 
 	maxQuestionsCount := 0
@@ -557,13 +557,12 @@ func getFormScore(questions []Question, minScore int, answer Answer) int {
 	return score
 }
 
-func getDisplayAnswer(questions []Question, minScore int, answer Answer) Answer {
-	displayAns := make([]string, 0)
+func getDisplayedAnswer(questions []Question, minScore int, answer Answer) Answer {
 	for idx, ans := range answer.Answers {
-		val := ""
 		if !questions[idx].IsMultipleChoice {
-			val = answer.Answers[idx]
+			continue
 		}
+		val := ""
 		// ans is the index of the option (start from zero)
 		ansInt, _ := strconv.Atoi(ans)
 		if questions[idx].IsReverseGrading {
@@ -571,9 +570,9 @@ func getDisplayAnswer(questions []Question, minScore int, answer Answer) Answer 
 		} else {
 			val = strconv.Itoa(ansInt + minScore)
 		}
-		displayAns = append(displayAns, val)
+		answer.Answers[idx] = val
 	}
-	return Answer{Answers: displayAns}
+	return answer
 }
 
 func getFormResultsByFormIDs(ids []int) []FormResult {
