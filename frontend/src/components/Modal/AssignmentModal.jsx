@@ -42,8 +42,8 @@ const validationSchema = Yup.object({
     .max(new Date('2100-10-10')),
   email: Yup.array().of(Yup.string().email(validateMsg.AUTH.EMAIL_REQUIRED).max(50, validateMsg.TOO_LONG)).min(1, validateMsg.REQUIRED),
   role: Yup.string().required(validateMsg.AUTH.ROLE_REQUIRED),
-  subject: Yup.string().required(validateMsg.REQUIRED),
-  content: Yup.string().required(validateMsg.REQUIRED),
+  // subject: Yup.string().required(validateMsg.REQUIRED),
+  // content: Yup.string().required(validateMsg.REQUIRED),
   footer: Yup.string(),
 });
 
@@ -95,6 +95,7 @@ const AssignmentModal = props => {
     setLoading(false); // In case the validate doesn't pass
   };
 
+  // To prevent the modal from disappeared when user clicks area outside modal, don't use onClose attr
   return (
     open && (
       <MuiModal open={open} /* onClose={onClose} */ aria-labelledby='modal-title' aria-describedby='modal-description'>

@@ -5,9 +5,12 @@ import (
 )
 
 func DeleteFormStatus(formStatus models.FormStatus) error {
-	return db.Delete(&formStatus).Error
-	// db.Delete(models.FormStatus{}, formStatus.ID)
+	err := db.Delete(&formStatus).Error
 	// db.Exec("DELETE FROM from_status WHERE id = " + formStatus.ID)
+	if err != nil {
+		log.ErrorMsg(err.Error())
+	}
+	return err
 }
 
 func GetFormStatusByUserEmail(email string, isAdmin bool) (formStatus []models.FormStatus) {

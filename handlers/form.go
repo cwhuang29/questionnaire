@@ -333,7 +333,7 @@ func MarkAnswerForm(c *gin.Context) {
 	email := c.MustGet("email").(string)
 	user := databases.GetUserByEmail(email)
 
-	if _, err := storeAnswerToDB(id, user, answer); err != nil {
+	if err := storeAnswerToDB(id, user, answer); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.TryAgain})
 	}
 
@@ -369,7 +369,7 @@ func RemindWritingForm(c *gin.Context) {
 		return
 	}
 
-	title := constants.EmailsHaveSent
+	title := constants.EmailHaveSent
 	c.JSON(http.StatusOK, gin.H{"title": title})
 }
 

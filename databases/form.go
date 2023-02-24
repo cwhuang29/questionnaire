@@ -90,18 +90,22 @@ func DeleteForm(id int) error {
 
 	if err := tx.Delete(models.Form{}, id).Error; err != nil {
 		tx.Rollback()
+		log.ErrorMsg(err.Error())
 		return err
 	}
 	if err := tx.Exec("DELETE FROM form_statuses WHERE form_id = " + strconv.Itoa(id)).Error; err != nil {
 		tx.Rollback()
+		log.ErrorMsg(err.Error())
 		return err
 	}
 	if err := tx.Exec("DELETE FROM form_answers WHERE form_id = " + strconv.Itoa(id)).Error; err != nil {
 		tx.Rollback()
+		log.ErrorMsg(err.Error())
 		return err
 	}
 
 	if err := tx.Commit().Error; err != nil {
+		log.ErrorMsg(err.Error())
 		return err
 	}
 	return nil

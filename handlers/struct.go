@@ -33,7 +33,7 @@ type Form struct {
 	ResearchName []string       `json:"researchName,omitempty"`
 	FormName     string         `json:"formName,omitempty"`
 	FormCustID   string         `json:"formCustId,omitempty"`
-	MinScore     int            `json:"minScore,omitempty"`
+	MinScore     int            `json:"minScore,"` // The min score might be zero
 	OptionsCount int            `json:"optionsCount,omitempty"`
 	FormTitle    FormInfoByRole `json:"formTitle,omitempty"`
 	FormIntro    FormInfoByRole `json:"formIntro,omitempty"`

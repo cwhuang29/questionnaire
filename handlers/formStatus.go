@@ -110,25 +110,31 @@ func CreateFormStatus(c *gin.Context) {
 		return
 	}
 
-	email := c.MustGet("email").(string)
+	if assignForm.EmailNotification.Subject == "" {
+		title := constants.EmailWillNotSendWhileAssign
+		c.JSON(http.StatusOK, gin.H{"title": title})
+		return
+	}
+
+	sdrEmail := c.MustGet("email").(string)
 	sendImmediately := isNotificaionEffectImmediately(assignForm)
 	if sendImmediately {
-		if err = SendRemindWritingFormByEmail(id, email, assignForm.EmailNotification); err != nil {
+		if err = SendRemindWritingFormByEmail(id, sdrEmail, assignForm.EmailNotification); err != nil {
 			// Even if the emails did not send out successfully, the users are still assigned
 			c.JSON(http.StatusOK, gin.H{"errHead": constants.EmailSentErr, "errBody": err.Error()})
 			return
 		}
 
-		title := constants.EmailsHaveSent
+		title := constants.EmailHaveSent
 		content := "All emails that have been assigned before were ignored"
 		c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
 	} else {
-		if err := storeFutureNotification(id, role, email, assignForm.EmailNotification); err != nil {
+		if err := storeFutureNotification(id, role, sdrEmail, assignForm.EmailNotification); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.ReloadAndRetry, "errBody": err.Error()})
 			return
 		}
 
-		title := constants.EmailsWillBeSend
+		title := constants.EmailWillBeSend
 		c.JSON(http.StatusOK, gin.H{"title": title})
 	}
 }

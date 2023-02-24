@@ -397,11 +397,11 @@ func getFormAnswerByFormID(formID int) []Answer {
 	return formAnswer
 }
 
-func storeAnswerToDB(formID int, user models.User, answer Answer) (models.FormAnswer, error) {
+func storeAnswerToDB(formID int, user models.User, answer Answer) error {
 	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(formID, user.Email, true)
 	dbFormAnswer := transformFormAnswerToDBFormat(answer, formID, user.ID, dbFormStatus.ID)
-	dbFormAnswer, err := databases.InsertFormAnswer(dbFormAnswer)
-	return dbFormAnswer, err
+	err := databases.InsertFormAnswerAndRemoveExisting(dbFormAnswer)
+	return err
 }
 
 func getFormResultByFormID(formID int) FormResult {
