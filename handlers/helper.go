@@ -413,17 +413,19 @@ func getFormResultByFormID(formID int) FormResult {
 func composeFormResult(form Form, dbFormAnswer []models.FormAnswer) FormResult {
 	formResultItems := make([]FormResultItem, len(dbFormAnswer))
 	for idx, f := range dbFormAnswer {
-		var answers []string
-		_ = json.Unmarshal([]byte(f.Answers), &answers)
+		var ans []string
+		_ = json.Unmarshal([]byte(f.Answers), &ans)
+		answers := Answer{Answers: ans}
 		user := databases.GetUser(f.UserID)
 		formStatus := databases.GetFormStatusByFormIdAndWriterEmail(form.ID, user.Email, true)
+		questions := getFormQuestionsBaesdOnRole(form, utils.RoleType(formStatus.Role))
 
 		formResultItems[idx].Name = user.GetName()
 		formResultItems[idx].Email = user.Email
 		formResultItems[idx].Role = utils.RoleType(formStatus.Role).String()
 		formResultItems[idx].AnswerTime = f.CreatedAt
-		formResultItems[idx].Score = getFormScore(form, utils.RoleType(formStatus.Role), Answer{Answers: answers})
-		formResultItems[idx].Answers = answers
+		formResultItems[idx].Score = getFormScore(questions, form.MinScore, answers)
+		formResultItems[idx].Answer = getDisplayAnswer(questions, form.MinScore, answers)
 	}
 
 	maxQuestionsCount := 0
@@ -524,7 +526,7 @@ func storeFutureNotification(formId int, role utils.RoleType, senderEmail string
 	return err
 }
 
-func getFormScore(form Form, role utils.RoleType, answer Answer) int {
+func getFormQuestionsBaesdOnRole(form Form, role utils.RoleType) []Question {
 	questions := make([]Question, 0)
 	if role.IsStudent() {
 		questions = form.Questions.Student
@@ -535,14 +537,15 @@ func getFormScore(form Form, role utils.RoleType, answer Answer) int {
 	} else if role.IsCounseling() {
 		questions = form.Questions.Counseling
 	}
+	return questions
+}
 
+func getFormScore(questions []Question, minScore int, answer Answer) int {
 	score := 0
-	minScore := form.MinScore
 	for idx, ans := range answer.Answers {
 		if !questions[idx].IsMultipleChoice {
 			continue // Short description questions are not evaluated
 		}
-
 		// ans is the index of the option (start from zero)
 		ansInt, _ := strconv.Atoi(ans)
 		if questions[idx].IsReverseGrading {
@@ -551,8 +554,26 @@ func getFormScore(form Form, role utils.RoleType, answer Answer) int {
 			score += (ansInt + minScore)
 		}
 	}
-
 	return score
+}
+
+func getDisplayAnswer(questions []Question, minScore int, answer Answer) Answer {
+	displayAns := make([]string, 0)
+	for idx, ans := range answer.Answers {
+		val := ""
+		if !questions[idx].IsMultipleChoice {
+			val = answer.Answers[idx]
+		}
+		// ans is the index of the option (start from zero)
+		ansInt, _ := strconv.Atoi(ans)
+		if questions[idx].IsReverseGrading {
+			val = strconv.Itoa(questions[idx].MaxScore - (ansInt + minScore))
+		} else {
+			val = strconv.Itoa(ansInt + minScore)
+		}
+		displayAns = append(displayAns, val)
+	}
+	return Answer{Answers: displayAns}
 }
 
 func getFormResultsByFormIDs(ids []int) []FormResult {

@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { MAX_OPTIONS_COUNT } from '@shared/constants';
 import { getDisplayTime } from '@shared/utils/time';
 
 export const getFormStatusRowId = row => `${row.writerEmail}`; // Note: the id in the data is formId, not index of elements in the array
@@ -93,10 +92,6 @@ export const formResultBaseColumns = [
 
 const getQuestionKeysName = (custId, quesNo) => `${custId}${quesNo}`;
 
-/*
- * Input: { name: 'aaa', email: 'bb@123.com', custId: 'key,' answers:[0,0, 'I am the only child', 3] }
- * Output: { name: 'aaa', email: 'bb@123.com', custId: 'key', answers:[3,3,5], 'key0': 1, 'key1': 1, 'key2': 'I am the only child', 'key3': 4 }
- */
 export const transformFormResultData = data => {
   const { formCustId: custId } = data;
   const rows = data.results.reduce(
@@ -104,12 +99,7 @@ export const transformFormResultData = data => {
       ...acc,
       {
         ...cur,
-        ...cur.answers.reduce((a, c, idx) => {
-          // eslint-disable-next-line
-          const isMultipleChoice = !isNaN(c) && Number(c) < MAX_OPTIONS_COUNT;
-          const val = isMultipleChoice ? Number(c) + 1 : c;
-          return { ...a, [getQuestionKeysName(custId, idx + 1)]: val };
-        }, {}),
+        ...cur.answers.reduce((a, c, idx) => ({ ...a, [getQuestionKeysName(custId, idx + 1)]: c }), {}),
       },
     ],
     []

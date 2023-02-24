@@ -33,8 +33,9 @@ const (
 
 	FormStatusDeleteSucceed = "Delete successfully. This user cannot access to this form from now on"
 
-	FormStatusCreateErr = "Failed to assign form to users"
-	FormHasBeenWritten  = "You have written this form already"
+	FormStatusCreateErr    = "Failed to assign form to users"
+	FormHasBeenWritten     = "You have written this form already"
+	FormIsNotAssignedToYou = "You may have clicked on the wrong link"
 
 	QueryErr        = "Invalid parameter"
 	QueryEmptyErr   = "Parameter %s can not be empty"

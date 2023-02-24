@@ -295,7 +295,7 @@ func GetAnswerForm(c *gin.Context) {
 
 	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(id, email, true)
 	if dbFormStatus.ID == 0 {
-		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.FormIsNotAssignedToYou})
 		return
 	} else if utils.FormStatus(dbFormStatus.Status).IsFinish() {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.GeneralErr, "errBody": constants.FormHasBeenWritten})
@@ -344,7 +344,8 @@ func MarkAnswerForm(c *gin.Context) {
 	}
 
 	form := getFormByID(id)
-	score := getFormScore(form, utils.RoleType(dbFormStatus.Role), answer)
+	questions := getFormQuestionsBaesdOnRole(form, utils.RoleType(dbFormStatus.Role))
+	score := getFormScore(questions, form.MinScore, answer)
 	c.JSON(http.StatusOK, gin.H{"data": score})
 }
 

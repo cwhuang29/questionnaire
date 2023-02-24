@@ -113,7 +113,7 @@ type FormResultItem struct {
 	Role       string    `json:"role"`
 	AnswerTime time.Time `json:"answerTime"`
 	Score      int       `json:"score"`
-	Answers    []string  `json:"answers"`
+	Answer
 }
 
 type ExportFormIds struct {
