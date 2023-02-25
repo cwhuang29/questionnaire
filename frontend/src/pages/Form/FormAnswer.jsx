@@ -28,7 +28,6 @@ const FormAnswer = props => {
   const { addGlobalMessage } = useGlobalMessageContext();
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenFormModal] = useState(false);
-  const [score, setScore] = useState();
 
   // eslint-disable-next-line no-unused-vars
   const { minScore, optionsCount, formTitle: title, formIntro: intro, questions = [] } = formData;
@@ -51,8 +50,7 @@ const FormAnswer = props => {
     onSubmit: async values => {
       await formService
         .sendFormAnswer(formId, values)
-        .then(resp => {
-          setScore(resp.data);
+        .then(() => {
           setOpenFormModal(true);
         })
         .catch(err => {
@@ -86,7 +84,7 @@ const FormAnswer = props => {
           component='form'
           onSubmit={formik.handleSubmit} // Alternative: execute formik.handleSubmit() manually in the onClick callback function
         >
-          <FormResultModal open={openModal} score={score} />
+          <FormResultModal open={openModal} />
 
           <Typography variant='h3' component='div' sx={{ fontWeight: '600', marginBottom: '20px' }}>
             {title[role]}

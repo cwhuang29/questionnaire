@@ -378,7 +378,7 @@ func editFormPreprocessing(c *gin.Context) (Form, models.User, error) {
 	return form, user, err
 }
 
-func markFormPreprocessing(c *gin.Context) (Answer, error) {
+func markAnswerFormPreprocessing(c *gin.Context) (Answer, error) {
 	var answer Answer
 
 	if err := c.ShouldBindJSON(&answer); err != nil {

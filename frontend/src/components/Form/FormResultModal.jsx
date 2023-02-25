@@ -7,7 +7,7 @@ import { ConfirmButton } from '@components/Button';
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
 
 const FormResultModal = props => {
-  const { open, score } = props;
+  const { open } = props;
   const navigate = useNavigate();
   const onConfirm = () => navigate(-1);
   const confirmButtonText = '返回首頁';
@@ -38,7 +38,7 @@ const FormResultModal = props => {
             感謝您填寫量表
           </Typography>
           <Typography variant='h6' component='div' sx={{ fontWeight: '600', marginBottom: '40px' }}>
-            您得到的分數為：{score}分
+            恭喜你填寫完成!請檢查是否還有其他問卷要填寫
           </Typography>
 
           <Box sx={{ position: 'relative', top: '65px' }}>
@@ -52,11 +52,6 @@ const FormResultModal = props => {
 
 FormResultModal.propTypes = {
   open: PropTypes.bool.isRequired,
-  score: PropTypes.number,
-};
-
-FormResultModal.defaultProps = {
-  score: 0,
 };
 
 export default FormResultModal;

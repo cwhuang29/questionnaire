@@ -324,7 +324,7 @@ func MarkAnswerForm(c *gin.Context) {
 		return
 	}
 
-	answer, err := markFormPreprocessing(c)
+	answer, err := markAnswerFormPreprocessing(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.TryAgain})
 		return
