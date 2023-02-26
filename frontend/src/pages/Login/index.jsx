@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { login } from '@actions/auth';
 import { validateMsg } from '@constants/messages';
 import useAuth from '@hooks/useAuth';
+import { useGlobalMessageContext } from '@shared/hooks/useGlobalMessageContext';
 
 import { LoadingButton } from '@mui/lab';
 import { Alert, Box, TextField } from '@mui/material';
@@ -22,6 +23,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { jwt } = useAuth();
+  const { clearAllGlobalMessages } = useGlobalMessageContext();
 
   // Without useEffect:
   // 01. Warning: Cannot update a component (`BrowserRouter`) while rendering a different component (`Login`). To locate the bad setState() call inside `Login`
@@ -41,7 +43,10 @@ const Login = () => {
       setErrorMessage('');
 
       await dispatch(login(values))
-        .then(() => navigate('/'))
+        .then(() => {
+          clearAllGlobalMessages();
+          navigate('/');
+        })
         .catch(err => setErrorMessage(`${err.title}. ${err.content || ''}`))
         .finally(() => setLoading(false));
     },
