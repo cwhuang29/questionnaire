@@ -8,7 +8,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     right: 6,
     top: 4.2,
     padding: '0 1px',
-    // backgroundColor: '#FBDC30',
     backgroundColor: '#7A9EDA',
   },
 }));

@@ -13,6 +13,7 @@ export default {
     ANSWER_FORMS: '/v2/forms/answer',
     FORM_STATUS: '/v2/forms/status',
     FORM_RESULT: '/v2/forms/result',
+    FORM_STATUS_N_RESULT: '/v2/forms/status-n-result',
     CREATE_FORM: '/v2/form/create',
     UPDATE_FORM: '/v2/form/update',
 

@@ -9,6 +9,7 @@ import FormModal from '@components/Form/FormModal';
 import PageWrapper from '@components/HomePageWrapper';
 import { AssignmentModal, EmailNotificationModal } from '@components/Modal';
 import StyledBadge from '@components/styledComponents/StyledBadge';
+import Spacing from '@components/Styling/Spacing';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import formService from '@services/form.service';
@@ -77,8 +78,6 @@ const Title = ({ children }) => (
   </Typography>
 );
 
-const SpacingComponent = () => <div style={{ marginBottom: '2.8em' }} />;
-
 const FormOverViewView = props => {
   const { data, error, isLoading } = props;
 
@@ -86,9 +85,9 @@ const FormOverViewView = props => {
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
   const [openNotificationModal, setOpenNotificationModal] = useState(false);
   const [isFetchingFormAssignStatusData, setIsFetchingFormAssignStatusData] = useState(true);
-  const [formAssignStatusData, setFormAssignStatusData] = useState([]);
-  const [isFetchingFormResultData, setIsFetchingFormResultData] = useState(true);
+  const [formStatusData, setFormAssignStatusData] = useState([]);
   const [formResultData, setFormResultData] = useState([]);
+  const [isFetchingFormResultData, setIsFetchingFormResultData] = useState(true);
   const [formResultColumns, setFormResultColumns] = useState([]);
   const { addGlobalMessage } = useGlobalMessageContext();
 
@@ -194,7 +193,7 @@ const FormOverViewView = props => {
     const email = params.row.writerEmail;
 
     formService
-      .deleteFormStatus(formId, { email })
+      .deleteFormStatusAndResult(formId, { email })
       .then(resp => {
         addGlobalMessage({
           title: resp.title,
@@ -202,9 +201,10 @@ const FormOverViewView = props => {
           severity: GLOBAL_MESSAGE_SERVERITY.SUCCESS,
           timestamp: Date.now(),
         });
-
-        const remainRows = formAssignStatusData.filter(d => d.writerEmail !== id);
-        setFormAssignStatusData(remainRows); // This is the only way to update rows in datagrid
+        const remainStatusRows = formStatusData.filter(d => d.writerEmail !== id);
+        const remainResultRows = formResultData.filter(d => d.email !== id);
+        setFormAssignStatusData(remainStatusRows);
+        setFormResultData(remainResultRows);
       })
       .catch(err => {
         addGlobalMessage({
@@ -225,7 +225,7 @@ const FormOverViewView = props => {
       width: 80,
       getActions: params => [<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={deleteFormStatus(params)} /* showInMenu */ />],
     }),
-    [formAssignStatusData] // Otherwise formAssignStatusData in the deleteFormStatus() equals to its initial value, i.e. {}
+    [formStatusData] // Otherwise formStatusData in the deleteFormStatus() equals to its initial value, i.e. {}
   );
 
   const formStatusColumns = [...formStatusBaseColumns, formStatusActionColumn];
@@ -246,7 +246,7 @@ const FormOverViewView = props => {
             submitButtonText='確認寄信'
             onSubmit={notificationOnSubmit}
             isFetchingEmail={isFetchingFormAssignStatusData}
-            emailList={formAssignStatusData}
+            emailList={formStatusData}
           />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row', cursor: 'default' }}>
@@ -257,18 +257,12 @@ const FormOverViewView = props => {
           </Box>
 
           <Title>量表填寫狀況</Title>
-          <DataGrid
-            height={500}
-            isLoading={isFetchingFormAssignStatusData}
-            columns={formStatusColumns}
-            rows={formAssignStatusData}
-            getRowId={getFormStatusRowId}
-          />
-          <SpacingComponent />
+          <DataGrid height={500} isLoading={isFetchingFormAssignStatusData} columns={formStatusColumns} rows={formStatusData} getRowId={getFormStatusRowId} />
+          <Spacing scale='2.8em' />
 
           <Title>量表回答狀況</Title>
           <DataGrid height={500} isLoading={isFetchingFormResultData} columns={formResultColumns} rows={formResultData} getRowId={getFormResultRowId} />
-          <SpacingComponent />
+          <Spacing scale='2.8em' />
         </>
       ) : (
         <div />

@@ -3,8 +3,6 @@ package constants
 const (
 	ParamFormID = "formId"
 
-	ParamArticleID = "articleId"
-
 	QueryArticleID  = "articleId"
 	QueryOffset     = "offset"
 	QueryLimit      = "limit"

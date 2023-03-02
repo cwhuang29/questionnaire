@@ -587,3 +587,17 @@ func getFormResultsByFormIDs(ids []int) []FormResult {
 func isNotificaionEffectImmediately(assignForm AssignForm) bool {
 	return !utils.IsFuture(assignForm.EffectiveTime, constants.NotificationSendTimeEpsilon)
 }
+
+func deleteFormStatusAndResult(formId int, email string) error {
+	formStatus := databases.GetFormStatusByFormIdAndWriterEmail(formId, email, true)
+	if formStatus.ID == 0 {
+		return errors.New(constants.ReloadAndRetry)
+	}
+
+	user := databases.GetUserByEmail(email) // When a users assigned a form, they may not had registered yet
+	isFuture := utils.IsFuture(formStatus.AssignedAt, 0)
+	if err := databases.DeleteFormStatusAndResultAndPendingNotification(user, formStatus, isFuture); err != nil {
+		return err
+	}
+	return nil
+}

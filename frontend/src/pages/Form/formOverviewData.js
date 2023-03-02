@@ -32,17 +32,17 @@ export const formStatusBaseColumns = [
     minWidth: 70,
   },
   {
-    field: 'emailSender',
-    headerName: '分派者',
-    flex: 0.8,
-    minWidth: 70,
-  },
-  {
     field: 'assignedAt',
     headerName: '學生可以填寫的時間點',
     type: 'dateTime',
     renderCell: params => <span style={{ color: new Date(params.value) > new Date() ? '#FF5550' : '' }}>{getDisplayTime(new Date(params.value))}</span>,
     flex: 1.2,
+    minWidth: 70,
+  },
+  {
+    field: 'emailSender',
+    headerName: '分派者',
+    flex: 0.8,
     minWidth: 70,
   },
   {
@@ -72,7 +72,6 @@ export const formResultBaseColumns = [
     field: 'role',
     headerName: '填寫者角色',
     flex: 0.5,
-    // minWidth: 70,
   },
   {
     field: 'answerTime',
@@ -86,7 +85,6 @@ export const formResultBaseColumns = [
     field: 'score',
     headerName: '分數',
     flex: 0.4,
-    // minWidth: 70,
   },
 ];
 

@@ -163,17 +163,27 @@ const AssignmentModal = props => {
               value={formik.values.email}
               onChange={(e, value) => {
                 // If user clicks enter right after typing, the "value" appended in the array is of type string
-                // If user press keydown to the option list and select the value he just typed, the "value" will have type object ({inputValue: 'abc', label: 'abc'}) (the key "label" is named by MUI)
-                const revisedValue = value.map(v => (v.constructor === Object ? v.label : v));
-                formik.setFieldValue('email', revisedValue);
+                // If user press keydown to the option list and select the value just typed, the "value" in the array will have type object ({inputValue: 'abc', label: 'abc'}) (the key "label" is named by MUI)
+                const tmp = value.map(v => (v.constructor === Object ? v.label : v));
+                let finalRes = [];
+                tmp.forEach(val => {
+                  const sepVals = val.split(/ |,|\n/).filter(ss => ss !== '');
+                  finalRes = [...finalRes, ...sepVals];
+                });
+                formik.setFieldValue('email', finalRes);
               }}
               renderInput={params => (
                 <TextField
                   {...params}
-                  label='請輸入email'
                   autoFocus
+                  label='請輸入email'
                   error={formik.touched.email && Boolean(formik.errors.email)}
                   helperText={formik.touched.email && formik.errors.email}
+                  // onKeyDown={e => {
+                  //   if (e.key === 'Enter' && e.target.value) {
+                  //     const values = e.target.value.split(/ |,|\n/).filter(ss => ss !== '');
+                  //   }
+                  // }}
                 />
               )}
               filterOptions={(options, params) => {
@@ -215,7 +225,7 @@ const AssignmentModal = props => {
           </Stack>
 
           <ListSubheader component='div' disableSticky style={{ backgroundColor: 'inherit' }}>
-            信件內容
+            信件內容（若無需寄通知信可忽略）
           </ListSubheader>
 
           <Stack spacing={2}>

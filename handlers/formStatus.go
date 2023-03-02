@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/cwhuang29/questionnaire/constants"
-	"github.com/cwhuang29/questionnaire/databases"
 	"github.com/cwhuang29/questionnaire/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -26,7 +25,7 @@ func GetFormStatus(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": formStatus})
 }
 
-func DeleteFormStatus(c *gin.Context) {
+func DeleteFormStatusAndResult(c *gin.Context) {
 	id, err := getParamFormID(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.QueryFormIDErr, "errBody": constants.TryAgain})
@@ -40,41 +39,14 @@ func DeleteFormStatus(c *gin.Context) {
 		return
 	}
 
-	email := json.Payload.Email
-	// user := databases.GetUserByEmail(email)
-	// When a user be assigned a form, he/she may not had registered yet
-	// if user.ID == 0 {
-	//     c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.UserNotFound})
-	//     return
-	// }
-
-	dbFormStatus := databases.GetFormStatusByFormIdAndWriterEmail(id, email, true)
-	if dbFormStatus.ID == 0 {
-		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": constants.ReloadAndRetry})
-		return
-	}
-
-	if err := databases.DeleteFormStatus(dbFormStatus); err != nil {
+	err = deleteFormStatusAndResult(id, json.Payload.Email)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
 		return
 	}
 
-	if utils.IsFuture(dbFormStatus.AssignedAt, 0) {
-		if err := databases.DeletePendingNotificationByFormStatus(dbFormStatus); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
-			return
-		}
-	}
-
-	// if user.ID != 0 {
-	//     if err := databases.DeleteFormAnswerByFormIDAndUserID(id, user.ID); err != nil {
-	//         c.JSON(http.StatusInternalServerError, gin.H{"errHead": constants.UnexpectedErr, "errBody": err.Error()})
-	//         return
-	//     }
-	// }
-
 	title := constants.FormStatusDeleteSucceed
-	content := "You can now reassign this user with same/different roles"
+	content := "You can now reassign this user with same/different role"
 	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
 }
 

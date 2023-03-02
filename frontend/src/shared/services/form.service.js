@@ -49,11 +49,9 @@ const sendFormAnswer = (id, data, token = authHeader()) =>
     .then(resp => Promise.resolve(resp.data))
     .catch(err => Promise.reject(extractErrorMessage(err)));
 
-const deleteFormStatus = (id, payload, token = authHeader()) =>
+const deleteFormStatusAndResult = (id, payload, token = authHeader()) =>
   fetch
-    // .delete(`${apis.V2.FORM_STATUS}/${id}`, { data: payload }, { headers: token }) // Error: header is not sent
-    // .delete(`${apis.V2.FORM_STATUS}/${id}`, { headers: token }, { data: payload }) // Error: request body is not sent
-    .delete(`${apis.V2.FORM_STATUS}/${id}`, { headers: token, data: { payload } }) // Request body: {payload: {email: 'a1@abc.com'}}
+    .delete(`${apis.V2.FORM_STATUS_N_RESULT}/${id}`, { headers: token, data: { payload } }) // Request body is {payload: {email: 'a1@abc.com'}}
     .then(resp => Promise.resolve(resp.data))
     .catch(err => Promise.reject(extractErrorMessage(err)));
 
@@ -88,7 +86,7 @@ export default {
   deleteForm,
   getFormStatus,
   createFormStatus,
-  deleteFormStatus,
+  deleteFormStatusAndResult,
 
   exportSelectedForms,
 };
