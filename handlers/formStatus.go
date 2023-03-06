@@ -32,7 +32,7 @@ func DeleteFormStatusAndResult(c *gin.Context) {
 		return
 	}
 
-	// bodyStr, _ := ioutil.ReadAll(c.Request.Body) // string(x): {"payload":{"email":"hcw1719@gmail.com"}}
+	// bodyStr, _ := ioutil.ReadAll(c.Request.Body) // string(x): {"payload":{"email":"abc@gmail.com"}}
 	var json = struct{ Payload struct{ Email string } }{}
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errHead": constants.PayloadIncorrect, "errBody": constants.TryAgain})
