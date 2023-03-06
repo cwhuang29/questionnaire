@@ -46,8 +46,7 @@ func DeleteFormStatusAndResult(c *gin.Context) {
 	}
 
 	title := constants.FormStatusDeleteSucceed
-	content := "You can now reassign this user with same/different role"
-	c.JSON(http.StatusOK, gin.H{"title": title, "content": content})
+	c.JSON(http.StatusOK, gin.H{"title": title})
 }
 
 func CreateFormStatus(c *gin.Context) {

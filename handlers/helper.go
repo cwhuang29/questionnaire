@@ -591,7 +591,9 @@ func isNotificaionEffectImmediately(assignForm AssignForm) bool {
 func deleteFormStatusAndResult(formId int, email string) error {
 	formStatus := databases.GetFormStatusByFormIdAndWriterEmail(formId, email, true)
 	if formStatus.ID == 0 {
-		return errors.New(constants.RecordDoesNotExist)
+		msg := fmt.Sprintf("Email \"%s\" not found in form ID \"%d\"", email, formId)
+		log.ErrorMsg(msg)
+		return errors.New(msg)
 	}
 
 	user := databases.GetUserByEmail(email) // When a users assigned a form, they may not had registered yet

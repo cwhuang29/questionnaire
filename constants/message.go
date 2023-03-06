@@ -33,7 +33,7 @@ const (
 
 	FormResultExportSucceed = "All form results you selected are ready to download"
 
-	FormStatusDeleteSucceed = "Delete successfully. This user cannot access to this form from now on"
+	FormStatusDeleteSucceed = "Delete succeed. This user cannot access to this form"
 
 	FormStatusCreateErr    = "Failed to assign form to users"
 	FormHasBeenWritten     = "You have written this form already"
