@@ -8,12 +8,14 @@ const (
 
 	PayloadIncorrect = "Your request data is not valid"
 
-	TryAgain       = "Please try again"
-	ReloadAndRetry = "Please reload the page and try again"
-	GobackAndRetry = "Go back to previous page and try again"
-	TryTooOften    = "You are trying too often"
+	TryAgain           = "Please try again"
+	ReloadAndRetry     = "Please reload the page and try again"
+	GobackAndRetry     = "Go back to previous page and try again"
+	TryTooOften        = "You are trying too often"
+	RecordDoesNotExist = "This record/data does not exit"
 
-	UserNotFound = "User not found"
+	UserNotFound      = "User not found"
+	UserDeleteSucceed = "This user is deleted"
 
 	DatabaseErr = "An error occurred while writing to DB"
 

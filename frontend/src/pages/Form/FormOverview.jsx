@@ -223,7 +223,7 @@ const FormOverViewView = props => {
       type: 'actions',
       align: 'center',
       width: 80,
-      getActions: params => [<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={deleteFormStatus(params)} /* showInMenu */ />],
+      getActions: params => [<GridActionsCellItem icon={<DeleteIcon />} label='Delete' onClick={deleteFormStatus(params)} />],
     }),
     [formStatusData] // Otherwise formStatusData in the deleteFormStatus() equals to its initial value, i.e. {}
   );

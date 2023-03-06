@@ -14,7 +14,14 @@ const getAllUsers = (token = authHeader()) =>
     .then(response => Promise.resolve(response.data))
     .catch(err => Promise.reject(err));
 
+const deleteUser = (payload, token = authHeader()) =>
+  fetch
+    .delete(`${apis.V2.USERS}`, { headers: token, data: { payload } })
+    .then(resp => Promise.resolve(resp.data))
+    .catch(err => Promise.reject(extractErrorMessage(err)));
+
 export default {
   getCurrentUserData,
   getAllUsers,
+  deleteUser,
 };

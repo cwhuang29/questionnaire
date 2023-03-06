@@ -81,9 +81,8 @@ func AdminRequired() gin.HandlerFunc {
 		email := c.MustGet("email").(string)
 		role := c.MustGet("role").(int)
 
-		// if !utils.RoleType(role).IsValid() { // TODO For develop only
 		if !utils.RoleType(role).IsAdmin() {
-			// If use JSON(), handler functions will be triggered subsequentlly
+			// If use c.JSON(), handler functions will be triggered subsequentlly
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"errHead": constants.GeneralErr, "errBody": constants.PermissionDenied})
 		}
 

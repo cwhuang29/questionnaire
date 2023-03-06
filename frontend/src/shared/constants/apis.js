@@ -1,11 +1,11 @@
 export default {
   V2: {
+    USERS: '/v2/users',
     ME: '/v2/users/me',
+    USERS_OVERVIEW: '/v2/users/overview',
 
     LOGIN: '/v2/login',
     REGISTER: '/v2/register',
-
-    USERS_OVERVIEW: '/v2/users/overview',
 
     FORMS: '/v2/forms',
     // FORM: '/v2/forms',

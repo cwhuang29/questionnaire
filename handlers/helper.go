@@ -591,7 +591,7 @@ func isNotificaionEffectImmediately(assignForm AssignForm) bool {
 func deleteFormStatusAndResult(formId int, email string) error {
 	formStatus := databases.GetFormStatusByFormIdAndWriterEmail(formId, email, true)
 	if formStatus.ID == 0 {
-		return errors.New(constants.ReloadAndRetry)
+		return errors.New(constants.RecordDoesNotExist)
 	}
 
 	user := databases.GetUserByEmail(email) // When a users assigned a form, they may not had registered yet

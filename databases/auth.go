@@ -45,3 +45,11 @@ func UpdatePassword(user models.User, password, token string) bool {
 	}
 	return true
 }
+
+func DeleteUser(email string) error {
+	if err := db.Where("email = ?", email).Delete(&models.User{}).Error; err != nil {
+		log.ErrorMsg(err.Error())
+		return err
+	}
+	return nil
+}
