@@ -10,6 +10,7 @@ import PageWrapper from '@components/HomePageWrapper';
 import { AssignmentModal, EmailNotificationModal } from '@components/Modal';
 import StyledBadge from '@components/styledComponents/StyledBadge';
 import Spacing from '@components/Styling/Spacing';
+import messages from '@constants/messages';
 import { GLOBAL_MESSAGE_SERVERITY } from '@constants/styles';
 import { useGlobalMessageContext } from '@hooks/useGlobalMessageContext';
 import formService from '@services/form.service';
@@ -157,8 +158,8 @@ const FormOverViewView = props => {
       .then(resp => setFormAssignStatusData(resp.data))
       .catch(err =>
         addGlobalMessage({
-          title: err.title,
-          content: err.content,
+          title: err.title || messages.UNKNOWN_ERROR,
+          content: err.content || messages.SERVER_UNSTABLE,
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           timestamp: Date.now(),
         })
@@ -171,19 +172,19 @@ const FormOverViewView = props => {
     formService
       .getFormResult(formId)
       .then(resp => {
-        const transformedData = transformFormResultData(resp.data);
         const transformedColumns = transformFormResultColumns(formResultBaseColumns, resp.data);
+        const transformedData = transformFormResultData(resp.data);
         setFormResultData(transformedData);
         setFormResultColumns(transformedColumns);
       })
-      .catch(err =>
+      .catch(err => {
         addGlobalMessage({
-          title: err.title,
-          content: err.content,
+          title: err.title || messages.UNKNOWN_ERROR,
+          content: err.content || messages.SERVER_UNSTABLE,
           severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
           timestamp: Date.now(),
-        })
-      )
+        });
+      })
       .finally(() => setIsFetchingFormResultData(false));
   }, []); // Just fetch one time
 

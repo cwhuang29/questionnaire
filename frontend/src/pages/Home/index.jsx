@@ -24,13 +24,14 @@ const Home = () => {
   const navigate = useNavigate();
   const admin = isAdmin();
   const { jwt } = useAuth();
-  const { addGlobalMessage } = useGlobalMessageContext();
+  const { addGlobalMessage, clearAllGlobalMessages } = useGlobalMessageContext();
 
   // Without useEffect:
   // 01. Warning: Cannot update a component (`BrowserRouter`) while rendering a different component (`Login`). To locate the bad setState() call inside `Login`
   // 02. You should call navigate() in a React.useEffect(), not when your component is first rendered.
   useEffect(() => {
     if (!jwt) {
+      clearAllGlobalMessages();
       addGlobalMessage({
         title: msg.LOGIN_REQUIRED,
         severity: GLOBAL_MESSAGE_SERVERITY.INFO,

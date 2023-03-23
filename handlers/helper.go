@@ -411,40 +411,41 @@ func getFormResultByFormID(formID int) FormResult {
 }
 
 func composeFormResult(form Form, dbFormAnswer []models.FormAnswer) FormResult {
-	formResultItems := make([]FormResultItem, len(dbFormAnswer))
-	for idx, f := range dbFormAnswer {
-		var ans []string
-		_ = json.Unmarshal([]byte(f.Answers), &ans)
-		answers := Answer{Answers: ans}
+	formResultItems := make([]FormResultItem, 0)
+
+	for _, f := range dbFormAnswer {
 		user := databases.GetUser(f.UserID)
+		if user.ID == 0 {
+			// TODO Currently, delete a user does not delete associated form_answers records (likely to change in future)
+			continue
+		}
+
+		formResultItem := FormResultItem{}
 		formStatus := databases.GetFormStatusByFormIdAndWriterEmail(form.ID, user.Email, true)
 		questions := getFormQuestionsBaesdOnRole(form, utils.RoleType(formStatus.Role))
+		ans := make([]string, len(questions))
 
-		formResultItems[idx].Name = user.GetName()
-		formResultItems[idx].Email = user.Email
-		formResultItems[idx].Role = utils.RoleType(formStatus.Role).String()
-		formResultItems[idx].AnswerTime = f.CreatedAt
-		formResultItems[idx].Score = getFormScore(questions, form.MinScore, answers)
-		formResultItems[idx].Answer = getDisplayedAnswer(questions, form.MinScore, answers)
-	}
+		_ = json.Unmarshal([]byte(f.Answers), &ans)
+		answer := Answer{Answers: ans}
 
-	maxQuestionsCount := 0
-	if len(form.Questions.Student) > maxQuestionsCount {
-		maxQuestionsCount = len(form.Questions.Student)
-	}
-	if len(form.Questions.Parent) > maxQuestionsCount {
-		maxQuestionsCount = len(form.Questions.Parent)
-	}
-	if len(form.Questions.Teacher) > maxQuestionsCount {
-		maxQuestionsCount = len(form.Questions.Teacher)
-	}
-	if len(form.Questions.Counseling) > maxQuestionsCount {
-		maxQuestionsCount = len(form.Questions.Counseling)
+		formResultItem.Name = user.GetName()
+		formResultItem.Email = user.Email
+		formResultItem.Role = utils.RoleType(formStatus.Role).String()
+		formResultItem.AnswerTime = f.CreatedAt
+
+		if len(questions) == 0 {
+			// TODO if admin remove questions of a specific role but some users with that role had filled out, website should popup warnings
+			formResultItem.Score = -1
+		} else {
+			formResultItem.Score = getFormScore(questions, form.MinScore, answer)
+			formResultItem.Answer = getDisplayedAnswer(questions, form.MinScore, answer)
+		}
+		formResultItems = append(formResultItems, formResultItem)
 	}
 
 	formResult := FormResult{
 		FormCustID:        form.FormCustID,
-		MaxQuestionsCount: maxQuestionsCount,
+		MaxQuestionsCount: getMaxQuestionsCountOfAForm(form.Questions),
 		FormLastUpdatedAt: form.UpdatedAt,
 		Results:           formResultItems,
 	}
@@ -573,6 +574,23 @@ func getDisplayedAnswer(questions []Question, minScore int, answer Answer) Answe
 		answer.Answers[idx] = val
 	}
 	return answer
+}
+
+func getMaxQuestionsCountOfAForm(questions FormQuestion) int {
+	maxQuestionsCount := 0
+	if len(questions.Student) > maxQuestionsCount {
+		maxQuestionsCount = len(questions.Student)
+	}
+	if len(questions.Parent) > maxQuestionsCount {
+		maxQuestionsCount = len(questions.Parent)
+	}
+	if len(questions.Teacher) > maxQuestionsCount {
+		maxQuestionsCount = len(questions.Teacher)
+	}
+	if len(questions.Counseling) > maxQuestionsCount {
+		maxQuestionsCount = len(questions.Counseling)
+	}
+	return maxQuestionsCount
 }
 
 func getFormResultsByFormIDs(ids []int) []FormResult {

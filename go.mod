@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go v1.42.9
 	github.com/codegangsta/envy v0.0.0-20141216192214-4b78388c8ce4 // indirect
 	github.com/codegangsta/gin v0.0.0-20211113050330-71f90109db02 // indirect
-	github.com/cwhuang29/article-sharing-website v0.0.0-20211011063341-6e198c68e037 // indirect
+	github.com/cwhuang29/article-sharing-website v0.0.0-20211011063341-6e198c68e037
 	github.com/gin-gonic/gin v1.7.4
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.3.0

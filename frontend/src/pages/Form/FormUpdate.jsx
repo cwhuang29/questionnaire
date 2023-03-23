@@ -30,7 +30,7 @@ const FormUpdate = () => {
       });
       navigate('/');
     } else if (!formData) {
-      // If user enter URL directly instead of redirecting to this page via <Form />, formToBeUpdated will be null
+      // If user enter URL directly instead of redirecting to this page via <Form />, formData will be null
       addGlobalMessage({
         title: formMsg.ACCESS_VIA_LINK,
         severity: GLOBAL_MESSAGE_SERVERITY.ERROR,
