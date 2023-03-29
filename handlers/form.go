@@ -383,7 +383,6 @@ func ExportSelectedForms(c *gin.Context) {
 	}
 
 	formResults := getFormResultsByFormIDs(exportFormIDs.FormIDs)
-	fmt.Println(formResults)
 	succeedMsg := constants.FormResultExportSucceed
 	c.JSON(http.StatusOK, gin.H{"title": succeedMsg, "data": formResults})
 }

@@ -33,7 +33,7 @@ export const formStatusBaseColumns = [
   },
   {
     field: 'assignedAt',
-    headerName: '學生可以填寫的時間點',
+    headerName: '生效時間',
     type: 'dateTime',
     renderCell: params => <span style={{ color: new Date(params.value) > new Date() ? '#FF5550' : '' }}>{getDisplayTime(new Date(params.value))}</span>,
     flex: 1.2,

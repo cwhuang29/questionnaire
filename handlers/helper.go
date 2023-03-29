@@ -416,7 +416,7 @@ func composeFormResult(form Form, dbFormAnswer []models.FormAnswer) FormResult {
 	for _, f := range dbFormAnswer {
 		user := databases.GetUser(f.UserID)
 		if user.ID == 0 {
-			// TODO Currently, delete a user does not delete associated form_answers records (likely to change in future)
+			// Currently, delete a user does not delete associated form_answers records (likely to change in future)
 			continue
 		}
 
