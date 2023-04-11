@@ -14,17 +14,12 @@ func DeleteFormStatus(formStatus models.FormStatus) error {
 }
 
 func GetFormStatusByUserEmail(email string, isAdmin bool) (formStatus []models.FormStatus) {
-	db.Where("writer_email = ?", email).Find(&formStatus)
+	db.Order("form_id asc").Where("writer_email = ?", email).Find(&formStatus)
 	return
 }
 
 func GetFormStatusByFormID(id int, isAdmin bool) (formStatus []models.FormStatus) {
 	db.Where("form_id = ?", id).Find(&formStatus)
-	return
-}
-
-func GetFormStatusByWriterEmail(writerEmail string, isAdmin bool) (formStatus []models.FormStatus) {
-	db.Where("writer_email = ?", writerEmail).Find(&formStatus)
 	return
 }
 

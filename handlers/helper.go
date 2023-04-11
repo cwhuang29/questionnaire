@@ -182,18 +182,6 @@ func getFormStatusByFormID(formID int) []FormStatus {
 	return formStatus
 }
 
-func getFormStatusByUser(email string) []FormStatus {
-	dbFormStatus := databases.GetFormStatusByWriterEmail(email, true)
-
-	formStatus := make([]FormStatus, len(dbFormStatus))
-	for i, f := range dbFormStatus {
-		form := databases.GetFormByID(f.FormID, true)
-		formStatus[i] = transformFormStatusToWebFormat(f, form, nil, nil, nil)
-	}
-
-	return formStatus
-}
-
 func getNotFinishFormStatusByUser(email string) []FormStatus {
 	status := []int{int(utils.FormStatusAssign), int(utils.FormStatusInProgress)}
 	dbFormStatus := databases.GetFormStatusByWriterEmailAndStatus(email, status, true)
@@ -295,11 +283,11 @@ func getAnswerForm(form Form, user models.User, role utils.RoleType) (Form, erro
 	return form, nil
 }
 
-func getFormsByFormStatuses(formStatus []models.FormStatus) []models.Form {
-	formIDs := make([]int, len(formStatus))
+func getFormsByFormStatuses(formStatuses []models.FormStatus) []models.Form {
+	formIDs := make([]int, len(formStatuses))
 
-	for idx, formAnswer := range formStatus {
-		formIDs[idx] = formAnswer.FormID
+	for idx, formStatus := range formStatuses {
+		formIDs[idx] = formStatus.FormID
 	}
 	return databases.GetFormsByIDs(formIDs, true)
 }
