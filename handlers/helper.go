@@ -186,10 +186,13 @@ func getNotFinishFormStatusByUser(email string) []FormStatus {
 	status := []int{int(utils.FormStatusAssign), int(utils.FormStatusInProgress)}
 	dbFormStatus := databases.GetFormStatusByWriterEmailAndStatus(email, status, true)
 
-	formStatus := make([]FormStatus, len(dbFormStatus))
-	for i, f := range dbFormStatus {
+	formStatus := make([]FormStatus, 0)
+	for _, f := range dbFormStatus {
+		if utils.IsFuture(f.AssignedAt, 0) {
+			continue
+		}
 		form := databases.GetFormByID(f.FormID, true)
-		formStatus[i] = transformFormStatusToWebFormat(f, form, nil, nil, nil)
+		formStatus = append(formStatus, transformFormStatusToWebFormat(f, form, nil, nil, nil))
 	}
 
 	return formStatus
