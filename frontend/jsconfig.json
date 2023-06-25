@@ -12,7 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./*"],
       "@pages/*": ["pages/*"],
       "@components/*": ["components/*"],
       "@shared/*": ["shared/*"],
